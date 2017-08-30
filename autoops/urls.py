@@ -21,5 +21,6 @@ from django.conf.urls import handler404, handler500
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', index),
+    url(r'^index.html$', index),
     url(r'^asset/', include('asset.urls', namespace="asset", app_name='asset'), )
 ]
