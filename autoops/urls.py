@@ -15,12 +15,12 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
-from  asset.views import index
+from  asset import views
 from django.conf.urls import handler404, handler500
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^$', index),
-    url(r'^index.html$', index),
+    url(r'^$', views.index),
+    url(r'^index.html$', views.index),
     url(r'^asset/', include('asset.urls', namespace="asset", app_name='asset'), )
 ]

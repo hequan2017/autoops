@@ -2,7 +2,7 @@
 {% block  title %}资产添加{% endblock %}
 {% block header-css %}
 
-
+    {% load	bootstrap3 %}
 {% endblock %}
 
 
@@ -53,19 +53,29 @@
                     </div>
                 </div>
                 <div class="ibox-content">
-                    <form class="form-horizontal" action="{% url "asset:asset_add" %}" method="post">
+                    <form class="form-horizontal" class="form" action="{% url "asset:asset_add" %}" method="post"
+                          enctype="multipart/form-data">
+
                         {% csrf_token %}
-                        <div class="form-group"><label class="col-sm-2 control-label">外网IP</label>
-                            <div class="col-lg-4 col-sm-10">
-                                <input type="text" class="form-control" name="network_ip" required=""></div>
+                        {{ form.non_field_errors }}
+                        <div class="fieldWrapper">
 
-                            <label class="col-sm-1 control-label">管理IP</label>
-                            <div class="col-lg-4 col-sm-10">
-                                <input type="text" class="form-control" name="manage_ip">
+                            <div class="form-group">
+                                {{ form.subject.errors }}
 
+                                <label class="col-sm-2 control-label" for="{{ form.subject.id_for_label }}">外网IP</label>
+                                <div class="col-lg-4 col-sm-10">
+                                    <input type="text" class="form-control" name="network_ip"></div>
+                                {{ form.subject }}
+                                {{ form.subject.errors }}
+                                <label class="col-sm-1 control-label" for="{{ form.subject.id_for_label }}">管理IP</label>
+                                <div class="col-lg-4 col-sm-10">
+                                    <input type="text" class="form-control" name="manage_ip"></div>
+                                {{ form.subject }}
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
+
 
                         <div class="form-group"><label class="col-sm-2 control-label">型号</label>
                             <div class="col-lg-4 col-sm-10">
@@ -177,7 +187,11 @@
                         </div>
 
                         <div class="hr-line-dashed"></div>
-
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">附件</label>
+                            <input type="file" name="file">
+                        </div>
+                        <div class="hr-line-dashed"></div>
 
                         <div class="form-group">
                             <div class="col-sm-4 col-sm-offset-2">

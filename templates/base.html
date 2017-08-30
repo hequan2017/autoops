@@ -1,3 +1,4 @@
+{% load  mytags %}
 <!DOCTYPE html>
 <html>
 
@@ -7,8 +8,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>{% block  title %}{% endblock %}</title>
+    <link	rel="stylesheet"	href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css"	>
 
-    {% include  "css.html" %}
+
+
+    {% include  "_css.html" %}
     {% block header-css %}
     {% endblock %}
 
@@ -18,24 +22,30 @@
 
 <div id="wrapper">
 
-    {% include "nav.html" %}
+    {% include "_nav.html" %}
 
     <div id="page-wrapper" class="gray-bg">
-        {% include  "navbar-static-top.html" %}
+        {% include  "_navbar-static-top.html" %}
 
         {% block page-content %}
 
 
         {% endblock %}
-        {% include  "footer.html" %}
+        {% include  "_footer.html" %}
 
     </div>
 </div>
 
 
-{% include  "js.html" %}
+{% include  "_js.html" %}
 {% block footer-js %}
 {% endblock %}
+
+
+<script  src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js">
+</script>
+
+
 
 </body>
 

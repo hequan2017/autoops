@@ -4,7 +4,7 @@ class asset(models.Model):
     network_ip = models.GenericIPAddressField(verbose_name='外网IP',null=True,blank=True)
     manage_ip = models.GenericIPAddressField(verbose_name='管理IP', null=True,blank=True)
     model = models.CharField(max_length=64, verbose_name='型号',null=True,blank=True)
-    data_center =  models.ForeignKey(to="data_centers",to_field='id', null=True,verbose_name='产品线',blank=True)
+    data_center =  models.ForeignKey(to="data_centers",to_field='id', null=True,verbose_name='数据中心',blank=True)
     cabinet = models.CharField(max_length=64,verbose_name='机柜',null=True,blank=True)
     position = models.CharField(max_length=64,verbose_name='位置',null=True,blank=True)
     sn = models.CharField(max_length=64,verbose_name='序列号',null=True,blank=True)
