@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+
+{% block page-content %}
+
+
+<div class="row wrapper border-bottom white-bg page-heading">
+                <div class="col-lg-10">
+                    <h2>资产信息</h2>
+                    <ol class="breadcrumb">
+                        <li>
+                            <a href="/index.html">主页</a>
+                        </li>
+                        <li>
+                            <a>资产管理</a>
+                        </li>
+                        <li class="active">
+                            <strong>资产信息</strong>
+                        </li>
+                  </ol>
+                </div>
+                <div class="col-lg-2">
+
+                </div>
+            </div>
+<div class="wrapper wrapper-content animated fadeInRight">
+            <div class="row">
+                <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>资产信息</h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                <i class="fa fa-wrench"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-user">
+                                <li><a href="#">选项 1</a>
+                                </li>
+                                <li><a href="#">选项 2</a>
+                                </li>
+                            </ul>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+
+                        <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover dataTables-example" >
+                    <thead>
+                    <tr>
+                        <th>外网IP</th>
+                        <th>管理IP</th>
+                        <th>产品线</th>
+                        <th>数据中心</th>
+                        <th>SN</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                        {% for   row   in   asset_list %}
+                               <tr class="gradeA">
+                          <td class="center">{{ row.network_ip }}</td>
+                            <td class="center">{{ row.manage_ip }}</td>
+                            <td class="center">{{ row.product_line }}</td>
+                            <td class="center">{{ row.data_center }}</td>
+                            <td class="center">{{ row.sn }}</td>
+                                       </tr>
+                        {% endfor %}
+
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <th>渲染引擎</th>
+                        <th>浏览器</th>
+                        <th>平台(s)</th>
+                        <th>引擎版本</th>
+                        <th>CSS等级</th>
+                    </tr>
+                    </tfoot>
+                    </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+
+
+
+{% endblock %}

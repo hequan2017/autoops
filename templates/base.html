@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AutoOps</title>
+
+    {% include  "css.html" %}
+    {% block header-css %}
+    {% endblock %}
+
+</head>
+
+<body>
+
+<div id="wrapper">
+
+    {% include "nav.html" %}
+
+    <div id="page-wrapper" class="gray-bg">
+        {% include  "navbar-static-top.html" %}
+
+        {% block page-content %}
+
+
+        {% endblock %}
+        {% include  "footer.html" %}
+
+    </div>
+</div>
+
+
+{% include  "js.html" %}
+{% block footer-js %}
+{% endblock %}
+
+</body>
+
+</html>
