@@ -26,7 +26,6 @@ def asset_add(request):
 
 
 def asset_update(request, nid):
-    print(nid)
     publisher = get_object_or_404(asset, id=nid)
     print(publisher)
 

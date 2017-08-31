@@ -13,9 +13,6 @@ class PublisherForm(forms.ModelForm):
             'sn', 'cpu', 'memory', 'disk', 'port', 'ship_time', 'end_time', 'product_line', 'ps'
         ]
         widgets = {
-            'data_center': forms.Select(
-                attrs={'class': 'select2',
-                       'data-placeholder': ('数据中心')}),
             'ship_time': forms.DateInput(
                 attrs={'type': 'date', }
             ),
