@@ -1,22 +1,32 @@
-from	django	import	forms
+from    django import forms
+from .models import asset
 
-class	PublisherForm(forms.Form):
-	network_ip = forms.GenericIPAddressField(label='外网IP')
-	manage_ip = forms.GenericIPAddressField(label='管理IP')
-	model = forms.CharField(max_length=64, label='型号')
-	data_center = forms.CharField(label='数据中心',max_length=64,)
-	cabinet =forms.CharField(max_length=64, label='机柜', )
-	position = forms.CharField(max_length=64, label='位置')
-	sn = forms.CharField(max_length=64, label='序列号')
-	cpu = forms.CharField(max_length=64, label='CPU')
-	memory = forms.CharField(max_length=64, label='内存')
-	disk = forms.CharField(max_length=256, label="硬盘")
-	port = forms.CharField(max_length=256, label="上联端口")
-	use = forms.BooleanField(label='是否在用')
-	
-	ship_time =  forms.DateField(label="出厂时间")
-	end_time =  forms.DateField(label="到保时间")
-	product_line =  forms.CharField(max_length=64, label='产品线')
-	
-	ps =  forms.CharField(max_length=1024, label="备注")
 
+# from django.utils.translation import gettext_lazy as _
+
+
+class PublisherForm(forms.ModelForm):
+    class Meta:
+        model = asset
+        fields = [
+            'network_ip', 'manage_ip', 'model', 'data_center', 'cabinet', 'position',
+            'sn', 'cpu', 'memory', 'disk', 'port', 'ship_time', 'end_time', 'product_line', 'ps'
+        ]
+        widgets = {
+            'data_center': forms.Select(
+                attrs={'class': 'select2',
+                       'data-placeholder': ('数据中心')}),
+            'ship_time': forms.DateInput(
+                attrs={'type': 'date', }
+            ),
+            'end_time': forms.DateInput(
+                attrs={'type': 'date', }
+            ),
+            'ps': forms.Textarea(
+                attrs={'cols': 80, 'rows': 3}
+            )
+        }
+        help_texts = {
+            # 'network_ip': '必填项目',
+            'model': ('必填项目,请输入产品型号,如:DELL R620 '),
+        }

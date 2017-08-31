@@ -1,21 +1,23 @@
 from django.db import models
+import django.utils.timezone as timezone
 
 class asset(models.Model):
     network_ip = models.GenericIPAddressField(verbose_name='外网IP',null=True,blank=True)
     manage_ip = models.GenericIPAddressField(verbose_name='管理IP', null=True,blank=True)
-    model = models.CharField(max_length=64, verbose_name='型号',null=True,blank=True)
+    model = models.CharField(max_length=64, verbose_name='型号',null=True)
     data_center =  models.ForeignKey(to="data_centers",to_field='id', null=True,verbose_name='数据中心',blank=True)
     cabinet = models.CharField(max_length=64,verbose_name='机柜',null=True,blank=True)
     position = models.CharField(max_length=64,verbose_name='位置',null=True,blank=True)
+
     sn = models.CharField(max_length=64,verbose_name='序列号',null=True,blank=True)
     cpu = models.CharField(max_length=64,verbose_name='CPU',null=True,blank=True)
     memory = models.CharField(max_length=64, verbose_name='内存', null=True,blank=True)
     disk = models.CharField(max_length=256,verbose_name="硬盘",null=True,blank=True)
     port = models.CharField(max_length=256,verbose_name="上联端口",null=True,blank=True)
-    use = models.BooleanField(verbose_name='是否在用',blank=True)
 
-    ship_time = models.DateField(verbose_name="出厂时间",blank=True)
-    end_time = models.DateField(verbose_name="到保时间",blank=True)
+    ship_time = models.DateField(verbose_name="出厂时间",default=timezone.now)
+    end_time = models.DateField(verbose_name="到保时间",default=timezone.now)
+
     product_line =  models.ForeignKey(to="product_lines",to_field='id', null=True,verbose_name='产品线',blank=True)
 
     ps = models.CharField(max_length=1024,verbose_name="备注",null=True,blank=True)

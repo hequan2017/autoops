@@ -53,110 +53,46 @@
                     </div>
                 </div>
                 <div class="ibox-content">
-                    <form class="form-horizontal" class="form" action="{% url "asset:asset_add" %}" method="post"
-                          enctype="multipart/form-data">
-
+                    <form class="form-horizontal" class="form-horizontal" action="{% url "asset:asset_add" %}"
+                          method="post" enctype="multipart/form-data">
                         {% csrf_token %}
-                        {{ form.non_field_errors }}
-                        <div class="fieldWrapper">
 
-                            <div class="form-group">
-                                {{ form.subject.errors }}
+                        {% if form.no_field_errors %}
+                            <div class="alert alert-danger">
+                                {{ form.non_field_errors }}
+                            </div>
+                        {% endif %}
+                        <div class="form-group">
+                            <div class="col-sm-10 col-sm-offset-0">
+                                <h3>基本</h3>
 
-                                <label class="col-sm-2 control-label" for="{{ form.subject.id_for_label }}">外网IP</label>
-                                <div class="col-lg-4 col-sm-10">
-                                    <input type="text" class="form-control" name="network_ip"></div>
-                                {{ form.subject }}
-                                {{ form.subject.errors }}
-                                <label class="col-sm-1 control-label" for="{{ form.subject.id_for_label }}">管理IP</label>
-                                <div class="col-lg-4 col-sm-10">
-                                    <input type="text" class="form-control" name="manage_ip"></div>
-                                {{ form.subject }}
+                                {% bootstrap_field form.network_ip layout="horizontal" %}
+                                {% bootstrap_field form.manage_ip layout="horizontal" %}
+                                {% bootstrap_field form.model layout="horizontal" %}
+                                {% bootstrap_field form.data_center layout="horizontal" %}
+                                {% bootstrap_field form.cabinet layout="horizontal" %}
+                                {% bootstrap_field form.position layout="horizontal" %}
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
-
-
-                        <div class="form-group"><label class="col-sm-2 control-label">型号</label>
-                            <div class="col-lg-4 col-sm-10">
-                                <input type="text" class="form-control" name="model"></div>
-
-                            <label class="col-sm-1 control-label">数据中心</label>
-                            <div class="col-lg-4 col-sm-10">
-                                <select class="select2_demo_1 form-control" value="product_line">
-
-                                    {% for  row in data_center_list %}
-                                        <option value="{{ row.id }}" id="ues1">{{ row.data_center_list }}</option>
-                                    {% endfor %}
-
-                                </select>
-
+                        <div class="form-group">
+                            <div class="col-sm-10 col-sm-offset-0">
+                                <h3>硬件</h3>
+                                {% bootstrap_field form.sn layout="horizontal" %}
+                                {% bootstrap_field form.cpu layout="horizontal" %}
+                                {% bootstrap_field form.memory layout="horizontal" %}
+                                {% bootstrap_field form.disk layout="horizontal" %}
+                                {% bootstrap_field form.port layout="horizontal" %}
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
-
-                        <div class="form-group"><label class="col-sm-2 control-label">机柜</label>
-                            <div class="col-lg-4 col-sm-10">
-                                <input type="text" class="form-control" name="cabinet"></div>
-
-                            <label class="col-sm-1 control-label">位置</label>
-                            <div class="col-lg-4 col-sm-10">
-                                <input type="text" class="form-control" name="position">
-
-                            </div>
-                        </div>
-                        <div class="hr-line-dashed"></div>
-
-                        <div class="form-group"><label class="col-sm-2 control-label">SN</label>
-                            <div class="col-lg-4 col-sm-10">
-                                <input type="text" class="form-control" name="sn"></div>
-
-                            <label class="col-sm-1 control-label">CPU</label>
-                            <div class="col-lg-4 col-sm-10">
-                                <input type="text" class="form-control" name="cpu">
-
-                            </div>
-                        </div>
-                        <div class="hr-line-dashed"></div>
-
-
-                        <div class="form-group"><label class="col-sm-2 control-label">内存</label>
-                            <div class="col-lg-4 col-sm-10">
-                                <input type="text" class="form-control" name="memory"></div>
-
-                            <label class="col-sm-1 control-label">硬盘</label>
-                            <div class="col-lg-4 col-sm-10">
-                                <input type="text" class="form-control" name="disk">
-
-                            </div>
-                        </div>
-                        <div class="hr-line-dashed"></div>
-
-
-                        <div class="form-group"><label class="col-sm-2 control-label">上联端口</label>
-                            <div class="col-lg-4 col-sm-10">
-                                <input type="text" class="form-control" name="port"></div>
-
-                            <label class="col-sm-1 control-label">是否在用</label>
-                            <div class="col-lg-4 col-sm-10">
-                                <select class="select2_demo_1 form-control" name="use">
-                                    <option value="1" id="ues1"> 启用</option>
-                                    <option value="0" id="user2">没用</option>
-
-                                </select>
-
-                            </div>
-                        </div>
-                        <div class="hr-line-dashed"></div>
-
-
-                        <div class="form-group"><label class="col-sm-2 control-label">出厂时间</label>
-                            <div class="col-lg-4 col-sm-10">
-                                <input type="text" class="form-control" name="ship_time"></div>
-
-                            <label class="col-sm-1 control-label">到保时间</label>
-                            <div class="col-lg-4 col-sm-10">
-                                <input type="text" class="form-control" name="end_time">
+                        <div class="form-group">
+                            <div class="col-sm-10 col-sm-offset-0">
+                                <h3>其他</h3>
+                                {% bootstrap_field form.ship_time layout="horizontal" %}
+                                {% bootstrap_field form.end_time layout="horizontal" %}
+                                {% bootstrap_field form.product_line layout="horizontal" %}
+                                {% bootstrap_field form.ps layout="horizontal" %}
 
                             </div>
                         </div>
@@ -164,42 +100,13 @@
 
 
                         <div class="form-group">
-
-
-                            <label class="col-sm-2 control-label">产品线</label>
-                            <div class="col-lg-4 col-sm-10">
-                                <select class="select2_demo_1 form-control" value="product_line">
-
-                                    {% for  row in product_line_list %}
-                                        <option value="{{ row.id }}" id="ues1">{{ row.product_line_list }}</option>
-                                    {% endfor %}
-
-                                </select>
-
-                            </div>
-                        </div>
-                        <div class="hr-line-dashed"></div>
-
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">备注</label>
-                            <div class="col-lg-9 col-sm-10">
-                                <input type="text" class="form-control" name="ps"></div>
-                        </div>
-
-                        <div class="hr-line-dashed"></div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">附件</label>
-                            <input type="file" name="file">
-                        </div>
-                        <div class="hr-line-dashed"></div>
-
-                        <div class="form-group">
-                            <div class="col-sm-4 col-sm-offset-2">
+                            <div class="col-sm-offset-3">
 
                                 <button class="btn btn-primary" type="submit">保存</button>
                                 <button class="btn btn-white" type="button">取消</button>
                             </div>
                         </div>
+
                     </form>
 
 

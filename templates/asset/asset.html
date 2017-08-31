@@ -66,7 +66,7 @@
 
                                 {% for   row   in   asset_list %}
                                     <tr class="gradeA">
-                                        <td class="center">{{ row.network_ip }}</td>
+                                        <td class="center" ><a   href="{% url  "asset:asset_update"   row.id  %}" >{{ row.network_ip }}</a></td>
                                         <td class="center">{{ row.manage_ip }}</td>
                                         <td class="center">{{ row.product_line }}</td>
                                         <td class="center">{{ row.data_center }}</td>
@@ -77,11 +77,11 @@
                                 </tbody>
                                 <tfoot>
                                 <tr>
-                                    <th>渲染引擎</th>
-                                    <th>浏览器</th>
-                                    <th>平台(s)</th>
-                                    <th>引擎版本</th>
-                                    <th>CSS等级</th>
+                                    <th>外网IP</th>
+                                    <th>管理IP</th>
+                                    <th>产品线</th>
+                                    <th>数据中心</th>
+                                    <th>SN</th>
                                 </tr>
                                 </tfoot>
                             </table>
