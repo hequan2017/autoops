@@ -22,19 +22,18 @@ def asset_add(request):
             # return	redirect('some	view	name')
     else:
         form = PublisherForm()
-        return render(request, 'asset/asset-add.html', {'form': form})
+    return render(request, 'asset/asset-add.html', {'form': form})
 
 
 def asset_update(request, nid):
     publisher = get_object_or_404(asset, id=nid)
-    print(publisher)
 
     if request.method == 'POST':
-        form = PublisherForm(request.POST)
+        form = PublisherForm(request.POST,instance=publisher)
         if form.is_valid():
             publisher = form.save()
-            return HttpResponse('Add	success1')
+            return HttpResponse('update 	success')
 
-    else:
-        form = PublisherForm(initial=publisher)
-        return render(request, 'asset/asset-update.html', {'form': form})
+
+    form = PublisherForm(instance=publisher)
+    return render(request, 'asset/asset-update.html', {'form': form,'nid':nid})
