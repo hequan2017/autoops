@@ -1,5 +1,5 @@
 from django.db import models
-import django.utils.timezone as timezone
+
 
 class asset(models.Model):
     network_ip = models.GenericIPAddressField(verbose_name='外网IP',null=True,blank=True)
@@ -15,8 +15,8 @@ class asset(models.Model):
     disk = models.CharField(max_length=256,verbose_name="硬盘",null=True,blank=True)
     port = models.CharField(max_length=256,verbose_name="上联端口",null=True,blank=True)
 
-    ship_time = models.DateField(verbose_name="出厂时间",default=timezone.now)
-    end_time = models.DateField(verbose_name="到保时间",default=timezone.now)
+    ship_time = models.DateField(verbose_name="出厂时间",default="1970-01-01")
+    end_time = models.DateField(verbose_name="到保时间",default="1970-01-01")
 
     product_line =  models.ForeignKey(to="product_lines",to_field='id', null=True,verbose_name='产品线',blank=True)
 

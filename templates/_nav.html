@@ -15,12 +15,12 @@
                     IN+
                 </div>
             </li>
-            <li class="active">
+            <li class="{{ asset_active }}">
                 <a href="#"><i class="fa fa-th-large"></i> <span class="nav-label">资产管理</span>
                     <span  class="fa arrow"> </span></a>
                 <ul class="nav nav-second-level">
-                    <li><a href="{% url    'asset:asset_info' %}">资产信息</a></li>
-                    <li><a href="{% url    'asset:asset_add' %}">资产添加</a></li>
+                    <li  class="{{ assetinfo_active }}"><a href="{% url    'asset:asset_info' %}">资产信息</a></li>
+                    <li  class="{{ assetadd_active }}"><a href="{% url    'asset:asset_add' %}">资产添加</a></li>
                 </ul>
             </li>
         </ul>

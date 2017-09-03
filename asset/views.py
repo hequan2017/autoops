@@ -10,7 +10,9 @@ def index(request):
 
 def asset_info(request):
     obj = asset.objects.all()
-    return render(request, 'asset/asset.html', {'asset_list': obj})
+    asset_active = "active"
+    assetinfo_active = "active"
+    return render(request, 'asset/asset.html', {'asset_list': obj,"asset_active":asset_active,"assetinfo_active":assetinfo_active})
 
 
 def asset_add(request):
@@ -22,7 +24,9 @@ def asset_add(request):
             # return	redirect('some	view	name')
     else:
         form = PublisherForm()
-    return render(request, 'asset/asset-add.html', {'form': form})
+    asset_active = "active"
+    assetadd_active = "active"
+    return render(request, 'asset/asset-add.html', {'form': form,"asset_active":asset_active,"assetadd_active":assetadd_active})
 
 
 def asset_update(request, nid):
