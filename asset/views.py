@@ -20,7 +20,7 @@ def asset_add(request):
         form = PublisherForm(request.POST)
         if form.is_valid():
             publisher = form.save()
-            return HttpResponse('Add	success1')
+            return redirect('asset-add.html')
             # return	redirect('some	view	name')
     else:
         form = PublisherForm()
@@ -29,15 +29,23 @@ def asset_add(request):
     return render(request, 'asset/asset-add.html', {'form': form,"asset_active":asset_active,"assetadd_active":assetadd_active})
 
 
-def asset_update(request, nid):
+def asset_update(request,nid):
     publisher = get_object_or_404(asset, id=nid)
 
     if request.method == 'POST':
         form = PublisherForm(request.POST,instance=publisher)
         if form.is_valid():
             publisher = form.save()
-            return HttpResponse('update 	success')
+            return redirect('asset.html')
 
 
     form = PublisherForm(instance=publisher)
-    return render(request, 'asset/asset-update.html', {'form': form,'nid':nid})
+    asset_active = "active"
+    assetinfo_active = "active"
+    return render(request, 'asset/asset-update.html', {'form': form,'nid':nid,"asset_active":asset_active,"assetinfo_active":assetinfo_active})
+
+def asset_del(request):
+    if request.method == "POST":
+        id = request.POST.get("nid",None)
+        print(id,"----------------------")
+        return HttpResponse(id)

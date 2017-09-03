@@ -16,7 +16,7 @@
                     <a href="/index.html">主页</a>
                 </li>
                 <li>
-                    <a>资产</a>
+                    <a href="asset.html">资产管理</a>
                 </li>
                 <li class="active">
                     <strong>资产更新</strong>
@@ -33,7 +33,7 @@
         <div class="col-lg-12">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
-                    <h5>更新</h5> {{ msg }}
+                    <h5>资产更新</h5>
                     <div class="ibox-tools">
                         <a class="collapse-link">
                             <i class="fa fa-chevron-up"></i>
@@ -53,12 +53,12 @@
                     </div>
                 </div>
                 <div class="ibox-content">
-                    <form class="form-horizontal" class="form-horizontal" action="{%   url   "asset:asset_update"    nid    %}"
+                    <form class="form-horizontal" class="form-horizontal"
+                          action="{% url   "asset:asset_update"    nid %}"
                           method="post" enctype="multipart/form-data">
                         {% csrf_token %}
-
                         {% if form.no_field_errors %}
-                            <div class="alert alert-danger">
+                            <div class="alert alert-danger" style="margin: 20px auto 0px">
                                 {{ form.non_field_errors }}
                             </div>
                         {% endif %}
@@ -92,6 +92,7 @@
                                 {% bootstrap_field form.ship_time layout="horizontal" %}
                                 {% bootstrap_field form.end_time layout="horizontal" %}
                                 {% bootstrap_field form.product_line layout="horizontal" %}
+                                {% bootstrap_field form.is_active layout="horizontal" %}
                                 {% bootstrap_field form.ps layout="horizontal" %}
 
                             </div>
@@ -100,10 +101,10 @@
 
 
                         <div class="form-group">
-                            <div class="col-sm-offset-3">
+                            <div class="col-sm-4 col-sm-offset-3">
 
-                                <button class="btn btn-primary" type="submit">更新</button>
-                                <button class="btn btn-white" type="button">取消</button>
+                                <button class="btn btn-primary" type="submit">提交</button>
+                                <button class="btn btn-white" type="reset">重置</button>
                             </div>
                         </div>
 
@@ -118,7 +119,11 @@
 
 
     {% block footer-js %}
-
+        <script>
+            $(document).ready(function () {
+                $('.select2').select2();
+            })
+        </script>
 
 
     {% endblock %}

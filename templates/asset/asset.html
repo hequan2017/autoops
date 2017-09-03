@@ -60,17 +60,23 @@
                                     <th>产品线</th>
                                     <th>数据中心</th>
                                     <th>SN</th>
+                                    <th>动作</th>
                                 </tr>
                                 </thead>
                                 <tbody>
 
                                 {% for   row   in   asset_list %}
-                                    <tr class="gradeA">
-                                        <td class="center" ><a   href="{% url  "asset:asset_update"   row.id  %}" >{{ row.network_ip }}</a></td>
+                                    <tr class="gradeA" id="{{ row.id }}">
+                                        <td class="center" ><a>{{ row.network_ip }}</a></td>
                                         <td class="center">{{ row.manage_ip }}</td>
-                                        <td class="center">{{ row.product_line }}</td>
+                                        <td class="center">{% for i in row.product_line.all %}  {{  i  }} {% endfor %}</td>
                                         <td class="center">{{ row.data_center }}</td>
                                         <td class="center">{{ row.sn }}</td>
+                                        <td> <a type="button" class="btn btn-primary"  href="{% url  "asset:asset_update"   row.id  %}">编辑</a>
+                                            <button type="button" class="btn btn-danger  asset_del_id"
+                                                            data-toggle="modal"
+                                                            data-target="#myModal1">删除
+                                                    </button></td>
                                     </tr>
                                 {% endfor %}
 
@@ -82,6 +88,7 @@
                                     <th>产品线</th>
                                     <th>数据中心</th>
                                     <th>SN</th>
+                                    <th>动作</th>
                                 </tr>
                                 </tfoot>
                             </table>
@@ -92,7 +99,65 @@
             </div>
         </div>
     </div>
+ <div class="modal inmodal" id="myModal1" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content animated fadeIn">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span
+                            aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <i class="fa fa-clock-o modal-icon"></i>
+                    <h4 class="modal-title">删除</h4>
+                    <span id="error" style="color:red;"></span>
+                    <small></small>
+                </div>
+                <form id="asset_del_form">
+                    <div class="modal-body">
+
+                        <div class="form-group"><input type="text" name="nid" style="display:none"/></div>
+                        <p><strong>确定删除？</strong></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                        <a     class="btn btn-danger m-r-sm asset_del"   >删除</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
 
+    {% block footer-js %}
+        <script>
+            $(function () {
+
+            $('.asset_del_id').click(function () {
+                var id = $(this).parent().parent().attr('id');
+                $('#asset_del_form').find('input[name="nid"]').val(id);
+
+
+
+            });
+            $('.asset_del').click(function () {
+              $.ajax({
+                    url: "/asset/asset-del.html",
+                    type: 'POST',
+                    data: $('#asset_del_form').serialize(),
+                    success: function (data) {
+                        var obj = JSON.parse(data);
+                        if (obj.status) {
+                            location.reload()
+                        } else {
+                            $('#error').text(obj.error);
+                        }
+                    }
+                })
+            });
+
+
+           });
+        </script>
+
+
+    {% endblock %}
 
 {% endblock %}

@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://D:/jumpserver/apps/.idea/apps.iml" filepath="D:/jumpserver/apps/.idea/apps.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/autoops.iml" filepath="$PROJECT_DIR$/.idea/autoops.iml" />
+      <module fileurl="file://D:/cmdb/.idea/cmdb.iml" filepath="D:/cmdb/.idea/cmdb.iml" />
     </modules>
   </component>
 </project>

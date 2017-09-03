@@ -8,12 +8,12 @@ from	django.forms	import		ValidationError
 class PublisherForm(forms.ModelForm):
     class Meta:
         model = asset
-        # fields = '__all__'
+        fields = '__all__'
         # exclude = ('ps',)
-        fields = [
-           'id', 'network_ip', 'manage_ip', 'model', 'data_center', 'cabinet', 'position',
-            'sn', 'cpu', 'memory', 'disk', 'port', 'ship_time', 'end_time', 'product_line', 'ps'
-        ]
+        # fields = [
+        #    'id', 'network_ip', 'manage_ip', 'model', 'data_center', 'cabinet', 'position',
+        #     'sn', 'cpu', 'memory', 'disk', 'port', 'ship_time', 'end_time', 'product_line', 'ps'
+        # ]
         labels={
             "network_ip":"外网IP"
         }
@@ -26,7 +26,13 @@ class PublisherForm(forms.ModelForm):
             ),
             'ps': forms.Textarea(
                 attrs={'cols': 80, 'rows': 3}
-            )
+            ),
+            'product_line': forms.SelectMultiple(
+                attrs={'class': 'select2',
+                       'data-placeholder': ('选择产品线')}),
+            # 'admin_user': forms.Select(
+            #     attrs={'class': 'select2',
+            #            'data-placeholder': ('Select asset admin user')}),
         }
         help_texts = {
             # 'network_ip': '必填项目',
@@ -43,8 +49,7 @@ class PublisherForm(forms.ModelForm):
         if len(model) < 3:
             raise ValidationError("不能短于3个字符")
         return model
-        
-        
+
     #
     # def clean(self):
     #     cleaned_data = super(PublisherForm, self).clean()

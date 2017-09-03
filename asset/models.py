@@ -18,7 +18,8 @@ class asset(models.Model):
     ship_time = models.DateField(verbose_name="出厂时间",default="1970-01-01")
     end_time = models.DateField(verbose_name="到保时间",default="1970-01-01")
 
-    product_line =  models.ForeignKey(to="product_lines",to_field='id', null=True,verbose_name='产品线',blank=True)
+    product_line =  models.ManyToManyField(to="product_lines",verbose_name='产品线',blank=True)
+    is_active = models.BooleanField(default=True, verbose_name=('是否启用'))
 
     ps = models.CharField(max_length=1024,verbose_name="备注",null=True,blank=True)
     ctime= models.DateTimeField(auto_now_add=True,null=True,verbose_name='创建时间',blank=True)
@@ -34,7 +35,7 @@ class asset(models.Model):
         return self.network_ip
 
 class   product_lines(models.Model):
-    product_line_list = models.CharField(max_length=128, verbose_name='产品线', null=True)
+    product_line_list = models.CharField(max_length=128, verbose_name='产品线',null=True,blank=True)
 
 
     class Meta:
