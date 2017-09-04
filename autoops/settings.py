@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'asset.apps.AssetConfig',
+    'names.apps.NamesConfig',
 ]
 
 MIDDLEWARE = [
@@ -101,6 +102,10 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+LOGIN_URL = '/login.html'
 
 
 # Internationalization

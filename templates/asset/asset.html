@@ -91,9 +91,9 @@
                                                 {{ i }} {% endfor %}</td>
                                             <td class="center">{{ row.data_center }}</td>
                                             <td class="center">{{ row.sn }}</td>
-                                            <td><a class="btn btn-primary"
+                                            <td><a class="btn btn-primary  btn-xs "
                                                    href="{% url  "asset:asset_update"   row.id %}">编辑</a>
-                                                <button class="btn btn-danger  asset_del_id" data-toggle="modal"
+                                                <button class="btn btn-danger  btn-xs  asset_del_id" data-toggle="modal"
                                                         data-target="#myModal1">删除
                                                 </button>
                                             </td>

@@ -12,7 +12,7 @@
   </component>
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$" />
-    <orderEntry type="jdk" jdkName="Python 3.6.1 (E:\python3.6.1\python.exe)" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Python 3.5.2 (C:\Python35\python.exe)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="apps" />
     <orderEntry type="module" module-name="cmdb" />
@@ -20,6 +20,7 @@
     <orderEntry type="module" module-name="cmdb" />
     <orderEntry type="module" module-name="jumpserver" />
     <orderEntry type="module" module-name="apps" />
+    <orderEntry type="module" module-name="Static_Full_Version汉化" />
   </component>
   <component name="TemplatesService">
     <option name="TEMPLATE_CONFIGURATION" value="Django" />

@@ -9,9 +9,6 @@ asset_list_active = "active"
 system_user_list_active = "active"
 
 
-def index(request):
-    return render(request, 'index.html')
-
 
 
 def asset_list(request):
