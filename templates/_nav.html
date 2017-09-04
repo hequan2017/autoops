@@ -15,14 +15,22 @@
                     IN+
                 </div>
             </li>
+            <li>
+                <a href="/index.html"><i class="fa fa-th-list"></i> <span class="nav-label">首页</span>
+                   </a>
+
+            </li>
             <li class="{{ asset_active }}">
                 <a href="#"><i class="fa fa-th-large"></i> <span class="nav-label">资产管理</span>
                     <span  class="fa arrow"> </span></a>
                 <ul class="nav nav-second-level">
-                    <li  class="{{ assetinfo_active }}"><a href="{% url    'asset:asset_info' %}">资产信息</a></li>
+                    <li  class="{{ asset_list_active }}"><a href="{% url    'asset:asset_list' %}">资产信息</a></li>
                     <li  class="{{ assetadd_active }}"><a href="{% url    'asset:asset_add' %}">资产添加</a></li>
+                    <li  class="{{ system_user_list_active }}"><a href="{% url    'asset:system_user' %}">系统用户</a></li>
+                    <li  class="{{ system_user_add_active  }}"><a href="{% url    'asset:system_user_add' %}">用户添加</a></li>
                 </ul>
             </li>
+
         </ul>
 
     </div>

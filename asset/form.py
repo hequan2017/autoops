@@ -1,11 +1,11 @@
 from    django import forms
-from .models import asset
+from .models import asset,system_users
 from	django.forms	import		ValidationError
 
 # from django.utils.translation import gettext_lazy as _
 
 
-class PublisherForm(forms.ModelForm):
+class AssetForm(forms.ModelForm):
     class Meta:
         model = asset
         fields = '__all__'
@@ -56,3 +56,19 @@ class PublisherForm(forms.ModelForm):
     #     network_ip = cleaned_data.get('network_ip')
     #     if len(network_ip) < 4:
     #         raise ValidationError('network_ip 不能小于4')
+
+
+class SystemUserForm(forms.ModelForm):
+    class Meta:
+        model = system_users
+        fields = '__all__'
+        widgets = {
+            'password': forms.PasswordInput(
+
+            ),
+            'ps': forms.Textarea(
+                attrs={'cols': 80, 'rows': 3}
+            ),
+
+        }
+

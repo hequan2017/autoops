@@ -67,16 +67,19 @@
 
                                 {% for   row   in   asset_list %}
                                     <tr class="gradeA" id="{{ row.id }}">
-                                        <td class="center" ><a>{{ row.network_ip }}</a></td>
+                                        <td class="center"><a  href="{% url  "asset:asset_detail"   row.id %}">{{ row.network_ip }}</a></td>
                                         <td class="center">{{ row.manage_ip }}</td>
-                                        <td class="center">{% for i in row.product_line.all %}  {{  i  }} {% endfor %}</td>
+                                        <td class="center">{% for i in row.product_line.all %}
+                                            {{ i }} {% endfor %}</td>
                                         <td class="center">{{ row.data_center }}</td>
                                         <td class="center">{{ row.sn }}</td>
-                                        <td> <a type="button" class="btn btn-primary"  href="{% url  "asset:asset_update"   row.id  %}">编辑</a>
-                                            <button type="button" class="btn btn-danger  asset_del_id"
-                                                            data-toggle="modal"
-                                                            data-target="#myModal1">删除
-                                                    </button></td>
+                                        <td><a   class="btn btn-primary"
+                                               href="{% url  "asset:asset_update"   row.id %}">编辑</a>
+                                            <button  class="btn btn-danger  asset_del_id"
+                                                    data-toggle="modal"
+                                                    data-target="#myModal1">删除
+                                            </button>
+                                        </td>
                                     </tr>
                                 {% endfor %}
 
@@ -99,7 +102,7 @@
             </div>
         </div>
     </div>
- <div class="modal inmodal" id="myModal1" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal inmodal" id="myModal1" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content animated fadeIn">
                 <div class="modal-header">
@@ -118,7 +121,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
-                        <a     class="btn btn-danger m-r-sm asset_del"   >删除</a>
+                        <a class="btn btn-danger m-r-sm asset_del">删除</a>
                     </div>
                 </form>
             </div>
@@ -130,31 +133,30 @@
         <script>
             $(function () {
 
-            $('.asset_del_id').click(function () {
-                var id = $(this).parent().parent().attr('id');
-                $('#asset_del_form').find('input[name="nid"]').val(id);
+                $('.asset_del_id').click(function () {
+                    var id = $(this).parent().parent().attr('id');
+                    $('#asset_del_form').find('input[name="nid"]').val(id);
 
 
-
-            });
-            $('.asset_del').click(function () {
-              $.ajax({
-                    url: "/asset/asset-del.html",
-                    type: 'POST',
-                    data: $('#asset_del_form').serialize(),
-                    success: function (data) {
-                        var obj = JSON.parse(data);
-                        if (obj.status) {
-                            location.reload()
-                        } else {
-                            $('#error').text(obj.error);
+                });
+                $('.asset_del').click(function () {
+                    $.ajax({
+                        url: "/asset/asset-del.html",
+                        type: 'POST',
+                        data: $('#asset_del_form').serialize(),
+                        success: function (data) {
+                            var obj = JSON.parse(data);
+                            if (obj.status) {
+                                location.reload()
+                            } else {
+                                $('#error').text(obj.error);
+                            }
                         }
-                    }
-                })
+                    })
+                });
+
+
             });
-
-
-           });
         </script>
 
 

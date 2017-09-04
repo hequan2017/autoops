@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+
+
+{% block  title %}资产信息{% endblock %}
+
+{% block page-content %}
+
+
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <h2>系统用户信息</h2>
+            <ol class="breadcrumb">
+                <li>
+                    <a href="/index.html">主页</a>
+                </li>
+                <li>
+                    <a href="/asset/system-user.html">用户管理</a>
+                </li>
+                <li class="active">
+                    <strong>系统用户信息</strong>
+                </li>
+            </ol>
+        </div>
+        <div class="col-lg-2">
+
+        </div>
+    </div>
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>系统用户信息</h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                <i class="fa fa-wrench"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-user">
+                                <li><a href="#">选项 1</a>
+                                </li>
+                                <li><a href="#">选项 2</a>
+                                </li>
+                            </ul>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered table-hover dataTables-example">
+                                <thead>
+                                <tr>
+                                    <th>名称</th>
+                                    <th>系统用户</th>
+                                    <th>备注</th>
+                                    <th>动作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                {% for   row   in   asset_list %}
+                                    <tr class="gradeA" id="{{ row.id }}">
+                                        <td class="center"><a  href="{% url  "asset:system_user_detail"   row.id %}">{{ row.name }}</a></td>
+                                        <td class="center">{{ row.username }}</td>
+                                        <td class="center">{{ row.ps }}</td>
+                                        <td><a   class="btn btn-primary"
+                                               href="{% url  "asset:system_user_update"   row.id %}">编辑</a>
+                                            <button  class="btn btn-danger  system_user_del_id"
+                                                    data-toggle="modal"
+                                                    data-target="#myModal1">删除
+                                            </button>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+
+                                </tbody>
+                                <tfoot>
+                                <tr>
+                                    <th>名称</th>
+                                    <th>系统用户</th>
+                                    <th>备注</th>
+                                    <th>动作</th>
+                                </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal inmodal" id="myModal1" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content animated fadeIn">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span
+                            aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <i class="fa fa-clock-o modal-icon"></i>
+                    <h4 class="modal-title">删除</h4>
+                    <span id="error" style="color:red;"></span>
+                    <small></small>
+                </div>
+                <form id="system_user_del_form">
+                    <div class="modal-body">
+
+                        <div class="form-group"><input type="text" name="nid" style="display:none"/></div>
+                        <p><strong>确定删除？</strong></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                        <a class="btn btn-danger m-r-sm system_user_del">删除</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    {% block footer-js %}
+        <script>
+            $(function () {
+
+                $('.system_user_del_id').click(function () {
+                    var id = $(this).parent().parent().attr('id');
+                    $('#system_user_del_form').find('input[name="nid"]').val(id);
+
+                });
+                $('.system_user_del').click(function () {
+                    $.ajax({
+                        url: "/asset/system-user-del.html",
+                        type: 'POST',
+                        data: $('#system_user_del_form').serialize(),
+                        success: function (data) {
+                            var obj = JSON.parse(data);
+                            if (obj.status) {
+                                location.reload()
+                            } else {
+                                $('#error').text(obj.error);
+                            }
+                        }
+                    })
+                });
+
+
+            });
+        </script>
+
+
+    {% endblock %}
+
+{% endblock %}

@@ -33,7 +33,7 @@
         <div class="col-lg-12">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
-                    <h5>资产更新</h5>
+                    <h5>资产添加</h5>   <div style="color:red;" >  {{msg }}</div>
                     <div class="ibox-tools">
                         <a class="collapse-link">
                             <i class="fa fa-chevron-up"></i>
@@ -68,7 +68,10 @@
 
                                 {% bootstrap_field form.network_ip layout="horizontal" %}
                                 {% bootstrap_field form.manage_ip layout="horizontal" %}
+                                {% bootstrap_field form.port layout="horizontal" %}
                                 {% bootstrap_field form.model layout="horizontal" %}
+                                {% bootstrap_field form.system layout="horizontal" %}
+                                {% bootstrap_field form.system_user layout="horizontal" %}
                                 {% bootstrap_field form.data_center layout="horizontal" %}
                                 {% bootstrap_field form.cabinet layout="horizontal" %}
                                 {% bootstrap_field form.position layout="horizontal" %}
@@ -83,7 +86,7 @@
                                 {% bootstrap_field form.cpu layout="horizontal" %}
                                 {% bootstrap_field form.memory layout="horizontal" %}
                                 {% bootstrap_field form.disk layout="horizontal" %}
-                                {% bootstrap_field form.port layout="horizontal" %}
+                                {% bootstrap_field form.uplink_port layout="horizontal" %}
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
