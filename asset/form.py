@@ -64,7 +64,6 @@ class SystemUserForm(forms.ModelForm):
         fields = '__all__'
         widgets = {
             'password': forms.PasswordInput(
-
             ),
             'ps': forms.Textarea(
                 attrs={'cols': 80, 'rows': 3}

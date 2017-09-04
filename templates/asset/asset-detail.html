@@ -2,11 +2,11 @@
 {% block  title %}资产详情{% endblock %}
 {% block header-css %}
 
-    {% load	bootstrap3 %}
+ {% load bootstrap3 %}
 {% endblock %}
 
 
-{% block page-content %}
+{% block  page-content %}
 
     <div class="row wrapper border-bottom white-bg page-heading">
         <div class="col-lg-10">
@@ -73,90 +73,95 @@
                                     <table class="table">
                                         <tbody>
                                         <tr>
-                                            <td style=" border-top: none !important;" width="20%">外网IP</td>
-                                            <td style=" border-top: none !important;"><b>{{ assets.network_ip }}</b>
+                                            <td style=" border-top: none !important;" width="20%">主机名:</td>
+                                            <td style=" border-top: none !important;"><b>{{ assets.hostname }}</b>
+                                            </td>
+                                        </tr>
+                                         <tr>
+                                            <td  width="20%">外网IP:</td>
+                                            <td><b>{{ assets.network_ip }}</b>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td width="20%">管理IP</td>
+                                            <td width="20%">管理IP:</td>
                                             <td><b>{{ assets.manage_ip }}</b></td>
                                         </tr>
                                         <tr>
-                                            <td width="20%">SSH端口</td>
+                                            <td width="20%">SSH端口:</td>
                                             <td><b>{{ assets.port }}</b></td>
                                         </tr>
                                         <tr>
-                                            <td width="20%">型号</td>
+                                            <td width="20%">型号:</td>
                                             <td><b>{{ assets.model }}</b></td>
                                         </tr>
                                         <tr>
-                                            <td width="20%">系统版本</td>
+                                            <td width="20%">系统版本:</td>
                                             <td><b>{{ assets.system }}</b></td>
                                         </tr>
                                         <tr>
-                                            <td width="20%">登陆用户</td>
+                                            <td width="20%">登陆用户:</td>
                                             <td><b>{{ assets.system_user }}</b></td>
                                         </tr>
 
                                         <tr>
-                                            <td width="20%">数据中心</td>
+                                            <td width="20%">数据中心:</td>
                                             <td><b>{{ assets.data_center }}</b></td>
                                         </tr>
                                         <tr>
-                                            <td width="20%">机柜</td>
+                                            <td width="20%">机柜:</td>
                                             <td><b>{{ assets.cabinet }}</b></td>
                                         </tr>
                                         <tr>
-                                            <td width="20%">位置</td>
+                                            <td width="20%">位置:</td>
                                             <td><b>{{ assets.position }}</b></td>
                                         </tr>
                                         <tr>
-                                            <td width="20%">SN</td>
+                                            <td width="20%">SN:</td>
                                             <td><b>{{ assets.sn }}</b></td>
                                         </tr>
                                         <tr>
-                                            <td width="20%">CPU</td>
+                                            <td width="20%">CPU:</td>
                                             <td><b>{{ assets.cpu }}</b></td>
                                         </tr>
                                         <tr>
-                                            <td width="20%">内存</td>
+                                            <td width="20%">内存:</td>
                                             <td><b>{{ assets.memory }}</b></td>
                                         </tr>
                                         <tr>
-                                            <td width="20%">硬盘</td>
+                                            <td width="20%">硬盘:</td>
                                             <td><b>{{ assets.disk }}</b></td>
                                         </tr>
                                         <tr>
-                                            <td width="20%">上联端口</td>
+                                            <td width="20%">上联端口:</td>
                                             <td><b>{{ assets.uplink_port }}</b></td>
                                         </tr>
                                         <tr>
-                                            <td width="20%">出厂时间</td>
+                                            <td width="20%">出厂时间:</td>
                                             <td><b>{{ assets.ship_time }}</b></td>
                                         </tr>
                                         <tr>
-                                            <td width="20%">到保时间</td>
+                                            <td width="20%">到保时间:</td>
                                             <td><b>{{ assets.end_time }}</b></td>
                                         </tr>
                                         <tr>
-                                            <td width="20%">产品线</td>
+                                            <td width="20%">产品线:</td>
                                             <td><b>{% for  i   in  assets.product_line.all %}
                                                 {{ i }}   {% endfor %}</b></td>
                                         </tr>
                                         <tr>
-                                            <td width="20%">是否启用</td>
+                                            <td width="20%">是否启用:</td>
                                             <td><b>{{ assets.is_active }}</b></td>
                                         </tr>
                                         <tr>
-                                            <td width="20%">备注</td>
+                                            <td width="20%">备注:</td>
                                             <td><b>{{ assets.ps }}</b></td>
                                         </tr>
                                         <tr>
-                                            <td width="20%">创建时间</td>
+                                            <td width="20%">创建时间:</td>
                                             <td><b>{{ assets.ctime }}</b></td>
                                         </tr>
                                         <tr>
-                                            <td width="20%">更新时间</td>
+                                            <td width="20%">更新时间:</td>
                                             <td><b>{{ assets.utime }}</b></td>
                                         </tr>
 
@@ -164,6 +169,45 @@
                                     </table>
                                 </div>
                             </div>
+                        </div>
+
+                         <div class="col-sm-5" style="padding-left: 0;padding-right: 0">
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    <i class="fa fa-info-circle"></i> 快速修改
+                                </div>
+                                <div class="panel-body">
+                                    <table class="table">
+                                        <tbody>
+{#                                        <tr class="no-borders-tr">#}
+{#                                          <td   style=" border-top: none !important;" width="50%">激活:</td>#}
+{#                                            <td  style=" border-top: none !important;"><span class="pull-right">#}
+{#                                                <div class="switch">#}
+{#                                                    <div class="onoffswitch">#}
+{#                                                        <input type="checkbox" {% if assets.is_active %} checked {% endif %}  class="onoffswitch-checkbox" id="is_active">#}
+{#                                                        <label class="onoffswitch-label" for="is_active">#}
+{#                                                            <span class="onoffswitch-inner"></span>#}
+{#                                                            <span class="onoffswitch-switch"></span>#}
+{#                                                        </label>#}
+{#                                                    </div>#}
+{#                                                </div>#}
+{#                                            </span></td>#}
+{#                                        </tr>#}
+                                        <tr>
+                                            <td style=" border-top: none !important;" >更新硬件信息:</td>
+                                            <td style=" border-top: none !important;" >
+                                                <span class="pull-right">
+                                                    <button type="button" class="btn btn-primary btn-xs" id="btn_refresh_asset" style="width: 54px">刷新</button>
+                                                </span>
+                                            </td>
+                                        </tr>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+
                         </div>
 
                     </div>

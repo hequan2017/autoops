@@ -4,15 +4,15 @@ from asset.models import asset, system_users
 from .form import AssetForm, SystemUserForm
 import json
 
+asset_active = "active"
+asset_list_active = "active"
+system_user_list_active = "active"
+
 
 def index(request):
     return render(request, 'index.html')
 
 
-
-asset_active = "active"
-asset_list_active = "active"
-assetadd_active = "active"
 
 def asset_list(request):
     obj = asset.objects.all()
@@ -29,12 +29,12 @@ def asset_add(request):
             publisher = form.save()
             form = AssetForm()
             return render(request, 'asset/asset-add.html',
-                          {'form': form, "asset_active": asset_active, "assetadd_active": assetadd_active,
+                          {'form': form, "asset_active": asset_active, "asset_list_active": asset_list_active,
                            "msg": "添加成功"})
     else:
         form = AssetForm()
     return render(request, 'asset/asset-add.html',
-                  {'form': form, "asset_active": asset_active, "assetadd_active": assetadd_active})
+                  {'form': form, "asset_active": asset_active,"asset_list_active": asset_list_active })
 
 
 def asset_update(request, nid):
@@ -51,12 +51,27 @@ def asset_update(request, nid):
                   {'form': form, 'nid': nid, "asset_active": asset_active, "asset_list_active": asset_list_active})
 
 
+
+
 def asset_del(request):
     ret = {'status': True, 'error': None, }
     if request.method == "POST":
         try:
             id = request.POST.get("nid", None)
             obj = asset.objects.get(id=id).delete()
+        except Exception as e:
+            ret['status'] = False
+            ret['error'] = '删除请求错误,{}'.format(e)
+        return HttpResponse(json.dumps(ret))
+
+
+def asset_all_del(request):
+    ret = {'status': True, 'error': None, }
+    if request.method == "POST":
+        try:
+            ids = request.POST.getlist('id',None)
+            idstring = ','.join(ids)
+            asset.objects.extra(where=['id IN (' + idstring + ')']).delete()
         except Exception as e:
             ret['status'] = False
             ret['error'] = '删除请求错误,{}'.format(e)
@@ -72,8 +87,8 @@ def asset_detail(request, nid):
                                                        "asset_list_active": asset_list_active})
 
 
-system_user_list_active = "active"
-system_user_add_active = "active"
+
+
 
 
 def system_user_list(request):
@@ -89,12 +104,12 @@ def system_user_add(request):
             assets_save = form.save()
             form = SystemUserForm()
             return render(request, 'asset/system-user-add.html',
-                          {'form': form, "asset_active": asset_active, "system_user_add_active": system_user_add_active,
+                          {'form': form, "asset_active": asset_active, "system_user_list_active": system_user_list_active,
                            "msg": "添加成功"})
     else:
         form = SystemUserForm()
     return render(request, 'asset/system-user-add.html',
-                  {'form': form, "asset_active": asset_active, "system_user_add_active": system_user_add_active, })
+                  {'form': form, "asset_active": asset_active, "system_user_list_active": system_user_list_active, })
 
 
 def system_user_update(request, nid):
@@ -107,8 +122,11 @@ def system_user_update(request, nid):
             return redirect('system-user.html')
 
     form = SystemUserForm(instance=system_user)
+    password = system_users.objects.get(id=nid).password
+    print(password)
     return render(request, 'asset/system-user-update.html', {'form': form, 'nid': nid, "asset_active": asset_active,
-                                                             "system_user_list_active": system_user_list_active})
+                                                             "system_user_list_active": system_user_list_active ,
+                                                             "pass":password})
 
 
 def system_user_del(request):
@@ -129,3 +147,11 @@ def system_user_detail(request, nid):
     return render(request, "asset/system-user-detail.html",
                   {"system_users": detail, "nid": nid, "asset_active": asset_active,
                    "system_user_list_active": system_user_list_active})
+
+def system_user_asset(request,nid):
+    sys = system_users.objects.get(id=nid)
+    obj = asset.objects.filter(system_user=nid)
+    return  render(request,"asset/system-user-asset.html",{"system_users":sys,"nid":nid,"asset_list":obj,
+                                                           "asset_active": asset_active,
+                                                           "system_user_list_active": system_user_list_active
+                                                           })

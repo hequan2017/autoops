@@ -61,6 +61,14 @@
     });
 
 
+       $("#CheckedAll").click(function () {
+        if ($(this).is(":checked")) {
+            $("[name=id]:checkbox").prop("checked", true);
+        } else {
+            $("[name=id]:checkbox").prop("checked", false);
+        }
+    });
+
 
 
 

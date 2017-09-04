@@ -37,6 +37,10 @@
                             <li class="active">
                                 <a class="text-center"><i class="fa fa-laptop"></i>系统用户详情</a>
                             </li>
+                              <li>
+
+                                <a class="text-center"  href="{% url "asset:system_user_asset"  nid  %}"  ><i class="fa fa-laptop"></i>关联资产</a>
+                            </li>
                             <li class="pull-right">
                                 <a class="btn btn-outline btn-default" href="{% url "asset:system_user_update"  nid %}"><i
                                         class="fa fa-edit"></i>编辑</a>
@@ -73,9 +77,13 @@
                                     <table class="table">
                                         <tbody>
                                         <tr>
-                                            <td style=" border-top: none !important;" width="20%">登陆用户</td>
-                                            <td style=" border-top: none !important;"><b>{{ system_users.username}}</b>
+                                            <td style=" border-top: none !important;" width="20%">名称</td>
+                                            <td style=" border-top: none !important;"><b>{{ system_users.name}}</b>
                                             </td>
+                                        </tr>
+                                         <tr>
+                                            <td width="20%">登陆用户</td>
+                                            <td><b>{{ system_users.username }}</b></td>
                                         </tr>
                                         <tr>
                                             <td width="20%">备注</td>
