@@ -51,7 +51,7 @@
                     </div>
                     <div class="ibox-content">
 
-                        <div class="table-responsive">
+                          <div class="table-responsive">
 
                             <a href="{% url    'asset:asset_add' %}" class="btn btn-primary  ">
                                 添加</a>
@@ -61,7 +61,7 @@
                             </a>
 
 
-                            <a class="btn btn-danger" href="">历史操作</a>
+                            <a class="btn btn-primary asset_bulk_update" >批量更新</a>
                             <a class="btn btn-danger" href="http://42.62.6.54:9000">webssh</a>
 
                             <form id="del_form_asset_all" class="form-horizontal  ">
@@ -104,6 +104,8 @@
 
                                 </table>
                             </form>
+
+
                         </div>
 
                     </div>
@@ -208,9 +210,31 @@
 
                     })
                 });
+                   $('.asset_bulk_update').click(function () {
+                    $.ajax({
+                        url: "/asset/asset-bulk-update.html",
+                        type: 'POST',
+                        data: $('#del_form_asset_all').serialize(),
+                        success: function (data) {
+                            var obj = JSON.parse(data);
+                            if (obj.status) {
+                                var id_list_string = obj.id_list.join(',');
+                                var url = "{% url 'asset:asset_bulk_update' %}?id=" + id_list_string;
+                                location.href = url
+                            }
+                        }
+
+                    })
+                });
+
+
+
 
 
             });
+
+
+
         </script>
 
 

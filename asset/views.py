@@ -62,6 +62,21 @@ def asset_del(request):
         return HttpResponse(json.dumps(ret))
 
 
+
+def asset_bulk_update(request):
+    ret = {'status': True, 'error': None, 'id_list':None}
+    if request.method == "POST":
+        try:
+            ids = request.POST.getlist('id',None)
+            idstring = ','.join(ids)
+            ret['id_list']=idstring
+            print(ret)
+        except Exception as e:
+            ret['status'] = False
+            ret['error'] = '更新请求错误,{}'.format(e)
+        return HttpResponse(json.dumps(ret))
+
+
 def asset_all_del(request):
     ret = {'status': True, 'error': None, }
     if request.method == "POST":
@@ -82,6 +97,7 @@ def asset_detail(request, nid):
     return render(request, "asset/asset-detail.html", {"assets": detail, "nid": nid,
                                                        "asset_active": asset_active,
                                                        "asset_list_active": asset_list_active})
+
 
 
 

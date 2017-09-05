@@ -9,6 +9,7 @@ urlpatterns = [
     url(r'^asset-all-del.html$',views.asset_all_del,name='asset_all_del'),
     url(r'^asset-detail-(?P<nid>\d+).html$',views.asset_detail,name='asset_detail'),
     url(r'^asset-update-(?P<nid>\d+).html$', views.asset_update, name='asset_update'),
+    url(r'^asset-bulk-update.html$', views.asset_bulk_update, name='asset_bulk_update'),
 
     url(r'^system-user.html$', views.system_user_list, name='system_user'),
     url(r'^system-user-asset-(?P<nid>\d+).html$', views.system_user_asset, name='system_user_asset'),
