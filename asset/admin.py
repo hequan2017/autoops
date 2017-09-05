@@ -2,7 +2,7 @@ from django.contrib import admin
 
 # Register your models here.
 
-from   .models import asset,product_lines,data_centers,system_users
+from   .models import asset,product_lines,data_centers,system_users,performance
 
 class assetadmin(admin.ModelAdmin):
     search_fields = ('network_ip','manage_ip',) ## 定义搜索框以哪些字段可以搜索
@@ -10,7 +10,12 @@ class assetadmin(admin.ModelAdmin):
     list_display_links = ('model',)
     list_filter = ("product_line",)
 
+
+
+
+
 admin.site.register(asset,assetadmin)
 admin.site.register(product_lines)
 admin.site.register(data_centers)
 admin.site.register(system_users)
+admin.site.register(performance)

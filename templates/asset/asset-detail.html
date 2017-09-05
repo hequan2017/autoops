@@ -196,7 +196,8 @@
                                             <td style=" border-top: none !important;" >更新硬件信息:</td>
                                             <td style=" border-top: none !important;" >
                                                 <span class="pull-right">
-                                                    <button type="button" class="btn btn-primary btn-xs" id="btn_refresh_asset" style="width: 54px">刷新</button>
+                                                    <button type="button" class="btn btn-primary btn-xs  asset_hardware_update"  style="width: 54px">刷新</button>
+                                                    <span id="error2" style="color:red;"></span>
                                                 </span>
                                             </td>
                                         </tr>
@@ -257,6 +258,22 @@
                                 location.href = "{% url "asset:asset_list" %}"
                             } else {
                                 $('#error').text(obj.error);
+                            }
+                        }
+                    })
+                });
+
+              $('.asset_hardware_update').click(function () {
+                    $.ajax({
+                        url: "/asset/asset-hardware-update.html",
+                        type: 'POST',
+                        data: $('#asset_del_form').serialize(),
+                        success: function (data) {
+                            var obj = JSON.parse(data);
+                            if (obj.status) {
+                                location.reload()
+                            } else {
+                                $('#error2').text(obj.error);
                             }
                         }
                     })

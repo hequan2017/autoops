@@ -1,0 +1,506 @@
+{% extends "base.html" %}
+{% load  static %}
+{% block  title %}性能{% endblock %}
+{% block header-css %}
+
+{% endblock %}
+
+
+{% block page-content %}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <h2>性能</h2>
+            <ol class="breadcrumb">
+                <li>
+                    <a href="/index.html">主页</a>
+                </li>
+                <li>
+                    <a href="asset.html">资产管理</a>
+                </li>
+                <li class="active">
+                    <strong>性能</strong>
+                </li>
+            </ol>
+        </div>
+        <div class="col-lg-2">
+
+        </div>
+    </div>
+
+<div class="wrapper wrapper-content animated fadeInRight chart"    >
+            <div class="row"  >
+                <div class="col-sm-6">
+                    <div class="ibox float-e-margins">
+
+                    <div class="ibox-title">
+                            <h5>CPU</h5>
+                              <div class="ibox-tools">
+                                <a class="collapse-links">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                    <i class="fa fa-wrench"></i>
+                                </a>
+                                <ul class="dropdown-menu dropdown-user">
+                                    <li><a href="#">配置选项 1</a>
+                                    </li>
+                                    <li><a href="#">配置选项 2</a>
+                                    </li>
+                                </ul>
+                                <a class="close-link">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
+
+                        </div>
+
+                    <div class="ibox-content" >
+                        <div   style="height:300px;" id="cpu"></div>
+                    </div>
+                </div>
+
+            </div>
+                <div class="col-sm-6">
+                    <div class="ibox float-e-margins">
+
+                    <div class="ibox-title">
+                            <h5>内存</h5>
+                              <div class="ibox-tools">
+                                <a class="collapse-links">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                    <i class="fa fa-wrench"></i>
+                                </a>
+                                <ul class="dropdown-menu dropdown-user">
+                                    <li><a href="#">配置选项 1</a>
+                                    </li>
+                                    <li><a href="#">配置选项 2</a>
+                                    </li>
+                                </ul>
+                                <a class="close-link">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
+
+                        </div>
+
+                    <div class="ibox-content" >
+                        <div   style="height:300px;" id="mem"></div>
+                    </div>
+                </div>
+
+            </div>
+                        <div class="col-sm-12">
+                    <div class="ibox float-e-margins">
+
+                    <div class="ibox-title">
+                            <h5>流量</h5>
+                              <div class="ibox-tools">
+                                <a class="collapse-links">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                    <i class="fa fa-wrench"></i>
+                                </a>
+                                <ul class="dropdown-menu dropdown-user">
+                                    <li><a href="#">配置选项 1</a>
+                                    </li>
+                                    <li><a href="#">配置选项 2</a>
+                                    </li>
+                                </ul>
+                                <a class="close-link">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
+
+                        </div>
+
+                    <div class="ibox-content" >
+              <form id="network_form">
+
+                      <input type="text" name="id" value="{{ asset_id }}"  style="display:none"/>
+                   </form>
+                        <div   style="height:500px;" id="network"></div>
+                    </div>
+                </div>
+
+            </div>
+
+
+
+
+
+
+                <div class="col-sm-12">
+                    <div class="ibox float-e-margins">
+
+                    <div class="ibox-title">
+                            <h5>历史</h5>
+                              <div class="ibox-tools">
+                                <a class="collapse-links">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                    <i class="fa fa-wrench"></i>
+                                </a>
+                                <ul class="dropdown-menu dropdown-user">
+                                    <li><a href="#">配置选项 1</a>
+                                    </li>
+                                    <li><a href="#">配置选项 2</a>
+                                    </li>
+                                </ul>
+                                <a class="close-link">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
+
+                        </div>
+
+                    <div class="ibox-content" >
+                        <form id="cpumem_form">
+
+                      <input type="text" name="id" value="{{ asset_id }}"  style="display:none"/>
+                   </form>
+                        <div   style="height:500px;" id="cpumem"></div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+        </div>
+
+
+{% block footer-js %}
+<script src="{% static "js/echarts.min.js" %}"></script>
+
+<script>
+    $(function () {
+          var myChart1 = echarts.init(document.getElementById('cpu'));
+            option1 = {
+                tooltip : {
+                    formatter: "{a} <br/>{b} : {c}%"
+                },
+                series: [
+                    {
+                        name: 'cpu',
+                        type: 'gauge',
+                        detail: {formatter:'{value}%'},
+                        data: [{value: {{  cpu }}, name: '使用率'}]
+                    }
+                ]
+            };
+            myChart1.setOption(option1, true);
+
+            window.onresize = function () {
+                myChart1.resize();
+            };
+
+
+          var myChart2 = echarts.init(document.getElementById('mem'));
+          option2 = {
+                tooltip : {
+                    formatter: "{a} <br/>{b} : {c}%"
+                },
+                series: [
+                    {
+                        name: '内存',
+                        type: 'gauge',
+                        detail: {formatter:'{value}%'},
+                        data: [{value: {{  mem }}, name: '使用率'}]
+                    }
+                ]
+            };
+            myChart2.setOption(option2, true);
+
+
+            window.onresize = function () {
+                myChart2.resize();
+            };
+
+
+
+
+        var myChart3 = echarts.init(document.getElementById('cpumem'));
+        var cpumem_info;
+        option3 = {
+                title: {
+                    text: 'CPU和内存展示图',
+                    subtext: '数据展示',
+                    x: 'center'
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        animation: false
+                    }
+                },
+                legend: {
+                    data:['CPU','内存'],
+                    x: 'left'
+                },
+                toolbox: {
+                    feature: {
+                        dataZoom: {
+                            yAxisIndex: 'none'
+                        },
+                        restore: {},
+                        saveAsImage: {}
+                    }
+                },
+                axisPointer: {
+                    link: {xAxisIndex: 'all'}
+                },
+                dataZoom: [
+                    {
+                        show: true,
+                        realtime: true,
+                        start: 30,
+                        end: 70,
+                        xAxisIndex: [0, 1]
+                    },
+                    {
+                        type: 'inside',
+                        realtime: true,
+                        start: 30,
+                        end: 70,
+                        xAxisIndex: [0, 1]
+                    }
+                ],
+                grid: [{
+                    left: 50,
+                    right: 50,
+                    height: '35%'
+                }, {
+                    left: 50,
+                    right: 50,
+                    top: '55%',
+                    height: '35%'
+                }],
+                xAxis : [
+                    {
+                        type : 'category',
+                        boundaryGap : false,
+                        axisLine: {onZero: true},
+                        data:{{  date |safe }}
+                    },
+                    {
+                        gridIndex: 1,
+                        type : 'category',
+                        boundaryGap : false,
+                        axisLine: {onZero: true},
+                        data: {{  date |safe }},
+                        position: 'top'
+                    }
+                ],
+                yAxis : [
+                    {
+                        name : '使用率',
+                        type : 'value',
+{#                        max : 100#}
+                    },
+                    {
+                        gridIndex: 1,
+                        name : '使用率',
+                        type : 'value',
+                        inverse: true
+                    }
+                ],
+                series : [
+                    {
+                        name:'CPU',
+                        type:'line',
+                        symbolSize: 8,
+                        hoverAnimation: false,
+                        data:{{ cpu_use| safe }}
+                    },
+                    {
+                        name:'内存',
+                        type:'line',
+                        xAxisIndex: 1,
+                        yAxisIndex: 1,
+                        symbolSize: 8,
+                        hoverAnimation: false,
+                        data: {{  mem_use  | safe }}
+                    }
+                ]
+            };
+
+        myChart3.setOption(option3, true);
+
+{#         setInterval(function () {#}
+{#                 $.ajax({#}
+{#                     type: 'GET',#}
+{#                     url: '/host/hostapi',#}
+{#                     data:$('#cpumem_form').serialize(),#}
+{#                     dataType: 'json',#}
+{#                     success: function (json) {#}
+{#                              cpumem_info = eval(json);#}
+{#                      }#}
+{#                 });#}
+{#                option3.xAxis[0].data = cpumem_info.date;#}
+{#                option3.xAxis[1].data = cpumem_info.date;#}
+{##}
+{#                option3.series[0].data = cpumem_info.cpu_use;#}
+{#                option3.series[1].data = cpumem_info.mem_use;#}
+{##}
+{#                myChart3.setOption(option3, true);#}
+{#            },30000);#}
+
+
+         window.onresize = function () {
+            myChart3.resize();
+        };
+
+
+
+
+        var myChart4 = echarts.init(document.getElementById('network'));
+        var network;
+        option4 = {
+                title: {
+                    text: '流量展示图',
+                    subtext: '数据展示',
+                    x: 'center'
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        animation: false
+                    }
+                },
+                legend: {
+                    data:['流入','流出'],
+                    x: 'left'
+                },
+                toolbox: {
+                    feature: {
+                        dataZoom: {
+                            yAxisIndex: 'none'
+                        },
+                        restore: {},
+                        saveAsImage: {}
+                    }
+                },
+                axisPointer: {
+                    link: {xAxisIndex: 'all'}
+                },
+                dataZoom: [
+                    {
+                        show: true,
+                        realtime: true,
+                        start: 30,
+                        end: 70,
+                        xAxisIndex: [0, 1]
+                    },
+                    {
+                        type: 'inside',
+                        realtime: true,
+                        start: 30,
+                        end: 70,
+                        xAxisIndex: [0, 1]
+                    }
+                ],
+                grid: [{
+                    left: 50,
+                    right: 50,
+                    height: '35%'
+                }, {
+                    left: 50,
+                    right: 50,
+                    top: '55%',
+                    height: '35%'
+                }],
+                xAxis : [
+                    {
+                        type : 'category',
+                        boundaryGap : false,
+                        axisLine: {onZero: true},
+                        data:{{  date |safe }}
+                    },
+                    {
+                        gridIndex: 1,
+                        type : 'category',
+                        boundaryGap : false,
+                        axisLine: {onZero: true},
+                        data: {{  date |safe }},
+                        position: 'top'
+                    }
+                ],
+                yAxis : [
+                    {
+                        name : 'kb/s',
+                        type : 'value',
+{#                        max : 100#}
+                    },
+                    {
+                        gridIndex: 1,
+                        name : 'kb/s',
+                        type : 'value',
+                        inverse: true
+                    }
+                ],
+                series : [
+                    {
+                        name:'流入',
+                        type:'line',
+                        symbolSize: 8,
+                        hoverAnimation: false,
+                        data:{{ in_use| safe }}
+                    },
+                    {
+                        name:'流出',
+                        type:'line',
+                        xAxisIndex: 1,
+                        yAxisIndex: 1,
+                        symbolSize: 8,
+                        hoverAnimation: false,
+                        data: {{  out_use  | safe }}
+                    }
+                ]
+            };
+
+        myChart4.setOption(option4, true);
+
+{#         setInterval(function () {#}
+{#                 $.ajax({#}
+{#                     type: 'GET',#}
+{#                     url: '/host/host-network-api',#}
+{#                     data:$('#network_form').serialize(),#}
+{#                     dataType: 'json',#}
+{#                     success: function (json) {#}
+{#                             network = eval(json);#}
+{#                      }#}
+{#                 });#}
+{#                option4.xAxis[0].data = network.date;#}
+{#                option4.xAxis[1].data = network.date;#}
+{##}
+{#                option4.series[0].data = network.in_use;#}
+{#                option4.series[1].data = network.out_use;#}
+{#                myChart4.setOption(option4, true);#}
+{#            },30000);#}
+
+
+         window.onresize = function () {
+            myChart4.resize();
+        };
+
+
+
+
+
+
+
+
+
+    });
+</script>
+
+{% endblock %}
+
+
+{% endblock %}
+
+

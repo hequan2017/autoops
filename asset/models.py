@@ -79,3 +79,22 @@ class  system_users(models.Model):
         db_table ="system_users"
         verbose_name="系统登陆用户"
         verbose_name_plural = '系统登陆用户'
+
+
+class performance(models.Model):
+
+    cpu_use = models.CharField(verbose_name='CPU使用率', null=True,blank=True,max_length=32)
+    mem_use = models.CharField(verbose_name='内存使用率', max_length=32, null=True,blank=True)
+    in_use = models.CharField(verbose_name='进流量', max_length=32, null=True,blank=True)
+    out_use = models.CharField(verbose_name='出流量', max_length=32, null=True,blank=True)
+    server = models.ForeignKey('asset',on_delete=callable, null=True,blank=True,)
+
+    cdate = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
+    udate = models.DateTimeField(auto_now=True, verbose_name='更新时间')
+    class Meta:
+        db_table = 'performance'
+        verbose_name = '监控状态'
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return self.cpu_use

@@ -3,7 +3,7 @@ from    django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
 
 # Create your views here.
-@login_required(login_url="/login.html")
+# @login_required(login_url="/login.html")
 def index(request):
 	return render(request, 'index.html')
 

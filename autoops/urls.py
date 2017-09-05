@@ -24,5 +24,6 @@ urlpatterns = [
     url(r'^$', index),
     url(r'^login.html$', login_view),
     url(r'^index.html$', index),
-    url(r'^asset/', include('asset.urls', namespace="asset", app_name='asset'), )
+    url(r'^asset/', include('asset.urls', namespace="asset", app_name='asset'), ),
+    url(r'^tasks/', include('tasks.urls', namespace="tasks", app_name='tasks'), )
 ]

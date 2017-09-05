@@ -62,7 +62,7 @@
 
 
 
-                            <a class="btn btn-danger" href="http://42.62.6.54:9000">webssh</a>
+
 
                             <form id="del_form_asset_all" class="form-horizontal  ">
                                 <table class="table table-striped table-bordered table-hover dataTables-example">
@@ -75,7 +75,7 @@
                                         <th>数据中心</th>
                                         <th>上联端口</th>
                                         <th>SN</th>
-                                        <th>动作</th>
+                                        <th>动作{{ error_performance }}</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -83,7 +83,7 @@
                                     {% for   row   in   asset_list %}
 
                                         <tr class="gradeA" id="{{ row.id }}">
-                                            <td><input type="checkbox" value="{{ row.id }}" name="id"></td>
+                                            <td><input type="checkbox" value="{{ row.id }}"  name="id"></td>
                                             <td class="center"><a
                                                     href="{% url  "asset:asset_detail"   row.id %}">{{ row.network_ip }}</a>
                                             </td>
@@ -98,6 +98,11 @@
                                                 <a class="btn btn-danger  btn-xs  asset_del_id"     data-toggle="modal"
                                                         data-target="#myModal1">删除
                                                 </a>
+                                                <a class="btn btn-primary  btn-xs "
+                                                   href="{% url    "asset:asset_performance"   row.id %}">性能</a>
+                                                <a type="button" class="btn btn-primary btn-xs  webssh">终端
+                                                </a>
+
                                             </td>
                                         </tr>
                                     {% endfor %}
@@ -216,6 +221,48 @@
 
             });
 
+
+        $('.webssh').click(function () {
+
+                var id_a = $(this).parent().parent().attr('id');
+                $.ajax({
+                    url: "/asset/asset-webssh.html",
+                    type: 'POST',
+                    data: {'id': id_a},
+                    success: function (ret) {
+
+                        var obj = JSON.parse(ret);
+                        var ip = obj.ip;
+                        var username = obj.username;
+                        var password = obj.password;
+
+                        $.ajax({
+                            url: "http://42.62.6.54:9000/console/login?rnd=" + Math.random(),
+                            method: "POST",
+                            data: {
+                                "vm_addr": ip,
+                                "user_name": username,
+                                "user_pwd": password
+                            },
+                            dataType: "jsonp",
+                            jsonp: 'callback',
+                            jsonpCallback: "callback",
+                            cache: false,
+                            contentType: "application/json;utf-8", /*设置返回类型*/
+                            async: false
+                        }).done(function (data) {
+                            var json = (data);
+                            if (json.ok) {
+                                location.href = "http://42.62.6.54:9000" + json.data;
+                            } else {
+                                alert("登陆失败，请确认您的登陆信息。");
+                            }
+                        }).fail(function () {
+                            alert("未知失败，请联系管理员。");
+                        });
+                    }
+                })
+            });
 
 
         </script>
