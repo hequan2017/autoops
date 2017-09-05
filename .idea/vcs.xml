@@ -2,6 +2,7 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
+    <mapping directory="D:/cmdb" vcs="Git" />
     <mapping directory="E:/cmdb" vcs="Git" />
     <mapping directory="E:/jumpserver" vcs="Git" />
   </component>

@@ -61,7 +61,7 @@
                             </a>
 
 
-                            <a class="btn btn-primary asset_bulk_update" >批量更新</a>
+
                             <a class="btn btn-danger" href="http://42.62.6.54:9000">webssh</a>
 
                             <form id="del_form_asset_all" class="form-horizontal  ">
@@ -73,6 +73,7 @@
                                         <th>管理IP</th>
                                         <th>产品线</th>
                                         <th>数据中心</th>
+                                        <th>上联端口</th>
                                         <th>SN</th>
                                         <th>动作</th>
                                     </tr>
@@ -90,12 +91,13 @@
                                             <td class="center">{% for i in row.product_line.all %}
                                                 {{ i }} {% endfor %}</td>
                                             <td class="center">{{ row.data_center }}</td>
+                                            <td class="center">{{ row.uplink_port }}</td>
                                             <td class="center">{{ row.sn }}</td>
                                             <td><a class="btn btn-primary  btn-xs "
                                                    href="{% url  "asset:asset_update"   row.id %}">编辑</a>
-                                                <button class="btn btn-danger  btn-xs  asset_del_id" data-toggle="modal"
+                                                <a class="btn btn-danger  btn-xs  asset_del_id"     data-toggle="modal"
                                                         data-target="#myModal1">删除
-                                                </button>
+                                                </a>
                                             </td>
                                         </tr>
                                     {% endfor %}
@@ -210,25 +212,6 @@
 
                     })
                 });
-                   $('.asset_bulk_update').click(function () {
-                    $.ajax({
-                        url: "/asset/asset-bulk-update.html",
-                        type: 'POST',
-                        data: $('#del_form_asset_all').serialize(),
-                        success: function (data) {
-                            var obj = JSON.parse(data);
-                            if (obj.status) {
-                                var id_list_string = obj.id_list.join(',');
-                                var url = "{% url 'asset:asset_bulk_update' %}?id=" + id_list_string;
-                                location.href = url
-                            }
-                        }
-
-                    })
-                });
-
-
-
 
 
             });

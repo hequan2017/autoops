@@ -2,7 +2,7 @@
 {% block  title %}资产详情{% endblock %}
 {% block header-css %}
 
- {% load bootstrap3 %}
+{% load bootstrap3 %}
 {% endblock %}
 
 
@@ -91,18 +91,22 @@
                                             <td><b>{{ assets.port }}</b></td>
                                         </tr>
                                         <tr>
-                                            <td width="20%">型号:</td>
-                                            <td><b>{{ assets.model }}</b></td>
-                                        </tr>
-                                        <tr>
-                                            <td width="20%">系统版本:</td>
-                                            <td><b>{{ assets.system }}</b></td>
-                                        </tr>
-                                        <tr>
                                             <td width="20%">登陆用户:</td>
                                             <td><b>{{ assets.system_user }}</b></td>
                                         </tr>
-
+                                         <tr>
+                                            <td width="20%">上联端口:</td>
+                                            <td><b>{{ assets.uplink_port }}</b></td>
+                                        </tr>
+                                          <tr>
+                                            <td width="20%">产品线:</td>
+                                            <td><b>{% for  i   in  assets.product_line.all %}
+                                                {{ i }}   {% endfor %}</b></td>
+                                        </tr>
+                                        <tr>
+                                            <td width="20%">是否启用:</td>
+                                            <td><b>{{ assets.is_active }}</b></td>
+                                        </tr>
                                         <tr>
                                             <td width="20%">数据中心:</td>
                                             <td><b>{{ assets.data_center }}</b></td>
@@ -114,6 +118,14 @@
                                         <tr>
                                             <td width="20%">位置:</td>
                                             <td><b>{{ assets.position }}</b></td>
+                                        </tr>
+                                        <tr>
+                                            <td width="20%">型号:</td>
+                                            <td><b>{{ assets.model }}</b></td>
+                                        </tr>
+                                        <tr>
+                                            <td width="20%">系统版本:</td>
+                                            <td><b>{{ assets.system }}</b></td>
                                         </tr>
                                         <tr>
                                             <td width="20%">SN:</td>
@@ -132,25 +144,12 @@
                                             <td><b>{{ assets.disk }}</b></td>
                                         </tr>
                                         <tr>
-                                            <td width="20%">上联端口:</td>
-                                            <td><b>{{ assets.uplink_port }}</b></td>
-                                        </tr>
-                                        <tr>
                                             <td width="20%">出厂时间:</td>
                                             <td><b>{{ assets.ship_time }}</b></td>
                                         </tr>
                                         <tr>
                                             <td width="20%">到保时间:</td>
                                             <td><b>{{ assets.end_time }}</b></td>
-                                        </tr>
-                                        <tr>
-                                            <td width="20%">产品线:</td>
-                                            <td><b>{% for  i   in  assets.product_line.all %}
-                                                {{ i }}   {% endfor %}</b></td>
-                                        </tr>
-                                        <tr>
-                                            <td width="20%">是否启用:</td>
-                                            <td><b>{{ assets.is_active }}</b></td>
                                         </tr>
                                         <tr>
                                             <td width="20%">备注:</td>

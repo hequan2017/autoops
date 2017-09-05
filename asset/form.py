@@ -36,7 +36,7 @@ class AssetForm(forms.ModelForm):
         }
         help_texts = {
             # 'network_ip': '必填项目',
-            'model': ('必填项目,请输入产品型号,如:DELL R620 '),
+            'network_ip': ('必填项目'),
         }
         error_messages = {
             'model':{
@@ -44,11 +44,11 @@ class AssetForm(forms.ModelForm):
             }
         }
 
-    def clean_model(self):
-        model = self.cleaned_data['model']
-        if len(model) < 3:
-            raise ValidationError("不能短于3个字符")
-        return model
+    # def clean_model(self):
+    #     model = self.cleaned_data['model']
+    #     if len(model) < 3:
+    #         raise ValidationError("不能短于3个字符")
+    #     return model
 
     #
     # def clean(self):
