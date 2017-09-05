@@ -55,6 +55,7 @@ def monitor_job():
         t_list.append(t)
     for i in t_list:
         i.join()
+        
     print("-------------end----------------")
 
 

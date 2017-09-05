@@ -8,7 +8,7 @@ class asset(models.Model):
     port = models.IntegerField(verbose_name='ssh端口', null=True,blank=True,default="22")
     model = models.CharField(max_length=128, verbose_name='型号', null=True,blank=True)
     system = models.CharField(max_length=128,verbose_name='系统版本',null=True,blank=True)
-    system_user = models.ForeignKey(to="system_users",to_field='id', null=True,verbose_name='登陆用户',blank=True)
+    system_user = models.ForeignKey(to="system_users",to_field='id',on_delete=models.SET_NULL, null=True,verbose_name='登陆用户',blank=True)
     data_center =  models.ForeignKey(to="data_centers",to_field='id', null=True,verbose_name='数据中心',blank=True)
     cabinet = models.CharField(max_length=64,verbose_name='机柜',null=True,blank=True)
     position = models.CharField(max_length=64,verbose_name='位置',null=True,blank=True)
@@ -81,13 +81,16 @@ class  system_users(models.Model):
         verbose_name_plural = '系统登陆用户'
 
 
+
 class performance(models.Model):
 
     cpu_use = models.CharField(verbose_name='CPU使用率', null=True,blank=True,max_length=32)
     mem_use = models.CharField(verbose_name='内存使用率', max_length=32, null=True,blank=True)
     in_use = models.CharField(verbose_name='进流量', max_length=32, null=True,blank=True)
     out_use = models.CharField(verbose_name='出流量', max_length=32, null=True,blank=True)
-    server = models.ForeignKey('asset',on_delete=callable, null=True,blank=True,)
+    server = models.ForeignKey('asset',on_delete=models.CASCADE,)
+
+
 
     cdate = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
     udate = models.DateTimeField(auto_now=True, verbose_name='更新时间')
@@ -95,6 +98,7 @@ class performance(models.Model):
         db_table = 'performance'
         verbose_name = '监控状态'
         verbose_name_plural = verbose_name
+        ordering = ["-cdate"]
 
     def __str__(self):
         return self.cpu_use

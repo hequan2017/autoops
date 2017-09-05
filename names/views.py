@@ -1,11 +1,14 @@
 from django.shortcuts import render, redirect, HttpResponse
 from    django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
+from django.views.generic import View
 
 # Create your views here.
 # @login_required(login_url="/login.html")
-def index(request):
-	return render(request, 'index.html')
+
+class Index(View):
+	def get(self, request):
+		return render(request, 'index.html')
 
 
 
