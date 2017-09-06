@@ -42,8 +42,8 @@ INSTALLED_APPS = [
     'asset.apps.AssetConfig',
     'names.apps.NamesConfig',
     'tasks.apps.TasksConfig',
-    # 'djcelery',
-    # 'djkombu',
+    'djcelery',
+    'djkombu',
 ]
 
 MIDDLEWARE = [
@@ -134,19 +134,18 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
 
+import djcelery
+djcelery.setup_loader()
 
-# # import djcelery
-# djcelery.setup_loader()
-#
-# BROKER_URL = 'redis://127.0.0.1:6379/0'
-# CELERY_RESULT_BACKEND = 'djcelery.backends.database:DatabaseBackend'
-#
-# CELERY_ACCEPT_CONTENT = ['application/json']
-# CELERY_TASK_SERIALIZER = 'json'
-# CELERY_RESULT_SERIALIZER = 'json'
-# CELERY_TIMEZONE = 'Asia/Shanghai'
-#
-# CELERY_IMPORTS = ('tasks.task',)
-#
-#
-# CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
+BROKER_URL = 'redis://127.0.0.1:6379/0'
+CELERY_RESULT_BACKEND = 'djcelery.backends.database:DatabaseBackend'
+
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Asia/Shanghai'
+
+CELERY_IMPORTS = ('tasks.task',)
+
+
+CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'

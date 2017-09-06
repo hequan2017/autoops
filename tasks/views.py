@@ -7,8 +7,8 @@ import paramiko,json,os
 from .form import ToolForm
 
 
-from   tasks.ansible_runner.runner      import AdHocRunner,PlayBookRunner
-from   tasks.ansible_runner.callback    import CommandResultCallback
+# from   tasks.ansible_runner.runner      import AdHocRunner,PlayBookRunner
+# from   tasks.ansible_runner.callback    import CommandResultCallback
 
 
 tasks_active = "active"
