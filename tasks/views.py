@@ -3,8 +3,13 @@ from  django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
 from asset.models import asset
 from .models import history,toolsscript
-import paramiko,json
+import paramiko,json,os
 from .form import ToolForm
+
+
+from   tasks.ansible_runner.runner      import AdHocRunner,PlayBookRunner
+from   tasks.ansible_runner.callback    import CommandResultCallback
+
 
 tasks_active = "active"
 cmd_active = "active"
@@ -57,11 +62,14 @@ def cmd(request):  ##命令行
 
         ret = {}
         ret['data'] = []
-        ret['status'] = True
+
         for i in obj:
             s = ssh(ip=i.network_ip, port=i.port, username=i.system_user.username, password=i.system_user.password, cmd=cmd)
             historys = history.objects.create(ip=i.network_ip, root=i.system_user, port=i.port, cmd=cmd, user=user)
             ret['data'].append(s)
+
+        ret['status'] = True
+
         return HttpResponse(json.dumps(ret))
 
 def  historys(request):
@@ -128,4 +136,106 @@ def  tools_bulk_delte(request):
             ret['error'] = '删除请求错误,{}'.format(e)
         return HttpResponse(json.dumps(ret))
 
+def  tools_script_post(request):
+    ret = {'data': None}
 
+    if request.method == 'POST':
+        try:
+            host_ids = request.POST.getlist('id', None)
+            sh_id = request.POST.get('shid', None)
+            user = request.user
+
+            if not host_ids:
+                error1 = "请选择主机"
+                ret = {"error": error1, "status": False}
+                return HttpResponse(json.dumps(ret))
+
+            idstring = ','.join(host_ids)
+
+            host = asset.objects.extra(where=['id IN (' + idstring + ')'])
+            sh = toolsscript.objects.filter(id=sh_id)
+
+            for s in sh:
+                if s.tool_run_type == 0:
+                    with  open('tasks/script/test.sh', 'w+') as f:
+                        f.write(s.tool_script)
+                        a = 'tasks/script/{}.sh'.format(s.id)
+                    os.system("sed 's/\r//'  tasks/script/test.sh >  {}".format(a))
+
+                elif s.tool_run_type == 1:
+                    with  open('tasks/script/test.py', 'w+') as f:
+                        f.write(s.tool_script)
+                        p = 'tasks/script/{}.py'.format(s.id)
+                    os.system("sed 's/\r//'  tasks/script/test.py >  {}".format(p))
+                elif s.tool_run_type == 2:
+                    with  open('tasks/script/test.yml', 'w+') as f:
+                        f.write(s.tool_script)
+                        y = 'tasks/script/{}.yml'.format(s.id)
+                    os.system("sed 's/\r//'  tasks/script/test.yml >  {}".format(y))
+                else:
+                    ret['status'] = False
+                    ret['error'] = '脚本类型错误,只能是shell、yml、python'
+                    return HttpResponse(json.dumps(ret))
+
+                data1 = []
+                for h in host:
+                    try:
+                        data2 = {}
+                        assets = [
+                            {
+                                "hostname": h.hostname,
+                                "ip": h.network_ip,
+                                "port": h.port,
+                                "username": h.system_user.username,
+                                "password": h.system_user.password,
+                            },
+                        ]
+
+                        history.objects.create(ip=h.network_ip, root=h.system_user.username, port=h.port, cmd=s.name, user=user)
+                        if   s.tool_run_type == 0:
+                            task_tuple = (('script', a),)
+                            hoc = AdHocRunner(hosts=assets)
+                            hoc.results_callback = CommandResultCallback()
+                            r = hoc.run(task_tuple)
+                            data2['ip'] = h.network_ip
+                            data2['data'] = r['contacted'][h.hostname]['stdout']
+                            data1.append(data2)
+                            print(data1)
+
+
+                        elif s.tool_run_type == 1:
+                            task_tuple = (('script', p),)
+                            hoc = AdHocRunner(hosts=assets)
+                            hoc.results_callback = CommandResultCallback()
+                            r = hoc.run(task_tuple)
+                            data2['ip'] = h.network_ip
+                            data2['data'] = r['contacted'][h.hostname]['stdout']
+                            data1.append(data2)
+                        elif s.tool_run_type == 2:
+                            play = PlayBookRunner(assets, playbook_path=y)
+                            b = play.run()
+                            data2['ip'] = h.network_ip
+                            data2['data'] = b['plays'][0]['tasks'][1]['hosts'][h.hostname]['stdout'] + \
+                                            b['plays'][0]['tasks'][1]['hosts'][h.hostname]['stderr']
+                            data1.append(data2)
+                        else:
+                            data2['ip'] = "脚本类型错误"
+                            data2['data'] = "脚本类型错误"
+                    except  Exception as  e:
+                        data2['ip'] = h.network_ip
+                        data2['data'] = "账号密码不对,请修改{}".format(e)
+                        data1.append(data2)
+
+                ret['data'] = data1
+                ret['status'] = True
+                return HttpResponse(json.dumps(ret))
+        except Exception as e:
+            ret['status'] = False
+            ret['error'] = '未知错误 {}'.format(e)
+            return HttpResponse(json.dumps(ret))
+
+def   tools_script_get(request, nid):
+    if request.method == "GET":
+        obj = asset.objects.filter(id__gt=0)
+        sh = toolsscript.objects.filter(id=nid)
+        return render(request, 'tasks/tools-script.html', {"asset_list": obj, "sh": sh})

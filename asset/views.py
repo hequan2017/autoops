@@ -4,7 +4,7 @@ from asset.models import asset, system_users, performance
 from .form import AssetForm, SystemUserForm
 import json
 
-# from  tasks.ansible_runner.runner   import AdHocRunner
+from  tasks.ansible_runner.runner   import AdHocRunner
 from tasks.views import ssh
 
 asset_active = "active"

@@ -15,8 +15,8 @@ import ansible.constants as C
 from ansible.utils.vars  import load_extra_vars
 from ansible.utils.vars  import load_options_vars
 
-# from  .inventorys   import   JMSInventory
-# from  .callback     import   AdHocResultCallback, PlaybookResultCallBack, CommandResultCallback
+from  .inventorys   import   JMSInventory
+from  .callback     import   AdHocResultCallback, PlaybookResultCallBack, CommandResultCallback
 
 
 

@@ -87,7 +87,12 @@
                                             <td class="center">{% ifequal  row.tool_run_type  0 %} shell{% endifequal  %} {% ifequal  row.tool_run_type  1 %} python {% endifequal  %}  {% ifequal row.tool_run_type  2 %}  yml {%  endifequal%}  </td>
                                             <td class="center">{{ row.comment }}</td>
                                             <td class="center">{{ row.utime }}</td>
-                                            <td><a class="btn btn-primary  btn-xs "
+
+                                            <td>
+                                                <a class="btn btn-primary  btn-xs "
+                                                   href="{% url  "tasks:tools_script_get"   row.id   %}">执行</a>
+
+                                                <a class="btn btn-primary  btn-xs "
                                                    href="{% url  "tasks:tools_update"   row.id   %}">编辑</a>
                                                 <a class="btn btn-danger  btn-xs  tools_del_id"     data-toggle="modal"
                                                         data-target="#myModal1">删除
