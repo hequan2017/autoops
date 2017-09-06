@@ -2,10 +2,15 @@ from django.shortcuts import render, redirect, HttpResponse
 from  django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
 from asset.models import asset
+from .models import history,tools_script
 import paramiko,json
+from .form import ToolForm
 
 tasks_active = "active"
 cmd_active = "active"
+histroy_active="active"
+tools_active="active"
+
 
 def ssh(ip, port, username, password, cmd):
     try:
@@ -36,6 +41,7 @@ def cmd(request):  ##命令行
     if request.method == 'POST':
         ids = request.POST.getlist('id')
         cmd = request.POST.get('cmd', None)
+        user = request.user
         idstring = ','.join(ids)
         if not ids:
             error_1 = "请选择主机"
@@ -54,6 +60,46 @@ def cmd(request):  ##命令行
         ret['status'] = True
         for i in obj:
             s = ssh(ip=i.network_ip, port=i.port, username=i.system_user.username, password=i.system_user.password, cmd=cmd)
-            # history = History.objects.create(ip=i.ip, root=i.username, port=i.port, cmd=cmd, user=i.username)
+            historys = history.objects.create(ip=i.network_ip, root=i.system_user, port=i.port, cmd=cmd, user=user)
             ret['data'].append(s)
         return HttpResponse(json.dumps(ret))
+
+def  historys(request):
+    obj = history.objects.all()
+    return  render(request,"tasks/history.html",{"historys":obj,"tasks_active":tasks_active,"history_active":histroy_active})
+
+
+def  tools(request):
+    obj = tools_script.objects.all()
+    return render(request, "tasks/tools.html",
+                  {"tools": obj, "tasks_active": tasks_active, "tools_active": tools_active})
+
+def  tools_add(request):
+    if request.method == 'POST':
+        form =  ToolForm(request.POST)
+        if form.is_valid():
+            tools_save = form.save()
+            form =  ToolForm()
+            return render(request, 'tasks/tools-add.html',
+                          {'form': form, "tasks_active": tasks_active, "tools_active": tools_active,
+                           "msg": "添加成功"})
+    else:
+        form =  ToolForm()
+    return render(request, 'tasks/tools-add.html',
+                  {'form': form, "tasks_active": tasks_active, "tools_active": tools_active,})
+
+
+
+
+
+def  tools_update(request):
+   pass
+
+def  tools_delete(request):
+   pass
+
+def  tools_bulk_delte(request):
+   pass
+
+def  tools_detail(request):
+   pass

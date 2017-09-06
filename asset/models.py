@@ -9,7 +9,7 @@ class asset(models.Model):
     model = models.CharField(max_length=128, verbose_name='型号', null=True,blank=True)
     system = models.CharField(max_length=128,verbose_name='系统版本',null=True,blank=True)
     system_user = models.ForeignKey(to="system_users",to_field='id',on_delete=models.SET_NULL, null=True,verbose_name='登陆用户',blank=True)
-    data_center =  models.ForeignKey(to="data_centers",to_field='id', null=True,verbose_name='数据中心',blank=True)
+    data_center =  models.ForeignKey(to="data_centers",to_field='id',on_delete=models.SET_NULL, null=True,verbose_name='数据中心',blank=True)
     cabinet = models.CharField(max_length=64,verbose_name='机柜',null=True,blank=True)
     position = models.CharField(max_length=64,verbose_name='位置',null=True,blank=True)
 
@@ -102,3 +102,5 @@ class performance(models.Model):
 
     def __str__(self):
         return self.cpu_use
+
+
