@@ -1,5 +1,5 @@
 from django.conf.urls import url
-
+from . import api
 from  .import views
 
 urlpatterns = [
@@ -18,5 +18,8 @@ urlpatterns = [
     url(r'^system-user-add.html$', views.system_user_add, name='system_user_add'),
     url(r'^system-user-del.html$', views.system_user_del, name='system_user_del'),
     url(r'^system-user-detail-(?P<nid>\d+).html$', views.system_user_detail, name='system_user_detail'),
-    url(r'^system-user-update-(?P<nid>\d+).html$', views.system_user_update, name='system_user_update')
+    url(r'^system-user-update-(?P<nid>\d+).html$', views.system_user_update, name='system_user_update'),
+    
+    url(r'^api/asset.html$',api.AssetList.as_view(),name='asset_api_list'),
+    url(r'^api/asset-detail-(?P<nid>\d+).html$', api.AssetDetail.as_view(), name='asset_api_detail'),
 ]
