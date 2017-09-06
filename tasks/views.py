@@ -1,8 +1,8 @@
-from django.shortcuts import render, redirect, HttpResponse
+from django.shortcuts import render, redirect, HttpResponse,get_object_or_404
 from  django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
 from asset.models import asset
-from .models import history,tools_script
+from .models import history,toolsscript
 import paramiko,json
 from .form import ToolForm
 
@@ -70,11 +70,12 @@ def  historys(request):
 
 
 def  tools(request):
-    obj = tools_script.objects.all()
+    obj = toolsscript.objects.all()
     return render(request, "tasks/tools.html",
                   {"tools": obj, "tasks_active": tasks_active, "tools_active": tools_active})
 
 def  tools_add(request):
+
     if request.method == 'POST':
         form =  ToolForm(request.POST)
         if form.is_valid():
@@ -89,17 +90,42 @@ def  tools_add(request):
                   {'form': form, "tasks_active": tasks_active, "tools_active": tools_active,})
 
 
+def  tools_update(request,nid):
+    tool_id = get_object_or_404(toolsscript, id=nid)
 
+    if request.method == 'POST':
+        form = ToolForm(request.POST, instance=tool_id)
+        if form.is_valid():
+            asset_save = form.save()
+            return redirect('tools.html')
 
+    form = ToolForm(instance=tool_id)
+    return render(request, 'tasks/tools-update.html',
+                  {'form': form, 'nid': nid,  "tasks_active": tasks_active, "tools_active": tools_active,})
 
-def  tools_update(request):
-   pass
 
 def  tools_delete(request):
-   pass
+    ret = {'status': True, 'error': None, }
+    if request.method == "POST":
+        try:
+            id_1 = request.POST.get("nid", None)
+            toolsscript.objects.get(id=id_1).delete()
+        except Exception as e:
+            ret['status'] = False
+            ret['error'] = '删除请求错误,{}'.format(e)
+        return HttpResponse(json.dumps(ret))
+
 
 def  tools_bulk_delte(request):
-   pass
+    ret = {'status': True, 'error': None, }
+    if request.method == "POST":
+        try:
+            ids = request.POST.getlist('id', None)
+            idstring = ','.join(ids)
+            toolsscript.objects.extra(where=['id IN (' + idstring + ')']).delete()
+        except Exception as e:
+            ret['status'] = False
+            ret['error'] = '删除请求错误,{}'.format(e)
+        return HttpResponse(json.dumps(ret))
 
-def  tools_detail(request):
-   pass
+

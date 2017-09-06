@@ -82,16 +82,14 @@
                                     {% for   row   in   tools %}
 
                                         <tr class="gradeA" id="{{ row.id }}">
-                                            <td><input type="checkbox" value="{{ row.id }}"  name="id"></td>
-                                            <td class="center"><a
-                                                    href="{% url  "tasks:tools_detail"   row.id %}">{{ row.name }}</a>
-                                            </td>
+                                            <td><input  type="checkbox"   value="{{ row.id }}"   name="id"></td>
+                                            <td class="center">{{ row.name }}</td>
                                             <td class="center">{% ifequal  row.tool_run_type  0 %} shell{% endifequal  %} {% ifequal  row.tool_run_type  1 %} python {% endifequal  %}  {% ifequal row.tool_run_type  2 %}  yml {%  endifequal%}  </td>
                                             <td class="center">{{ row.comment }}</td>
                                             <td class="center">{{ row.utime }}</td>
                                             <td><a class="btn btn-primary  btn-xs "
-                                                   href="{% url  "tasks:tools_update"   row.id %}">编辑</a>
-                                                <a class="btn btn-danger  btn-xs  asset_del_id"     data-toggle="modal"
+                                                   href="{% url  "tasks:tools_update"   row.id   %}">编辑</a>
+                                                <a class="btn btn-danger  btn-xs  tools_del_id"     data-toggle="modal"
                                                         data-target="#myModal1">删除
                                                 </a>
                                             </td>
@@ -127,12 +125,12 @@
                 <form id="tools_del_form">
                     <div class="modal-body">
 
-                        <div class="form-group"><input type="text" name="nid" style="display:none"/></div>
+                        <div class="form-group"><input type="text" name="nid" style="display: none;" /></div>
                         <p><strong>确定删除？</strong></p>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
-                        <a class="btn btn-danger m-r-sm asset_del">删除</a>
+                        <a class="btn btn-danger m-r-sm tools_del">删除</a>
                     </div>
                 </form>
             </div>
@@ -172,15 +170,15 @@
         <script>
             $(function () {
 
-                $('.asset_del_id').click(function () {
-                    var id = $(this).parent().parent().attr('id');
+                $('.tools_del_id').click(function () {
+                    var   id = $(this).parent().parent().attr('id');
                     $('#tools_del_form').find('input[name="nid"]').val(id);
 
 
                 });
-                $('.asset_del').click(function () {
+                $('.tools_del').click(function () {
                     $.ajax({
-                        url: "/task/tools_del.html",
+                        url: "/tasks/tools-del.html",
                         type: 'POST',
                         data: $('#tools_del_form').serialize(),
                         success: function (data) {
@@ -196,7 +194,7 @@
 
                 $('.asset_all_del').click(function () {
                     $.ajax({
-                        url: "/task/tools_bulk_del.html",
+                        url: "/tasks/tools-bulk-del.html",
                         type: 'POST',
                         data: $('#del_form_tools_bulk').serialize(),
                         success: function (data) {

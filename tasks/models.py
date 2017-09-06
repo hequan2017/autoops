@@ -21,7 +21,7 @@ class history(models.Model):
 
 
 
-class tools_script(models.Model):
+class toolsscript(models.Model):
     TOOL_RUN_TYPE = (
         (0, 'shell'),
         (1, 'python'),
@@ -29,7 +29,7 @@ class tools_script(models.Model):
     )
 
     name = models.CharField(max_length=255, verbose_name='工具名称',unique=True)
-    tool_script = models.TextField(verbose_name='脚本')
+    tool_script = models.TextField(verbose_name='脚本',null=True, blank=True)
     tool_run_type = models.IntegerField(choices=TOOL_RUN_TYPE, verbose_name='脚本类型', default=0)
     comment = models.TextField(verbose_name='工具说明', null=True, blank=True)
     ctime = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
@@ -39,7 +39,7 @@ class tools_script(models.Model):
         return self.name
 
     class Meta:
-        db_table = "tools_script"
+        db_table = "toolsscript"
         verbose_name = "工具"
         verbose_name_plural = verbose_name
 

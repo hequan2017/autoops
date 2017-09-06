@@ -1,10 +1,10 @@
 from    django import forms
-from .models import tools_script
+from .models import toolsscript
 
 
 class ToolForm(forms.ModelForm):
     class Meta:
-        model = tools_script
+        model = toolsscript
         fields = '__all__'
         widgets = {
             'comment': forms.Textarea(
