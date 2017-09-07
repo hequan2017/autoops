@@ -20,7 +20,40 @@
     <favorites_list name="autoops" />
   </component>
   <component name="FileEditorManager">
-    <leaf />
+    <leaf>
+      <file leaf-file-name="cmd.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/templates/tasks/cmd.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="266">
+              <caret line="167" column="27" lean-forward="false" selection-start-line="167" selection-start-column="27" selection-end-line="167" selection-end-column="27" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="views.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/tasks/views.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="266">
+              <caret line="231" column="43" lean-forward="true" selection-start-line="231" selection-start-column="43" selection-end-line="231" selection-end-column="43" />
+              <folding>
+                <element signature="e#0#77#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="tools-script.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/templates/tasks/tools-script.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-41">
+              <caret line="171" column="0" lean-forward="true" selection-start-line="171" selection-start-column="0" selection-end-line="171" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -84,7 +117,6 @@
         <option value="$PROJECT_DIR$/templates/asset/system-user-update.html" />
         <option value="E:/cmdb/templates/host/cmd.html" />
         <option value="E:/cmdb/hostinfo/views.py" />
-        <option value="$PROJECT_DIR$/templates/tasks/cmd.html" />
         <option value="E:/cmdb/templates/host/show.html" />
         <option value="$PROJECT_DIR$/asset/apps.py" />
         <option value="$PROJECT_DIR$/asset/admin.py" />
@@ -100,7 +132,6 @@
         <option value="$PROJECT_DIR$/tasks/admin.py" />
         <option value="$PROJECT_DIR$/tasks/form.py" />
         <option value="$PROJECT_DIR$/templates/tasks/tasks-script.html" />
-        <option value="$PROJECT_DIR$/templates/tasks/tools-script.html" />
         <option value="$PROJECT_DIR$/tasks/ansible_runner/runner.py" />
         <option value="$PROJECT_DIR$/templates/tasks/tools.html" />
         <option value="$PROJECT_DIR$/tasks/urls.py" />
@@ -120,8 +151,10 @@
         <option value="$PROJECT_DIR$/templates/_navbar-static-top.html" />
         <option value="E:/cmdb/README.md" />
         <option value="$PROJECT_DIR$/asset/views.py" />
-        <option value="$PROJECT_DIR$/tasks/views.py" />
         <option value="$PROJECT_DIR$/README.md" />
+        <option value="$PROJECT_DIR$/templates/tasks/cmd.html" />
+        <option value="$PROJECT_DIR$/tasks/views.py" />
+        <option value="$PROJECT_DIR$/templates/tasks/tools-script.html" />
       </list>
     </option>
   </component>
@@ -131,7 +164,7 @@
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
   </component>
-  <component name="ProjectFrameBounds">
+  <component name="ProjectFrameBounds" extendedState="7">
     <option name="x" value="434" />
     <option name="y" value="168" />
     <option name="width" value="1378" />
@@ -165,15 +198,23 @@
             <path>
               <item name="autoops" type="b2602c69:ProjectViewProjectNode" />
               <item name="autoops" type="462c0819:PsiDirectoryNode" />
-              <item name="static" type="462c0819:PsiDirectoryNode" />
+              <item name="asset" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="autoops" type="b2602c69:ProjectViewProjectNode" />
-              <item name="cmdb" type="462c0819:PsiDirectoryNode" />
+              <item name="autoops" type="462c0819:PsiDirectoryNode" />
+              <item name="tasks" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="autoops" type="b2602c69:ProjectViewProjectNode" />
-              <item name="jumpserver" type="462c0819:PsiDirectoryNode" />
+              <item name="autoops" type="462c0819:PsiDirectoryNode" />
+              <item name="templates" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="autoops" type="b2602c69:ProjectViewProjectNode" />
+              <item name="autoops" type="462c0819:PsiDirectoryNode" />
+              <item name="templates" type="462c0819:PsiDirectoryNode" />
+              <item name="tasks" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -502,7 +543,8 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="434" y="168" width="1378" height="735" extended-state="0" />
+    <frame x="-8" y="-8" width="1616" height="876" extended-state="7" />
+    <editor active="true" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.5580205" sideWeight="0.49167928" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="调试" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.45662847" sideWeight="0.7177542" order="10" side_tool="false" content_ui="tabs" />
@@ -513,8 +555,8 @@
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3253796" sideWeight="0.4757208" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Execute Anonymous" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32935154" sideWeight="0.4969743" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3253796" sideWeight="0.48878205" order="13" side_tool="false" content_ui="tabs" />
-      <window_info id="运行" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.23743501" sideWeight="0.48638427" order="22" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.19499241" sideWeight="0.5622951" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="运行" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3844011" sideWeight="0.48638427" order="22" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1651671" sideWeight="0.5622951" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32964224" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24885496" sideWeight="0.46135265" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.38880485" sideWeight="0.43770492" order="2" side_tool="true" content_ui="tabs" />
@@ -582,7 +624,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/static/css/plugins/codemirror/show-hint.css" />
     <entry file="file://$PROJECT_DIR$/static/js/plugins/codemirror/hint/show-hint.js" />
     <entry file="file://$PROJECT_DIR$/templates/tasks/tools-update.html" />
     <entry file="file://$PROJECT_DIR$/templates/asset/asset-add.html">
@@ -602,13 +643,6 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/templates/tasks/tools-add.html" />
     <entry file="file://$PROJECT_DIR$/tasks/form.py" />
-    <entry file="file://$PROJECT_DIR$/templates/tasks/cmd.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="171">
-          <caret line="9" column="31" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="194" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://E:/cmdb/sh/views.py" />
     <entry file="file://E:/cmdb/templates/sh/shell.html" />
     <entry file="file://$PROJECT_DIR$/tasks/ansible_runner/callback.py">
@@ -625,9 +659,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/tasks/tools-script.html" />
     <entry file="file://$PROJECT_DIR$/tasks/script/test.sh" />
-    <entry file="file://$PROJECT_DIR$/templates/tasks/tools.html" />
     <entry file="file://$PROJECT_DIR$/install_redis.sh">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="152">
@@ -673,6 +705,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="436">
           <caret line="25" column="0" lean-forward="true" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -680,6 +713,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="247">
           <caret line="15" column="0" lean-forward="false" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -709,13 +743,6 @@
         <state relative-caret-position="419">
           <caret line="106" column="0" lean-forward="true" selection-start-line="106" selection-start-column="0" selection-end-line="106" selection-end-column="0" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/asset/asset-performance.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-153">
-          <caret line="415" column="33" lean-forward="false" selection-start-line="415" selection-start-column="33" selection-end-line="415" selection-end-column="33" />
         </state>
       </provider>
     </entry>
@@ -759,6 +786,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="209">
           <caret line="11" column="0" lean-forward="true" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#35#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -862,10 +892,50 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/templates/asset/asset-update.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/asset/asset-performance.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="19">
+          <caret line="415" column="33" lean-forward="false" selection-start-line="415" selection-start-column="33" selection-end-line="415" selection-end-column="33" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/tasks/tools.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-3399">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/tasks/cmd.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="266">
+          <caret line="167" column="27" lean-forward="false" selection-start-line="167" selection-start-column="27" selection-end-line="167" selection-end-column="27" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/tasks/tools-script.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-41">
+          <caret line="171" column="0" lean-forward="true" selection-start-line="171" selection-start-column="0" selection-end-line="171" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/tasks/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="190">
-          <caret line="71" column="18" lean-forward="true" selection-start-line="71" selection-start-column="18" selection-end-line="71" selection-end-column="18" />
+        <state relative-caret-position="266">
+          <caret line="231" column="43" lean-forward="true" selection-start-line="231" selection-start-column="43" selection-end-line="231" selection-end-column="43" />
           <folding>
             <element signature="e#0#77#0" expanded="true" />
           </folding>

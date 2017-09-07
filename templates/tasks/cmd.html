@@ -158,8 +158,7 @@
                 success: function (data) {
                     var obj = JSON.parse(data);
                     cons = "";
-                    if (obj.status) {
-
+                    if (obj.data) {
                          $.each(obj, function (data, values) {
                             $.each(values, function (index, value) {
                                 cons += "<pre>"+"主机:" + value.ip + "\n" + "结果: \n " + value.data + "</pre>"
@@ -167,7 +166,6 @@
                             });
                             $(".pres").html(cons); //把内容入到这个div中即完成
                         });
-
                     } else {
                         $('#err').text(obj.error);
                     }

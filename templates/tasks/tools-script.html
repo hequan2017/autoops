@@ -160,7 +160,7 @@
                 success: function (data) {
                     var obj = JSON.parse(data);
                     cons = "";
-                    if (obj.status) {
+                    if (obj.data) {
 
                          $.each(obj, function (data, values) {
                             $.each(values, function (index, value) {

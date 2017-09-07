@@ -67,10 +67,6 @@ def cmd(request):  ##命令行
             s = ssh(ip=i.network_ip, port=i.port, username=i.system_user.username, password=i.system_user.password, cmd=cmd)
             historys = history.objects.create(ip=i.network_ip, root=i.system_user, port=i.port, cmd=cmd, user=user)
             ret['data'].append(s)
-
-        ret['status'] = True
-        print(ret)
-
         return HttpResponse(json.dumps(ret))
 
 
@@ -236,10 +232,8 @@ def  tools_script_post(request):
                         data1.append(data2)
 
                 ret['data'] = data1
-                ret['status'] = True
                 return HttpResponse(json.dumps(ret))
         except Exception as e:
-            ret['status'] = False
             ret['error'] = '未知错误 {}'.format(e)
             return HttpResponse(json.dumps(ret))
 
