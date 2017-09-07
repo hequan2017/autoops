@@ -2,9 +2,10 @@ from django.shortcuts import render, redirect, HttpResponse
 from    django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
 from django.views.generic import View
-
+from  django.core.urlresolvers import reverse_lazy
 # Create your views here.
-@login_required(login_url="/login.html")
+
+@login_required(login_url=reverse_lazy('login_view'))
 def index(request):
 	return render(request, 'index.html')
 
@@ -25,7 +26,7 @@ def login_view(request):
 				request.session['is_login'] = True
 				return redirect('/index.html')
 			else:
-				error_msg1 = "用户名或密码错误,请重试"
+				error_msg1 = "用户名或密码错误,或者被禁用,请重试"
 				return render(request, 'names/login.html', {'error_msg': error_msg1, })
 		else:
 			error_msg1 = "用户名或密码错误,请重试"

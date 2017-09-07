@@ -210,7 +210,6 @@ def system_user_update(request, nid):
 
     form = SystemUserForm(instance=system_user)
     password = system_users.objects.get(id=nid).password
-    print(password)
     return render(request, 'asset/system-user-update.html', {'form': form, 'nid': nid, "asset_active": asset_active,
                                                              "system_user_list_active": system_user_list_active,
                                                              "pass": password})

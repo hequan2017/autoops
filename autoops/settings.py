@@ -109,6 +109,10 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Custom User Auth model
+# AUTH_USER_MODEL = 'users.User'
+
+
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 LOGIN_URL = '/login.html'
