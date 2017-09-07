@@ -75,6 +75,9 @@ password=123
 ![图片](https://github.com/hequan2017/autoops/blob/master/static/demo/4.png)
 ![图片](https://github.com/hequan2017/autoops/blob/master/static/demo/5.png)
 ![图片](https://github.com/hequan2017/autoops/blob/master/static/demo/6.png)
+![图片](https://github.com/hequan2017/autoops/blob/master/static/demo/7.png)
+![图片](https://github.com/hequan2017/autoops/blob/master/static/demo/8.png)
+
 
 
 ### 贡献者
