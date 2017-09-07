@@ -69,6 +69,7 @@ def cmd(request):  ##命令行
             ret['data'].append(s)
 
         ret['status'] = True
+        print(ret)
 
         return HttpResponse(json.dumps(ret))
 

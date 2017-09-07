@@ -4,7 +4,7 @@ from asset.models import asset, system_users, performance
 from .form import AssetForm, SystemUserForm
 import json
 
-# from  tasks.ansible_runner.runner   import AdHocRunner
+from  tasks.ansible_runner.runner   import AdHocRunner
 from tasks.views import ssh
 
 asset_active = "active"
@@ -106,7 +106,7 @@ def asset_hardware_update(request):
             runner = AdHocRunner(assets)
             result = runner.run(task_tuple=task_tuple, pattern='all', task_name='Ansible Ad-hoc')
             data = result['contacted']['host'][0]['ansible_facts']
-            print(data)
+
             hostname = data['ansible_nodename']
             system = data['ansible_distribution'] + " " + data['ansible_distribution_version']
             disk = str(sum([int(data["ansible_devices"][i]["sectors"]) * \
