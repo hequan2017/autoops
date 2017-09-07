@@ -11,13 +11,13 @@ asset_active = "active"
 asset_list_active = "active"
 system_user_list_active = "active"
 
-
+@login_required(login_url="/login.html")
 def asset_list(request):
     obj = asset.objects.all()
     return render(request, 'asset/asset.html',
                   {'asset_list': obj, "asset_active": asset_active, "asset_list_active": asset_list_active})
 
-
+@login_required(login_url="/login.html")
 def asset_add(request):
     if request.method == 'POST':
         form = AssetForm(request.POST)
@@ -32,7 +32,7 @@ def asset_add(request):
     return render(request, 'asset/asset-add.html',
                   {'form': form, "asset_active": asset_active, "asset_list_active": asset_list_active})
 
-
+@login_required(login_url="/login.html")
 def asset_update(request, nid):
     asset_id = get_object_or_404(asset, id=nid)
 
@@ -46,7 +46,7 @@ def asset_update(request, nid):
     return render(request, 'asset/asset-update.html',
                   {'form': form, 'nid': nid, "asset_active": asset_active, "asset_list_active": asset_list_active})
 
-
+@login_required(login_url="/login.html")
 def asset_del(request):
     ret = {'status': True, 'error': None, }
     if request.method == "POST":
@@ -58,7 +58,7 @@ def asset_del(request):
             ret['error'] = '删除请求错误,{}'.format(e)
         return HttpResponse(json.dumps(ret))
 
-
+@login_required(login_url="/login.html")
 def asset_all_del(request):
     ret = {'status': True, 'error': None, }
     if request.method == "POST":
@@ -71,7 +71,7 @@ def asset_all_del(request):
             ret['error'] = '删除请求错误,{}'.format(e)
         return HttpResponse(json.dumps(ret))
 
-
+@login_required(login_url="/login.html")
 def asset_detail(request, nid):
     asset_id = get_object_or_404(asset, id=nid)
     detail = asset.objects.get(id=nid)
@@ -80,7 +80,7 @@ def asset_detail(request, nid):
                                                        "asset_active": asset_active,
                                                        "asset_list_active": asset_list_active})
 
-
+@login_required(login_url="/login.html")
 def asset_hardware_update(request):
     ret = {'status': True, 'error': None, 'data': None}
 
@@ -125,7 +125,7 @@ def asset_hardware_update(request):
             ret['error'] = '硬件更新错误{}'.format(e)
         return HttpResponse(json.dumps(ret))
 
-
+@login_required(login_url="/login.html")
 def asset_web_ssh(request):
     if request.method == 'POST':
         id = request.POST.get('id', None)
@@ -136,7 +136,7 @@ def asset_web_ssh(request):
         ret = {"ip": ip, "username": username, 'password': password, "static": True}
         return HttpResponse(json.dumps(ret))
 
-
+@login_required(login_url="/login.html")
 def asset_performance(request, nid):
     try:
         i = asset.objects.get(id=nid)
@@ -162,7 +162,7 @@ def asset_performance(request, nid):
                 mem_use.append(i.mem_use)
                 in_use.append(i.in_use)
                 out_use.append(i.out_use)
-
+        print(in_use,date)
         return render(request, 'asset/asset-performance.html', {'cpu': cpu, 'mem': mem, "asset_id": id,
                                                                 'date': date, 'cpu_use': cpu_use, 'mem_use': mem_use,
                                                                 'in_use': in_use, 'out_use': out_use,
@@ -176,13 +176,13 @@ def asset_performance(request, nid):
                       {'asset_list': obj, "asset_active": asset_active, "asset_list_active": asset_list_active,
                        "error_performance": error})
 
-
+@login_required(login_url="/login.html")
 def system_user_list(request):
     obj = system_users.objects.all()
     return render(request, 'asset/system-user.html',
                   {'asset_list': obj, "asset_active": asset_active, "system_user_list_active": system_user_list_active})
 
-
+@login_required(login_url="/login.html")
 def system_user_add(request):
     if request.method == 'POST':
         form = SystemUserForm(request.POST)
@@ -198,7 +198,7 @@ def system_user_add(request):
     return render(request, 'asset/system-user-add.html',
                   {'form': form, "asset_active": asset_active, "system_user_list_active": system_user_list_active, })
 
-
+@login_required(login_url="/login.html")
 def system_user_update(request, nid):
     system_user = get_object_or_404(system_users, id=nid)
 
@@ -215,7 +215,7 @@ def system_user_update(request, nid):
                                                              "system_user_list_active": system_user_list_active,
                                                              "pass": password})
 
-
+@login_required(login_url="/login.html")
 def system_user_del(request):
     ret = {'status': True, 'error': None, }
     if request.method == "POST":
@@ -227,7 +227,7 @@ def system_user_del(request):
             ret['error'] = '删除请求错误,{}'.format(e)
         return HttpResponse(json.dumps(ret))
 
-
+@login_required(login_url="/login.html")
 def system_user_detail(request, nid):
     system_user = get_object_or_404(system_users, id=nid)
     detail = system_users.objects.get(id=nid)
@@ -235,7 +235,7 @@ def system_user_detail(request, nid):
                   {"system_users": detail, "nid": nid, "asset_active": asset_active,
                    "system_user_list_active": system_user_list_active})
 
-
+@login_required(login_url="/login.html")
 def system_user_asset(request, nid):
     sys = system_users.objects.get(id=nid)
     obj = asset.objects.filter(system_user=nid)

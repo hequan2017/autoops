@@ -98,7 +98,7 @@ class performance(models.Model):
         db_table = 'performance'
         verbose_name = '监控状态'
         verbose_name_plural = verbose_name
-        ordering = ["-cdate"]
+        ordering = ["cdate"]
 
     def __str__(self):
         return self.cpu_use

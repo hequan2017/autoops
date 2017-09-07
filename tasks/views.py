@@ -7,8 +7,8 @@ import paramiko,json,os
 from .form import ToolForm
 
 
-# from   tasks.ansible_runner.runner      import AdHocRunner,PlayBookRunner
-# from   tasks.ansible_runner.callback    import CommandResultCallback
+from   tasks.ansible_runner.runner      import AdHocRunner,PlayBookRunner
+from   tasks.ansible_runner.callback    import CommandResultCallback
 
 
 tasks_active = "active"
@@ -36,7 +36,7 @@ def ssh(ip, port, username, password, cmd):
         ret = {"ip": ip, "data": error}
         return ret
 
-
+@login_required(login_url="/login.html")
 def cmd(request):  ##命令行
 
     if request.method == "GET":
@@ -72,16 +72,20 @@ def cmd(request):  ##命令行
 
         return HttpResponse(json.dumps(ret))
 
+
+@login_required(login_url="/login.html")
 def  historys(request):
     obj = history.objects.all()
     return  render(request,"tasks/history.html",{"historys":obj,"tasks_active":tasks_active,"history_active":histroy_active})
 
-
+@login_required(login_url="/login.html")
 def  tools(request):
     obj = toolsscript.objects.all()
     return render(request, "tasks/tools.html",
                   {"tools": obj, "tasks_active": tasks_active, "tools_active": tools_active})
 
+
+@login_required(login_url="/login.html")
 def  tools_add(request):
 
     if request.method == 'POST':
@@ -98,6 +102,8 @@ def  tools_add(request):
                   {'form': form, "tasks_active": tasks_active, "tools_active": tools_active,})
 
 
+
+@login_required(login_url="/login.html")
 def  tools_update(request,nid):
     tool_id = get_object_or_404(toolsscript, id=nid)
 
@@ -111,7 +117,7 @@ def  tools_update(request,nid):
     return render(request, 'tasks/tools-update.html',
                   {'form': form, 'nid': nid,  "tasks_active": tasks_active, "tools_active": tools_active,})
 
-
+@login_required(login_url="/login.html")
 def  tools_delete(request):
     ret = {'status': True, 'error': None, }
     if request.method == "POST":
@@ -123,7 +129,7 @@ def  tools_delete(request):
             ret['error'] = '删除请求错误,{}'.format(e)
         return HttpResponse(json.dumps(ret))
 
-
+@login_required(login_url="/login.html")
 def  tools_bulk_delte(request):
     ret = {'status': True, 'error': None, }
     if request.method == "POST":
@@ -136,6 +142,8 @@ def  tools_bulk_delte(request):
             ret['error'] = '删除请求错误,{}'.format(e)
         return HttpResponse(json.dumps(ret))
 
+
+@login_required(login_url="/login.html")
 def  tools_script_post(request):
     ret = {'data': None}
 
@@ -234,6 +242,8 @@ def  tools_script_post(request):
             ret['error'] = '未知错误 {}'.format(e)
             return HttpResponse(json.dumps(ret))
 
+
+@login_required(login_url="/login.html")
 def   tools_script_get(request, nid):
     if request.method == "GET":
         obj = asset.objects.filter(id__gt=0)
