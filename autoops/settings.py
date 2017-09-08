@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'djcelery',
     'djkombu',
+    'guardian',
 ]
 
 MIDDLEWARE = [
@@ -57,6 +58,12 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend', # default
+    'guardian.backends.ObjectPermissionBackend',
+)
+
 
 ROOT_URLCONF = 'autoops.urls'
 
@@ -110,7 +117,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # Custom User Auth model
-# AUTH_USER_MODEL = 'users.User'
+# AUTH_USER_MODEL = 'names.User'
 
 
 

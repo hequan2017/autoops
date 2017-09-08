@@ -46,7 +46,7 @@ pip3 install https://github.com/darklow/django-suit/tarball/v2
  * 安装 `supervisor  `
  
   ```
- pip2 install    supervisor   
+ pip2   install    supervisor   
  
  echo_supervisord_conf > /etc/supervisord.conf 
  

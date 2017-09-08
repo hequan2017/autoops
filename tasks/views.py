@@ -1,14 +1,14 @@
 from django.shortcuts import render, redirect, HttpResponse,get_object_or_404
 from  django.contrib.auth.decorators import login_required
-from django.contrib.auth import authenticate, login
 from asset.models import asset
 from .models import history,toolsscript
 import paramiko,json,os
 from .form import ToolForm
 
 
-from   tasks.ansible_runner.runner      import AdHocRunner,PlayBookRunner
-from   tasks.ansible_runner.callback    import CommandResultCallback
+
+# from   tasks.ansible_runner.runner      import AdHocRunner,PlayBookRunner
+# from   tasks.ansible_runner.callback    import CommandResultCallback
 
 
 def ssh(ip, port, username, password, cmd):

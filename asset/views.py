@@ -3,14 +3,25 @@ from django.contrib.auth.decorators import permission_required, login_required
 from asset.models import asset, system_users, performance,web_history
 from .form import AssetForm, SystemUserForm
 import json
-
-from  tasks.ansible_runner.runner   import AdHocRunner
-from tasks.views import ssh
+from django.contrib.auth.models import User
+from guardian.shortcuts import assign_perm, get_perms
+from guardian.core import ObjectPermissionChecker
+from guardian.decorators import permission_required
+from names.models import name
+# from  tasks.ansible_runner.runner   import AdHocRunner
+# from tasks.views import ssh
 
 
 @login_required(login_url="/login.html")
 def asset_list(request):
-    obj = asset.objects.all()
+    if request.user.is_superuser:
+        obj = asset.objects.all()
+    else:
+        user = request.user
+        print(user)
+        a = name.objects.get(id=3)
+        obj = asset.objects.filter(product_line__product_line_list=a)
+
     return render(request, 'asset/asset.html',
                   {'asset_list': obj, "asset_active": "active", "asset_list_active": "active"})
 

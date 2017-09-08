@@ -3,7 +3,7 @@ from django.db import models
 
 class asset(models.Model):
     hostname = models.CharField(max_length=64, verbose_name='主机名', null=True,blank=True)
-    network_ip = models.GenericIPAddressField(verbose_name='外网IP',null=True,blank=True)
+    network_ip = models.GenericIPAddressField(verbose_name='外网IP',null=True)
     manage_ip = models.GenericIPAddressField(verbose_name='管理IP', null=True,blank=True)
     port = models.IntegerField(verbose_name='ssh端口', null=True,blank=True,default="22")
     model = models.CharField(max_length=128, verbose_name='型号', null=True,blank=True)
@@ -39,6 +39,9 @@ class asset(models.Model):
 
     def __str__(self):
         return self.network_ip
+
+
+
 
 class   product_lines(models.Model):
     product_line_list = models.CharField(max_length=128, verbose_name='产品线',null=True,blank=True)
