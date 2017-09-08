@@ -104,3 +104,18 @@ class performance(models.Model):
         return self.cpu_use
 
 
+class web_history(models.Model):
+    user = models.CharField(max_length=32, verbose_name='登录用户', null=True)
+    ip = models.GenericIPAddressField(verbose_name='用户地址',null=True)
+    login_user = models.CharField(max_length=32,verbose_name='所用账号',null=True)
+    host = models.CharField(max_length=32,verbose_name='登录主机',null=True)
+    ctime = models.DateTimeField(auto_now_add=True, verbose_name='时间')
+
+    class  Meta:
+        db_table ="web_history"
+        verbose_name="历史登录"
+        verbose_name_plural = '历史登录'
+
+
+    def __str__(self):
+        return self.user

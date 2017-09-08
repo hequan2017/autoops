@@ -26,5 +26,6 @@ urlpatterns = [
     url(r'^logout.html$', logout,name="logout"),
     url(r'^index.html$', index),
     url(r'^asset/', include('asset.urls', namespace="asset", app_name='asset'), ),
-    url(r'^tasks/', include('tasks.urls', namespace="tasks", app_name='tasks'), )
+    url(r'^tasks/', include('tasks.urls', namespace="tasks", app_name='tasks'), ),
+    url(r'^names/', include('names.urls', namespace="names", app_name='names'), )
 ]

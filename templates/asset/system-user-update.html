@@ -67,11 +67,7 @@
                              <h3>基本</h3>
                                 {% bootstrap_field form.name layout="horizontal" %}
                                 {% bootstrap_field form.username layout="horizontal" %}
-                                <div class="form-group">
-                                    <label class="col-md-3 control-label" for="id_password">登陆密码</label>
-                                    <div class="col-md-9">
-                                        <input type="password" name="password" maxlength="256" class="form-control" placeholder="登陆密码" title="" value="{{ pass }}" id="id_password">
-                                    </div></div>
+                                 {% bootstrap_field form.password layout="horizontal" %}
                                 {% bootstrap_field form.ps layout="horizontal" %}
                             </div>
                         </div>

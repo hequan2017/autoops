@@ -1,21 +1,18 @@
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
 from django.contrib.auth.decorators import permission_required, login_required
-from asset.models import asset, system_users, performance
+from asset.models import asset, system_users, performance,web_history
 from .form import AssetForm, SystemUserForm
 import json
 
 from  tasks.ansible_runner.runner   import AdHocRunner
 from tasks.views import ssh
 
-asset_active = "active"
-asset_list_active = "active"
-system_user_list_active = "active"
 
 @login_required(login_url="/login.html")
 def asset_list(request):
     obj = asset.objects.all()
     return render(request, 'asset/asset.html',
-                  {'asset_list': obj, "asset_active": asset_active, "asset_list_active": asset_list_active})
+                  {'asset_list': obj, "asset_active": "active", "asset_list_active": "active"})
 
 @login_required(login_url="/login.html")
 def asset_add(request):
@@ -25,12 +22,12 @@ def asset_add(request):
             asset_save = form.save()
             form = AssetForm()
             return render(request, 'asset/asset-add.html',
-                          {'form': form, "asset_active": asset_active, "asset_list_active": asset_list_active,
+                          {'form': form, "asset_active": "active", "asset_list_active": "active",
                            "msg": "添加成功"})
     else:
         form = AssetForm()
     return render(request, 'asset/asset-add.html',
-                  {'form': form, "asset_active": asset_active, "asset_list_active": asset_list_active})
+                  {'form': form, "asset_active": "active", "asset_list_active": "active"})
 
 @login_required(login_url="/login.html")
 def asset_update(request, nid):
@@ -44,7 +41,7 @@ def asset_update(request, nid):
 
     form = AssetForm(instance=asset_id)
     return render(request, 'asset/asset-update.html',
-                  {'form': form, 'nid': nid, "asset_active": asset_active, "asset_list_active": asset_list_active})
+                  {'form': form, 'nid': nid, "asset_active": "active", "asset_list_active": "active"})
 
 @login_required(login_url="/login.html")
 def asset_del(request):
@@ -77,8 +74,11 @@ def asset_detail(request, nid):
     detail = asset.objects.get(id=nid)
 
     return render(request, "asset/asset-detail.html", {"assets": detail, "nid": nid,
-                                                       "asset_active": asset_active,
-                                                       "asset_list_active": asset_list_active})
+                                                       "asset_active": "active",
+                                                       "asset_list_active": "active"})
+
+
+
 
 @login_required(login_url="/login.html")
 def asset_hardware_update(request):
@@ -134,7 +134,15 @@ def asset_web_ssh(request):
         username = obj.system_user.username
         password = obj.system_user.password
         ret = {"ip": ip, "username": username, 'password': password, "static": True}
+
+
+        login_ip = request.META['REMOTE_ADDR']
+
+        web_history.objects.create(user=request.user,ip=login_ip,login_user=obj.system_user.username,host=ip)
         return HttpResponse(json.dumps(ret))
+
+
+
 
 @login_required(login_url="/login.html")
 def asset_performance(request, nid):
@@ -166,21 +174,21 @@ def asset_performance(request, nid):
         return render(request, 'asset/asset-performance.html', {'cpu': cpu, 'mem': mem, "asset_id": id,
                                                                 'date': date, 'cpu_use': cpu_use, 'mem_use': mem_use,
                                                                 'in_use': in_use, 'out_use': out_use,
-                                                                "asset_active": asset_active,
-                                                                "asset_list_active": asset_list_active})
+                                                                "asset_active":"active",
+                                                                "asset_list_active": "active"})
 
     except Exception as e:
         obj = asset.objects.all()
         error = "错误,{}".format(e)
         return render(request, 'asset/asset.html',
-                      {'asset_list': obj, "asset_active": asset_active, "asset_list_active": asset_list_active,
+                      {'asset_list': obj, "asset_active": "active", "asset_list_active": "active",
                        "error_performance": error})
 
 @login_required(login_url="/login.html")
 def system_user_list(request):
     obj = system_users.objects.all()
     return render(request, 'asset/system-user.html',
-                  {'asset_list': obj, "asset_active": asset_active, "system_user_list_active": system_user_list_active})
+                  {'asset_list': obj, "asset_active": "active", "system_user_list_active": "active"})
 
 @login_required(login_url="/login.html")
 def system_user_add(request):
@@ -190,13 +198,13 @@ def system_user_add(request):
             assets_save = form.save()
             form = SystemUserForm()
             return render(request, 'asset/system-user-add.html',
-                          {'form': form, "asset_active": asset_active,
-                           "system_user_list_active": system_user_list_active,
+                          {'form': form, "asset_active": "active",
+                           "system_user_list_active": "active",
                            "msg": "添加成功"})
     else:
         form = SystemUserForm()
     return render(request, 'asset/system-user-add.html',
-                  {'form': form, "asset_active": asset_active, "system_user_list_active": system_user_list_active, })
+                  {'form': form, "asset_active": "active", "system_user_list_active": "active", })
 
 @login_required(login_url="/login.html")
 def system_user_update(request, nid):
@@ -204,15 +212,24 @@ def system_user_update(request, nid):
 
     if request.method == 'POST':
         form = SystemUserForm(request.POST, instance=system_user)
+        old_password = system_users.objects.get(id=nid).password
         if form.is_valid():
-            system_user_save = form.save()
+            password = form.cleaned_data['password']
+            if password:
+                system_user_pasword = form.save()
+            else:
+                s =  system_users.objects.get(id=nid)
+                s.name=form.cleaned_data['name']
+                s.username=form.cleaned_data['username']
+                s.password=old_password
+                s.ps=form.cleaned_data['ps']
+                s.save()
             return redirect('system-user.html')
 
     form = SystemUserForm(instance=system_user)
-    password = system_users.objects.get(id=nid).password
-    return render(request, 'asset/system-user-update.html', {'form': form, 'nid': nid, "asset_active": asset_active,
-                                                             "system_user_list_active": system_user_list_active,
-                                                             "pass": password})
+    return render(request, 'asset/system-user-update.html', {'form': form, 'nid': nid, "asset_active": "active",
+                                                             "system_user_list_active": "active",
+                                                            })
 
 @login_required(login_url="/login.html")
 def system_user_del(request):
@@ -231,13 +248,20 @@ def system_user_detail(request, nid):
     system_user = get_object_or_404(system_users, id=nid)
     detail = system_users.objects.get(id=nid)
     return render(request, "asset/system-user-detail.html",
-                  {"system_users": detail, "nid": nid, "asset_active": asset_active,
-                   "system_user_list_active": system_user_list_active})
+                  {"system_users": detail, "nid": nid, "asset_active": "active",
+                   "system_user_list_active":"active"})
 
 @login_required(login_url="/login.html")
 def system_user_asset(request, nid):
     sys = system_users.objects.get(id=nid)
     obj = asset.objects.filter(system_user=nid)
     return render(request, "asset/system-user-asset.html", {"system_users": sys, "nid": nid, "asset_list": obj,
-                                                            "asset_active": asset_active,
-                                                            "system_user_list_active": system_user_list_active})
+                                                            "asset_active": "active",
+                                                            "system_user_list_active": "active"})
+
+
+@login_required(login_url="/login.html")
+def web_historys(request):
+    obj = web_history.objects.all()
+    return render(request, 'asset/web-history.html',
+                      {'web_historys': obj, "asset_active": "active", "web_history_active":"active",})

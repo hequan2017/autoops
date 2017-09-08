@@ -68,6 +68,8 @@ class SystemUserForm(forms.ModelForm):
             'ps': forms.Textarea(
                 attrs={'cols': 80, 'rows': 3}
             ),
-
         }
+        help_texts = {
 
+            'password': ('在更新页面,如果不想修改当前用户的密码,保持为空即可.'),
+        }

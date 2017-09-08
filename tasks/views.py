@@ -11,12 +11,6 @@ from   tasks.ansible_runner.runner      import AdHocRunner,PlayBookRunner
 from   tasks.ansible_runner.callback    import CommandResultCallback
 
 
-tasks_active = "active"
-cmd_active = "active"
-histroy_active="active"
-tools_active="active"
-
-
 def ssh(ip, port, username, password, cmd):
     try:
         ssh = paramiko.SSHClient()  # 创建ssh对象
@@ -41,7 +35,7 @@ def cmd(request):  ##命令行
 
     if request.method == "GET":
         obj = asset.objects.all()
-        return render(request, 'tasks/cmd.html',{'asset_list': obj,"tasks_active":tasks_active,"cmd_active":cmd_active})
+        return render(request, 'tasks/cmd.html',{'asset_list': obj,"tasks_active":"active","cmd_active":"active"})
 
     if request.method == 'POST':
         ids = request.POST.getlist('id')
@@ -73,13 +67,13 @@ def cmd(request):  ##命令行
 @login_required(login_url="/login.html")
 def  historys(request):
     obj = history.objects.all()
-    return  render(request,"tasks/history.html",{"historys":obj,"tasks_active":tasks_active,"history_active":histroy_active})
+    return  render(request,"tasks/history.html",{"historys":obj,"tasks_active":"active","history_active":"active"})
 
 @login_required(login_url="/login.html")
 def  tools(request):
     obj = toolsscript.objects.all()
     return render(request, "tasks/tools.html",
-                  {"tools": obj, "tasks_active": tasks_active, "tools_active": tools_active})
+                  {"tools": obj, "tasks_active": "active", "tools_active": "active"})
 
 
 @login_required(login_url="/login.html")
@@ -91,12 +85,12 @@ def  tools_add(request):
             tools_save = form.save()
             form =  ToolForm()
             return render(request, 'tasks/tools-add.html',
-                          {'form': form, "tasks_active": tasks_active, "tools_active": tools_active,
+                          {'form': form, "tasks_active": "active", "tools_active":"active",
                            "msg": "添加成功"})
     else:
         form =  ToolForm()
     return render(request, 'tasks/tools-add.html',
-                  {'form': form, "tasks_active": tasks_active, "tools_active": tools_active,})
+                  {'form': form, "tasks_active": "active", "tools_active":"active",})
 
 
 
@@ -112,7 +106,7 @@ def  tools_update(request,nid):
 
     form = ToolForm(instance=tool_id)
     return render(request, 'tasks/tools-update.html',
-                  {'form': form, 'nid': nid,  "tasks_active": tasks_active, "tools_active": tools_active,})
+                  {'form': form, 'nid': nid,  "tasks_active": "active", "tools_active":"active",})
 
 @login_required(login_url="/login.html")
 def  tools_delete(request):
@@ -243,4 +237,4 @@ def   tools_script_get(request, nid):
     if request.method == "GET":
         obj = asset.objects.filter(id__gt=0)
         sh = toolsscript.objects.filter(id=nid)
-        return render(request, 'tasks/tools-script.html', {"asset_list": obj, "sh": sh})
+        return render(request, 'tasks/tools-script.html', {"asset_list": obj, "sh": sh,"tools_active":"active"})
