@@ -1,5 +1,5 @@
 from django.contrib import admin
-from   .models import asset,product_lines,data_centers,system_users,performance,web_history
+from   .models import asset,data_centers,system_users,performance,web_history
 from guardian.admin import GuardedModelAdmin
 
 
@@ -9,10 +9,14 @@ class AssetAdmin(GuardedModelAdmin):
     list_display_links = ('model',)
     list_filter = ("product_line",)
 
+class SystemUsersAdmin(GuardedModelAdmin):
+    search_fields = ('name','username',) ## 定义搜索框以哪些字段可以搜索
+    list_display = ('name','username',)#  每行的显示信息
+    list_display_links = ('name',)
+    list_filter = ("product_line",)
 
 admin.site.register(asset,AssetAdmin)
-admin.site.register(product_lines)
 admin.site.register(data_centers)
-admin.site.register(system_users)
+admin.site.register(system_users,SystemUsersAdmin)
 admin.site.register(performance)
 admin.site.register(web_history)

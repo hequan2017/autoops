@@ -7,8 +7,8 @@ from .form import ToolForm
 
 
 
-# from   tasks.ansible_runner.runner      import AdHocRunner,PlayBookRunner
-# from   tasks.ansible_runner.callback    import CommandResultCallback
+from   tasks.ansible_runner.runner      import AdHocRunner,PlayBookRunner
+from   tasks.ansible_runner.callback    import CommandResultCallback
 
 
 def ssh(ip, port, username, password, cmd):

@@ -1,7 +1,6 @@
 from django.contrib import admin
+from   .models import login_log
 
-# Register your models here.
 
-from   .models import login_log,name
 admin.site.register(login_log)
-admin.site.register(name)
+

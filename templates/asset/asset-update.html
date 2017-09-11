@@ -69,7 +69,18 @@
                                 {% bootstrap_field form.network_ip layout="horizontal" %}
                                 {% bootstrap_field form.manage_ip layout="horizontal" %}
                                 {% bootstrap_field form.port layout="horizontal" %}
-                                {% bootstrap_field form.system_user layout="horizontal" %}
+             {% if  user.is_superuser  %}                        {% bootstrap_field form.system_user layout="horizontal" %}  {% endif %}
+            {% if  user.is_superuser   == 0  %}
+             <div class="form-group"><label class="col-md-3 control-label"
+                                                               for="id_system_user">登陆用户</label>
+                                    <div class="col-md-9"><select name="system_user" class="form-control" title="" id="id_system_user">
+                                        <option value="" selected="">---------</option>
+                                        {% for  row  in system_u %}
+                                        <option value="{{ row }}">{{ row }}</option>
+                                        {% endfor %}
+
+                                    </select></div>
+                                </div>{% endif %}
                                 {% bootstrap_field form.product_line layout="horizontal" %}
                                 {% bootstrap_field form.uplink_port layout="horizontal" %}
 

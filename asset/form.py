@@ -27,16 +27,16 @@ class AssetForm(forms.ModelForm):
             'ps': forms.Textarea(
                 attrs={'cols': 80, 'rows': 3}
             ),
-            'product_line': forms.SelectMultiple(
-                attrs={'class': 'select2',
-                       'data-placeholder': ('选择产品线')}),
+            # 'product_line': forms.SelectMultiple(
+            #     attrs={'class': 'select2',
+            #            'data-placeholder': ('选择产品线')}),
             # 'admin_user': forms.Select(
             #     attrs={'class': 'select2',
             #            'data-placeholder': ('Select asset admin user')}),
         }
         help_texts = {
-            # 'network_ip': '必填项目',
             'network_ip': ('必填项目'),
+            'product_line': ('必填项目,此产品线对应的为后台用户组,请先建立后台用户权限组',),
         }
         error_messages = {
             'model':{
@@ -44,10 +44,10 @@ class AssetForm(forms.ModelForm):
             }
         }
 
-    # def clean_model(self):
+    # def clean_product_line(self):
     #     model = self.cleaned_data['model']
-    #     if len(model) < 3:
-    #         raise ValidationError("不能短于3个字符")
+    #     if len(model) == None:
+    #         raise ValidationError("不能为空")
     #     return model
 
     #
@@ -70,6 +70,6 @@ class SystemUserForm(forms.ModelForm):
             ),
         }
         help_texts = {
-
             'password': ('在更新页面,如果不想修改当前用户的密码,保持为空即可.'),
+            'product_line': ('必填项目,此产品线对应的为后台用户组,请先建立后台用户权限组',),
         }
