@@ -277,9 +277,9 @@ def test_run():
          {
                  "hostname": "192.168.50.231",
                  "ip": "192.168.50.231",
-                "port": 22,
+                 "port": 22,
                  "username": "root",
-                 "password": "He.he123",
+                 "password": "123123",
          },
      ]
     task_tuple = (('shell', 'ls'),)
