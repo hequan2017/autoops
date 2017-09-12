@@ -43,6 +43,8 @@ git  clone  git@github.com:hequan2017/autoops.git
 
 cd autoops/
 
+yum install sshpass -y
+
 pip3 install -r requirements.txt     
 
 pip3 install https://github.com/darklow/django-suit/tarball/v2

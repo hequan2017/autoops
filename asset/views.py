@@ -222,7 +222,7 @@ def asset_performance(request, nid):
         list = total['data'].split(" ")
         while '' in list:
             list.remove('')
-        mem = float('%.2f' % (int(list[2]) / int(list[1]))) * 100
+        mem = float('%.2f' % (float('%.3f' % (int(list[2]) / int(list[1]))) * 100))
 
         all = performance.objects.all()
         date, cpu_use, mem_use, in_use, out_use = [], [], [], [], []
@@ -234,7 +234,6 @@ def asset_performance(request, nid):
                 mem_use.append(i.mem_use)
                 in_use.append(i.in_use)
                 out_use.append(i.out_use)
-        print(in_use, date)
         return render(request, 'asset/asset-performance.html', {'cpu': cpu, 'mem': mem, "asset_id": id,
                                                                 'date': date, 'cpu_use': cpu_use, 'mem_use': mem_use,
                                                                 'in_use': in_use, 'out_use': out_use,

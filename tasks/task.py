@@ -12,11 +12,9 @@ app= Celery('autoops',)
 def   job(id):  ##计划任务
 
     i = asset.objects.filter(id=id).first()
-    print(i)
     print(i.network_ip, i.port, i.system_user.username, i.system_user.password)
     cpu1 = ssh(ip=i.network_ip, port=i.port, username=i.system_user.username, password=i.system_user.password, cmd=" top -bn 1 -i -c | grep Cpu   ")
 
-    print(cpu1)
     cpu2 = cpu1['data'].split()
     cpu3 = cpu2[1].split('%')
     cpu = cpu3[0]
@@ -26,9 +24,8 @@ def   job(id):  ##计划任务
     list = total['data'].split(" ")
     while '' in list:
         list.remove('')
-    mem = float('%.2f' % (int(list[2]) / int(list[1]))) * 100
+    mem = float('%.2f' % (float('%.3f' % (int(list[2]) / int(list[1]))) * 100))
 
-    print(mem,"mem-------------------------")
 
     in1 = ssh(ip=i.network_ip, port=i.port, username=i.system_user.username, password=i.system_user.password, cmd="cat /proc/net/dev  |  grep eth0  ")
     in2 = in1['data'].split()
@@ -40,7 +37,6 @@ def   job(id):  ##计划任务
 
     in_network = int((int(in4[1]) - int(in2[1]))/1024/10*8)
     out_network = int((int(in4[9]) - int(in2[9]))/1024/10*8)
-    print(in_network,out_network)
     performance.objects.create(server_id=i.id, cpu_use=cpu, mem_use=mem,in_use=in_network,out_use=out_network)
 
 
