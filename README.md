@@ -10,7 +10,9 @@ AutoOps是一款基础django开发的，面向运维工程师使用,可以管理
   -  后台地址 `http://42.62.55.58:8003/admin`  账号`admin`   密码`1qaz.2wsx`
   -  资产api地址 `http://42.62.55.58:8003/asset/api/asset.html`
   -  博客:`http://hequan.blog.51cto.com/`   
-![图片](https://github.com/hequan2017/autoops/blob/master/static/demo/autoops.png)  
+  
+  
+![图片](https://github.com/hequan2017/autoops/blob/master/static/demo/autuops.png)  
 
 
 
