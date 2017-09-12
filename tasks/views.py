@@ -1,10 +1,12 @@
-from django.shortcuts import render, redirect, HttpResponse,get_object_or_404
+from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
 from  django.contrib.auth.decorators import login_required
 from asset.models import asset
-from .models import history,toolsscript
-import paramiko,json,os
+from .models import history, toolsscript
+import paramiko, json, os
 from .form import ToolForm
-
+from guardian.shortcuts import get_objects_for_user, get_objects_for_group
+from django.contrib.auth.models import User
+from guardian.core import ObjectPermissionChecker
 
 
 from   tasks.ansible_runner.runner      import AdHocRunner,PlayBookRunner
@@ -30,18 +32,28 @@ def ssh(ip, port, username, password, cmd):
         ret = {"ip": ip, "data": error}
         return ret
 
+
 @login_required(login_url="/login.html")
 def cmd(request):  ##命令行
 
     if request.method == "GET":
-        obj = asset.objects.all()
-        return render(request, 'tasks/cmd.html',{'asset_list': obj,"tasks_active":"active","cmd_active":"active"})
+        obj = get_objects_for_user(request.user, 'asset.change_asset')
+        return render(request, 'tasks/cmd.html', {'asset_list': obj, "tasks_active": "active", "cmd_active": "active"})
 
     if request.method == 'POST':
         ids = request.POST.getlist('id')
         cmd = request.POST.get('cmd', None)
+
+        user = User.objects.get(username=request.user)
+        checker = ObjectPermissionChecker(user)
+        ids1 = []
+        for i in ids:
+            assets = asset.objects.get(id=i)
+            if checker.has_perm('delete_asset', assets, ) == True:
+                ids1.append(i)
+        print(ids1)
         user = request.user
-        idstring = ','.join(ids)
+        idstring = ','.join(ids1)
         if not ids:
             error_1 = "请选择主机"
             ret = {"error": error_1, "status": False}
@@ -53,49 +65,45 @@ def cmd(request):  ##命令行
 
         obj = asset.objects.extra(where=['id IN (' + idstring + ')'])
 
-
         ret = {}
-        ret['data'] = []
 
+        ret['data'] = []
         for i in obj:
-            s = ssh(ip=i.network_ip, port=i.port, username=i.system_user.username, password=i.system_user.password, cmd=cmd)
-            historys = history.objects.create(ip=i.network_ip, root=i.system_user, port=i.port, cmd=cmd, user=user)
-            ret['data'].append(s)
+            try:
+                s = ssh(ip=i.network_ip, port=i.port, username=i.system_user.username, password=i.system_user.password,
+                        cmd=cmd)
+                historys = history.objects.create(ip=i.network_ip, root=i.system_user, port=i.port, cmd=cmd, user=user)
+                ret['data'].append(s)
+            except Exception as e:
+                ret['data'].append({"ip": i.network_ip, "data": "账号密码不对,{}".format(e)})
         return HttpResponse(json.dumps(ret))
 
 
 @login_required(login_url="/login.html")
-def  historys(request):
-    obj = history.objects.all()
-    return  render(request,"tasks/history.html",{"historys":obj,"tasks_active":"active","history_active":"active"})
-
-@login_required(login_url="/login.html")
-def  tools(request):
+def tools(request):
     obj = toolsscript.objects.all()
     return render(request, "tasks/tools.html",
                   {"tools": obj, "tasks_active": "active", "tools_active": "active"})
 
 
 @login_required(login_url="/login.html")
-def  tools_add(request):
-
+def tools_add(request):
     if request.method == 'POST':
-        form =  ToolForm(request.POST)
+        form = ToolForm(request.POST)
         if form.is_valid():
             tools_save = form.save()
-            form =  ToolForm()
+            form = ToolForm()
             return render(request, 'tasks/tools-add.html',
-                          {'form': form, "tasks_active": "active", "tools_active":"active",
+                          {'form': form, "tasks_active": "active", "tools_active": "active",
                            "msg": "添加成功"})
     else:
-        form =  ToolForm()
+        form = ToolForm()
     return render(request, 'tasks/tools-add.html',
-                  {'form': form, "tasks_active": "active", "tools_active":"active",})
-
+                  {'form': form, "tasks_active": "active", "tools_active": "active", })
 
 
 @login_required(login_url="/login.html")
-def  tools_update(request,nid):
+def tools_update(request, nid):
     tool_id = get_object_or_404(toolsscript, id=nid)
 
     if request.method == 'POST':
@@ -106,10 +114,11 @@ def  tools_update(request,nid):
 
     form = ToolForm(instance=tool_id)
     return render(request, 'tasks/tools-update.html',
-                  {'form': form, 'nid': nid,  "tasks_active": "active", "tools_active":"active",})
+                  {'form': form, 'nid': nid, "tasks_active": "active", "tools_active": "active", })
+
 
 @login_required(login_url="/login.html")
-def  tools_delete(request):
+def tools_delete(request):
     ret = {'status': True, 'error': None, }
     if request.method == "POST":
         try:
@@ -120,8 +129,9 @@ def  tools_delete(request):
             ret['error'] = '删除请求错误,{}'.format(e)
         return HttpResponse(json.dumps(ret))
 
+
 @login_required(login_url="/login.html")
-def  tools_bulk_delte(request):
+def tools_bulk_delte(request):
     ret = {'status': True, 'error': None, }
     if request.method == "POST":
         try:
@@ -135,13 +145,14 @@ def  tools_bulk_delte(request):
 
 
 @login_required(login_url="/login.html")
-def  tools_script_post(request):
+def tools_script_post(request):
     ret = {'data': None}
 
     if request.method == 'POST':
         try:
             host_ids = request.POST.getlist('id', None)
             sh_id = request.POST.get('shid', None)
+
             user = request.user
 
             if not host_ids:
@@ -149,7 +160,14 @@ def  tools_script_post(request):
                 ret = {"error": error1, "status": False}
                 return HttpResponse(json.dumps(ret))
 
-            idstring = ','.join(host_ids)
+            user = User.objects.get(username=request.user)
+            checker = ObjectPermissionChecker(user)
+            ids1 = []
+            for i in host_ids:
+                assets = asset.objects.get(id=i)
+                if checker.has_perm('delete_asset', assets, ) == True:
+                    ids1.append(i)
+            idstring = ','.join(ids1)
 
             host = asset.objects.extra(where=['id IN (' + idstring + ')'])
             sh = toolsscript.objects.filter(id=sh_id)
@@ -190,8 +208,9 @@ def  tools_script_post(request):
                             },
                         ]
 
-                        history.objects.create(ip=h.network_ip, root=h.system_user.username, port=h.port, cmd=s.name, user=user)
-                        if   s.tool_run_type == 0:
+                        history.objects.create(ip=h.network_ip, root=h.system_user.username, port=h.port, cmd=s.name,
+                                               user=user)
+                        if s.tool_run_type == 0:
                             task_tuple = (('script', a),)
                             hoc = AdHocRunner(hosts=assets)
                             hoc.results_callback = CommandResultCallback()
@@ -233,8 +252,8 @@ def  tools_script_post(request):
 
 
 @login_required(login_url="/login.html")
-def   tools_script_get(request, nid):
+def tools_script_get(request, nid):
     if request.method == "GET":
-        obj = asset.objects.filter(id__gt=0)
+        obj = get_objects_for_user(request.user, 'asset.change_asset')
         sh = toolsscript.objects.filter(id=nid)
-        return render(request, 'tasks/tools-script.html', {"asset_list": obj, "sh": sh,"tools_active":"active"})
+        return render(request, 'tasks/tools-script.html', {"asset_list": obj, "sh": sh, "tools_active": "active"})

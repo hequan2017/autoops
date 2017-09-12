@@ -4,7 +4,7 @@ from  .import views
 
 urlpatterns = [
     url(r'^cmd.html$', views.cmd, name='cmd'),
-    url(r'^history.html$', views.historys, name='history'),
+
     url(r'^tools.html$', views.tools, name='tools'),
     url(r'^tools-add.html$', views.tools_add, name='tools_add'),
     url(r'^tools-del.html$', views.tools_delete, name='tools_delete'),

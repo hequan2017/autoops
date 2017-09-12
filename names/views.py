@@ -7,8 +7,8 @@ from .models import login_log
 from .form import UserPasswordForm
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password, check_password
-
-
+from  asset.models import web_history
+from  tasks.models import history
 
 
 @login_required(login_url="/login.html")
@@ -50,9 +50,9 @@ def error(request):  ##错误页面
 
 
 @login_required(login_url="/login.html")
-def login_logs(request):
+def login_history(request):
     obj = login_log.objects.all()
-    return render(request, 'names/login-log.html',
+    return render(request, 'names/login-history.html',
                   {'login_log': obj, "autoops_active": "active", "login_log_active": "active", })
 
 
@@ -82,3 +82,17 @@ def password_update(request):
     else:
         form = UserPasswordForm()
     return render(request, 'names/password.html',{'form': form, })
+
+
+
+@login_required(login_url="/login.html")
+def web_historys(request):
+    obj = web_history.objects.all()
+    return render(request, 'names/web-history.html',
+                  {'web_historys': obj,"autoops_active": "active", "login_log_active": "active",   })
+
+
+@login_required(login_url="/login.html")
+def  cmd_historys(request):
+    obj = history.objects.all()
+    return  render(request,"names/cmd-history.html",{"historys":obj,"autoops_active": "active", "login_log_active": "active", })

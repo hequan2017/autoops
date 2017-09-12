@@ -7,7 +7,9 @@ from django.contrib.auth.models import User, Group
 from guardian.shortcuts import assign_perm, get_perms
 from guardian.core import ObjectPermissionChecker
 from guardian.decorators import permission_required_or_403
+
 from  tasks.ansible_runner.runner   import AdHocRunner
+
 from tasks.views import ssh
 from guardian.shortcuts import get_objects_for_user, get_objects_for_group
 from guardian.models import UserObjectPermission, GroupObjectPermission
@@ -376,8 +378,3 @@ def system_user_asset(request, nid):
                                                             "system_user_list_active": "active"})
 
 
-@login_required(login_url="/login.html")
-def web_historys(request):
-    obj = web_history.objects.all()
-    return render(request, 'asset/web-history.html',
-                  {'web_historys': obj, "asset_active": "active", "web_history_active": "active", })

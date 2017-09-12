@@ -61,6 +61,7 @@
                                 <tr>
                                     <th>名称</th>
                                     <th>系统用户</th>
+                                     <th>产品线</th>
                                     <th>备注</th>
                                     <th>动作</th>
                                 </tr>
@@ -73,6 +74,7 @@
                                                 href="{% url  "asset:system_user_detail"   row.id %}" >{{ row.name }}</a>
                                         </td>
                                         <td class="center">{{ row.username }}</td>
+                                        <td class="center">{{ row.product_line }}</td>
                                         <td class="center">{{ row.ps }}</td>
                                         <td><a class="btn btn-primary  btn-xs"
                                                href="{% url  "asset:system_user_update"   row.id %}">编辑</a>
