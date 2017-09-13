@@ -35,7 +35,7 @@
                     <div class="panel-options">
                         <ul class="nav nav-tabs">
                             <li >
-                                <a   href="{% url "asset:system_user_detail"  nid  %}" class="text-center"><i class="fa fa-laptop"></i>系统用户详情</a>
+                                <a   href="{% url "asset:system_user_detail"  nid  %}" class="text-center"><i class="fa fa-laptop"></i>用户详情</a>
                             </li>
                               <li class="active">
 
@@ -98,8 +98,7 @@
                                         <td class="center">{{ row.network_ip }}</td>
                                         <td class="center">{{ row.manage_ip }}</td>
                                         <td class="center">{{ row.port }}</td>
-                                        <td class="center">{% for i in row.product_line.all %}
-                                            {{ i }} {% endfor %}</td>
+                                        <td class="center">{{ row.product_line }}</td>
                                         <td><a   class="btn btn-primary btn-xs"
                                                href="{% url  "asset:asset_update"   row.id %}">编辑</a>
                                             <button  class="btn btn-danger btn-xs  asset_del_id"

@@ -51,11 +51,11 @@ def error(request):  ##错误页面
 
 @login_required(login_url="/login.html")
 def login_history(request):
-    obj = login_log.objects.all()
+    obj = login_log.objects.order_by('-ctime')
     return render(request, 'names/login-history.html',
                   {'login_log': obj, "autoops_active": "active", "login_log_active": "active", })
 
-
+@login_required(login_url="/login.html")
 def password_update(request):
     if request.method == 'POST':
         form = UserPasswordForm(request.POST)
@@ -87,12 +87,12 @@ def password_update(request):
 
 @login_required(login_url="/login.html")
 def web_historys(request):
-    obj = web_history.objects.all()
+    obj = web_history.objects.order_by('-ctime')
     return render(request, 'names/web-history.html',
                   {'web_historys': obj,"autoops_active": "active", "login_log_active": "active",   })
 
 
 @login_required(login_url="/login.html")
 def  cmd_historys(request):
-    obj = history.objects.all()
+    obj = history.objects.order_by('-ctime')
     return  render(request,"names/cmd-history.html",{"historys":obj,"autoops_active": "active", "login_log_active": "active", })

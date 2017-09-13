@@ -35,8 +35,8 @@ class AssetForm(forms.ModelForm):
             #            'data-placeholder': ('Select asset admin user')}),
         }
         help_texts = {
-            'network_ip': ('必填项目'),
-            'product_line': ('必填项目,此产品线对应的为后台用户组,请先建立后台用户权限组',),
+            'network_ip': '必填项目,如您管理的主机无外网IP,可将内网IP输入到此。 批量执行工具都是按照此项进行操作的',
+            'product_line': '必填项目,此产品线对应的为后台用户组,请先建立后台用户权限组'
         }
         error_messages = {
             'model':{
@@ -72,6 +72,6 @@ class SystemUserForm(forms.ModelForm):
             ),
         }
         help_texts = {
-            'password': ('在更新页面,如果不想修改当前用户的密码,保持为空即可.'),
-            'product_line': ('必填项目,此产品线对应的为后台用户组,请先建立后台用户权限组',),
+            'password': '在更新页面,如果不想修改当前用户的密码,保持为空即可',
+            'product_line': '必填项目,此产品线对应的为后台用户组,请先建立后台用户权限组',
         }
