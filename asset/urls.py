@@ -3,12 +3,14 @@ from . import api
 from  .import views
 
 urlpatterns = [
-    url(r'^asset.html$',views.asset_list,name='asset_list'),
-    url(r'^asset-add.html$',views.asset_add,name='asset_add'),
-    url(r'^asset-del.html$',views.asset_del,name='asset_del'),
+    url(r'^asset.html$',views.AssetListAll.as_view(),name='asset_list'),
+    url(r'^asset-add.html$',views.AssetAdd.as_view(),name='asset_add'),
+    url(r'^asset-del.html$',views.AssetDel.as_view(),name='asset_del'),
     url(r'^asset-all-del.html$',views.asset_all_del,name='asset_all_del'),
-    url(r'^asset-detail-(?P<nid>\d+).html$',views.asset_detail,name='asset_detail'),
-    url(r'^asset-update-(?P<nid>\d+).html$', views.asset_update, name='asset_update'),
+    url(r'^asset-detail-(?P<pk>\d+).html$',views.AssetDetail.as_view(),name='asset_detail'),
+    url(r'^asset-update-(?P<pk>[0-9]+).html$', views.AssetUpdate.as_view(), name='asset_update'),
+
+
     url(r'^asset-hardware-update.html$', views.asset_hardware_update, name='asset_hardware_update'),
     url(r'^asset-performance-(?P<nid>\d+).html$', views.asset_performance, name='asset_performance'),
     url(r'^asset-webssh.html$', views.asset_web_ssh, name='asset_web_ssh'),

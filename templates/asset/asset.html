@@ -85,7 +85,7 @@
                                         <tr class="gradeA" id="{{ row.id }}">
                                             <td><input type="checkbox" value="{{ row.id }}"  name="id"></td>
                                             <td class="center"><a
-                                                    href="{% url  "asset:asset_detail"   row.id %}">{{ row.network_ip }}</a>
+                                                    href="{% url  "asset:asset_detail"   pk=row.id %}">{{ row.network_ip }}</a>
                                             </td>
                                             <td class="center">{{ row.manage_ip }}</td>
                                             <td class="center">{{  row.product_line.name }}</td>
@@ -93,7 +93,7 @@
                                             <td class="center">{{ row.uplink_port }}</td>
                                             <td class="center">{{ row.sn }}</td>
                                             <td><a class="btn btn-primary  btn-xs "
-                                                   href="{% url  "asset:asset_update"   row.id %}">编辑</a>
+                                                   href="{% url  "asset:asset_update"  pk=row.id %}">编辑</a>
                                                 <a class="btn btn-danger  btn-xs  asset_del_id"     data-toggle="modal"
                                                         data-target="#myModal1">删除
                                                 </a>
