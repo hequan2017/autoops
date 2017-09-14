@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import Group
 
+
+
 class asset(models.Model):
     hostname = models.CharField(max_length=64, verbose_name='主机名', null=True,blank=True)
     network_ip = models.GenericIPAddressField(verbose_name='外网IP',unique=True)
@@ -35,23 +37,14 @@ class asset(models.Model):
         db_table ="asset"
         verbose_name="资产管理"
         verbose_name_plural = '资产管理'
+        permissions = {
+            ('read_asset',u"只读资产管理"),
+        }
 
 
     def __str__(self):
         return self.network_ip
 
-#
-# class   product_lines(models.Model):
-#     product_line_list = models.CharField(max_length=128, verbose_name='产品线')
-#
-#
-#     class Meta:
-#         db_table = "product_lines"
-#         verbose_name = "产品线"
-#         verbose_name_plural = '产品线'
-#
-#     def __str__(self):
-#         return self.product_line_list
 
 class   data_centers(models.Model):
     data_center_list = models.CharField(max_length=128, verbose_name='数据中心', null=True)
@@ -81,6 +74,9 @@ class  system_users(models.Model):
         db_table ="system_users"
         verbose_name="系统登陆用户"
         verbose_name_plural = '系统登陆用户'
+        permissions = {
+            ('read_system_users',u"只读系统登陆用户"),
+        }
 
 
 

@@ -11,8 +11,10 @@ from guardian.decorators import permission_required_or_403
 from tasks.views import ssh
 from guardian.shortcuts import get_objects_for_user, get_objects_for_group
 from guardian.models import UserObjectPermission, GroupObjectPermission
-from django.views.generic import TemplateView, ListView, View,CreateView,UpdateView,DeleteView,DetailView
+from django.views.generic import TemplateView, ListView, View, CreateView, UpdateView, DeleteView, DetailView
 from django.urls import reverse_lazy
+from common.mixins import JSONResponseMixin
+
 
 from  tasks.ansible_runner.runner   import AdHocRunner
 
@@ -25,25 +27,24 @@ class AssetListAll(TemplateView):
     def dispatch(self, *args, **kwargs):
         return super(AssetListAll, self).dispatch(*args, **kwargs)
 
-    def get_context_data(self,**kwargs):
+    def get_context_data(self, **kwargs):
         context = {
             "asset_active": "active",
             "asset_list_active": "active",
-            'asset_list': get_objects_for_user(self.request.user, 'asset.change_asset')
+            'asset_list': get_objects_for_user(self.request.user, 'asset.read_asset')
         }
         kwargs.update(context)
         return super(AssetListAll, self).get_context_data(**kwargs)
 
 
-
-
-class  AssetAdd(CreateView):
+class AssetAdd(CreateView):
     model = asset
     form_class = AssetForm
     template_name = 'asset/asset-add.html'
     success_url = reverse_lazy('asset:asset_list')
 
     @method_decorator(login_required)
+    @method_decorator(permission_required_or_403('asset.add_asset'))
     def dispatch(self, *args, **kwargs):
         return super(AssetAdd, self).dispatch(*args, **kwargs)
 
@@ -51,6 +52,7 @@ class  AssetAdd(CreateView):
         self.asset_save = asset_save = form.save()
         myproduct = asset.objects.get(network_ip=form.cleaned_data['network_ip']).product_line
         mygroup = Group.objects.get(name=myproduct)
+        GroupObjectPermission.objects.assign_perm("read_asset", mygroup, obj=asset_save)
         GroupObjectPermission.objects.assign_perm("add_asset", mygroup, obj=asset_save)
         GroupObjectPermission.objects.assign_perm("change_asset", mygroup, obj=asset_save)
         GroupObjectPermission.objects.assign_perm("delete_asset", mygroup, obj=asset_save)
@@ -59,35 +61,33 @@ class  AssetAdd(CreateView):
     def get_success_url(self):
         return super(AssetAdd, self).get_success_url()
 
-    def get_context_data(self,**kwargs):
+    def get_context_data(self, **kwargs):
         context = {
-                "asset_active": "active",
-                "asset_list_active": "active",
+            "asset_active": "active",
+            "asset_list_active": "active",
         }
         kwargs.update(context)
         return super(AssetAdd, self).get_context_data(**kwargs)
 
 
-
 class AssetUpdate(UpdateView):
     model = asset
     form_class = AssetForm
-    template_name =  'asset/asset-update.html'
+    template_name = 'asset/asset-update.html'
     success_url = reverse_lazy('asset:asset_list')
 
     @method_decorator(login_required)
-    @method_decorator(permission_required_or_403('asset.change_asset', (asset, 'id', 'pk')))
+    @method_decorator(permission_required_or_403('asset.add_asset', (asset, 'id', 'pk')))
     def dispatch(self, *args, **kwargs):
         return super(AssetUpdate, self).dispatch(*args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = {
-                "asset_active": "active",
-                "asset_list_active": "active",
+            "asset_active": "active",
+            "asset_list_active": "active",
         }
         kwargs.update(context)
         return super(AssetUpdate, self).get_context_data(**kwargs)
-
 
     def form_invalid(self, form):
         print(form.errors)
@@ -101,12 +101,16 @@ class AssetUpdate(UpdateView):
         myproduct = asset.objects.get(id=pk).product_line
         mygroup = Group.objects.get(name=myproduct)
 
-        if oldmygroup  !=  mygroup:
+        if oldmygroup != mygroup:
             GroupObjectPermission.objects.filter(object_pk=pk).delete()
+            GroupObjectPermission.objects.assign_perm("read_asset", mygroup, obj=self.object)
             GroupObjectPermission.objects.assign_perm("add_asset", mygroup, obj=self.object)
             GroupObjectPermission.objects.assign_perm("change_asset", mygroup, obj=self.object)
             GroupObjectPermission.objects.assign_perm("delete_asset", mygroup, obj=self.object)
         return super(AssetUpdate, self).form_valid(form)
+
+    def get_success_url(self):
+        return super(AssetUpdate, self).get_success_url()
 
 
 class AssetDetail(DetailView):
@@ -131,11 +135,8 @@ class AssetDetail(DetailView):
         return super(AssetDetail, self).get_context_data(**kwargs)
 
 
-
-
-class  AssetDel(View):
+class AssetDel(JSONResponseMixin, View):
     model = asset
-
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
@@ -151,12 +152,13 @@ class  AssetDel(View):
             if checker.has_perm('delete_asset', assets, ) == True:
                 assets.delete()
                 GroupObjectPermission.objects.filter(object_pk=id).delete()
+            print(ret)
         except Exception as e:
-            ret['status'] = False
-            ret['error'] = '删除请求错误,{}'.format(e)
+            ret = {
+                "static": False,
+                "error": '删除请求错误,{}'.format(e)
+            }
         return HttpResponse(json.dumps(ret))
-
-
 
 
 @login_required(login_url="/login.html")
@@ -180,7 +182,6 @@ def asset_all_del(request):
             ret['status'] = False
             ret['error'] = '删除请求错误,{}'.format(e)
         return HttpResponse(json.dumps(ret))
-
 
 
 @login_required(login_url="/login.html")
@@ -293,7 +294,7 @@ def system_user_list(request):
     l = []
     for i in obj:
         system_u = system_users.objects.get(id=i.id)
-        if checker.has_perm('change_system_users', system_u) == True:
+        if checker.has_perm('read_system_users', system_u) == True:
             l.append(i)
     return render(request, 'asset/system-user.html',
                   {'asset_list': l, "asset_active": "active", "system_user_list_active": "active"})
@@ -307,7 +308,7 @@ def system_user_add(request):
             system_save = form.save()
             myproduct = system_users.objects.get(name=form.cleaned_data['name']).product_line
             mygroup = Group.objects.get(name=myproduct)
-
+            GroupObjectPermission.objects.assign_perm("read_system_users", mygroup, obj=system_save)
             GroupObjectPermission.objects.assign_perm("add_system_users", mygroup, obj=system_save)
             GroupObjectPermission.objects.assign_perm("change_system_users", mygroup, obj=system_save)
             GroupObjectPermission.objects.assign_perm("delete_system_users", mygroup, obj=system_save)
@@ -341,6 +342,7 @@ def system_user_update(request, nid):
                     mygroup = Group.objects.get(name=myproduct)
                     GroupObjectPermission.objects.filter(object_pk=nid).delete()
 
+                    GroupObjectPermission.objects.assign_perm("read_system_users", mygroup, obj=system_save)
                     GroupObjectPermission.objects.assign_perm("add_system_users", mygroup, obj=system_save)
                     GroupObjectPermission.objects.assign_perm("change_system_users", mygroup, obj=system_save)
                     GroupObjectPermission.objects.assign_perm("delete_system_users", mygroup, obj=system_save)
@@ -360,6 +362,7 @@ def system_user_update(request, nid):
                     mygroup = Group.objects.get(name=myproduct)
                     GroupObjectPermission.objects.filter(object_pk=nid).delete()
 
+                    GroupObjectPermission.objects.assign_perm("read_system_users", mygroup, obj=s)
                     GroupObjectPermission.objects.assign_perm("add_system_users", mygroup, obj=s)
                     GroupObjectPermission.objects.assign_perm("change_system_users", mygroup, obj=s)
                     GroupObjectPermission.objects.assign_perm("delete_system_users", mygroup, obj=s)
