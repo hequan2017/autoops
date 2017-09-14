@@ -173,5 +173,6 @@ REST_FRAMEWORK	=	{
            'rest_framework.permissions.IsAdminUser',)
 }
 
-
+MEDIA_ROOT = os.path.join(BASE_DIR, 'upload/')
+MEDIA_URL = '/upload/' #这个是在浏览器上访问该上传文件的url的前缀
 

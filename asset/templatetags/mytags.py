@@ -4,4 +4,6 @@ register = template.Library()
 
 @register.filter
 def	 lowers(text):
-	return	  text.lower()
+	a = text.split("/")
+	b = a[-1]
+	return	  b

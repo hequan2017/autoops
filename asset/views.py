@@ -125,6 +125,7 @@ class AssetDetail(DetailView):
     def get_context_data(self, **kwargs):
         pk = self.kwargs.get(self.pk_url_kwarg, None)
         detail = asset.objects.get(id=pk)
+        print(detail.file)
         context = {
             "asset_active": "active",
             "asset_list_active": "active",
@@ -412,3 +413,19 @@ def system_user_asset(request, nid):
     return render(request, "asset/system-user-asset.html", {"system_users": sys, "nid": nid, "asset_list": obj,
                                                             "asset_active": "active",
                                                             "system_user_list_active": "active"})
+
+
+class AssetUpload(View):
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(AssetUpload, self).dispatch(*args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        f = open('{}'.format(request.path[1:]), 'rb')
+        url = request.path
+        urls = url.split("/")[-1]
+        response = HttpResponse(f, content_type='application/octet-stream')
+        response['Content-Disposition'] = 'attachment;	filename={}'.format(urls)
+        f.close()
+        return response

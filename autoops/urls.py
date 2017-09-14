@@ -17,7 +17,7 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from names.views import index,login_view,logout
 from django.conf.urls import handler404, handler500
-
+from asset.views import  AssetUpload
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -27,5 +27,6 @@ urlpatterns = [
     url(r'^index.html$', index),
     url(r'^asset/', include('asset.urls', namespace="asset", app_name='asset'), ),
     url(r'^tasks/', include('tasks.urls', namespace="tasks", app_name='tasks'), ),
-    url(r'^names/', include('names.urls', namespace="names", app_name='names'), )
+    url(r'^names/', include('names.urls', namespace="names", app_name='names'), ),
+    url(r'^upload/',  AssetUpload.as_view()),
 ]

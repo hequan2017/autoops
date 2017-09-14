@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block  title %}资产详情{% endblock %}
+{% load  mytags %}
 {% block header-css %}
 
 {% load bootstrap3 %}
@@ -149,6 +150,10 @@
                                         <tr>
                                             <td width="20%">到保时间:</td>
                                             <td><b>{{ assets.end_time }}</b></td>
+                                        </tr>
+                                        <tr>
+                                            <td width="20%">文件:</td>
+                                            <td ><b><a href="{{ assets.file.url }}">{{  assets.file.name | lowers }}</a></b></td>
                                         </tr>
                                         <tr>
                                             <td width="20%">备注:</td>

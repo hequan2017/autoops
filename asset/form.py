@@ -15,7 +15,8 @@ class AssetForm(forms.ModelForm):
         #     'sn', 'cpu', 'memory', 'disk', 'port', 'ship_time', 'end_time', 'product_line', 'ps'
         # ]
         labels={
-            "network_ip":"外网IP"
+            "network_ip":"外网IP",
+            "file":"上传文件"
         }
         widgets = {
             'ship_time': forms.DateInput(
