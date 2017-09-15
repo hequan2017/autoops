@@ -20,7 +20,7 @@ from django.conf.urls import handler404, handler500
 from asset.views import  AssetUpload
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
+    url(r'^admin/', admin.site.urls,name="admin1"),
     url(r'^$', index),
     url(r'^login.html$', login_view,name="login_view"),
     url(r'^logout.html$', logout,name="logout"),
