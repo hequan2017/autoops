@@ -48,8 +48,7 @@ INSTALLED_APPS = [
     'djcelery',
     'djkombu',
     'guardian',
-    'ueditor',
-
+    'DjangoUeditor',
 ]
 
 MIDDLEWARE = [
@@ -146,9 +145,10 @@ DATE_FORMAT = 'Y-m-d'
 
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
-)
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+# STATICFILES_DIRS = (
+#     os.path.join(BASE_DIR, 'static'),
+# )
 
 import djcelery
 djcelery.setup_loader()

@@ -18,7 +18,7 @@
                     <a href="/index.html">主页</a>
                 </li>
                 <li>
-                    <a href="library.html">资产管理</a>
+                    <a href="library.html">文档列表</a>
                 </li>
                 <li class="active">
                     <strong>文档添加</strong>
@@ -55,7 +55,7 @@
                     </div>
                 </div>
                 <div class="ibox-content">
-                    <form class="form-horizontal" action="{% url "asset:asset_add" %}" method="post"
+                    <form class="form-horizontal" action="{% url "library:library_add" %}" method="post"
                           enctype="multipart/form-data">
                         {% csrf_token %}
                         {% if form.no_field_errors %}
@@ -67,11 +67,11 @@
                         <div class="form-group">
                             <div class="col-sm-10 col-sm-offset-0">
 
-
+                            {{ form.media  }}
                              {% bootstrap_field form.title layout="horizontal" %}
-
+                            {% bootstrap_field form.content layout="horizontal" %}
                             {% bootstrap_field form.classify layout="horizontal" %}
-                                {% bootstrap_field form.file layout="horizontal" %}
+
 
 
 

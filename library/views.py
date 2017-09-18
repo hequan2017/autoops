@@ -15,28 +15,76 @@ from django.views.generic import TemplateView, ListView, View, CreateView, Updat
 from django.urls import reverse_lazy
 
 
+
+class LibraryListAll(TemplateView):
+    template_name = 'library/library.html'
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(LibraryListAll, self).dispatch(*args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        obj = librarys.objects.all()
+        context = {
+            "library_active": "active",
+            "library_list_active": "active",
+            'library_list': obj,
+        }
+        kwargs.update(context)
+        return super(LibraryListAll, self).get_context_data(**kwargs)
+
+
+
+
+
 class LibraryAdd(CreateView):
     model = librarys
     form_class = LibrarysForm
     template_name = 'library/library-add.html'
-    success_url = reverse_lazy('asset:asset_list')
+    success_url = reverse_lazy('library:library_list')
 
     @method_decorator(login_required)
-    @method_decorator(permission_required_or_403('library.add_library'))
     def dispatch(self, *args, **kwargs):
         return super(LibraryAdd, self).dispatch(*args, **kwargs)
 
     def form_valid(self, form):
-        self.asset_save = asset_save = form.save()
+        self.lib_save = lib_save = form.save()
+    
         return super(LibraryAdd, self).form_valid(form)
-
-    def get_success_url(self):
-        return super(LibraryAdd, self).get_success_url()
 
     def get_context_data(self, **kwargs):
         context = {
             "library_active": "active",
-            "library_add_active": "active",
+            "library_list_active": "active",
+            
         }
         kwargs.update(context)
         return super(LibraryAdd, self).get_context_data(**kwargs)
+    
+    
+class LibraryUpdate(UpdateView):
+    model = librarys
+    form_class = LibrarysForm
+    template_name = 'library/library-update.html'
+    success_url = reverse_lazy('library:libray_add')
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(LibraryUpdate, self).dispatch(*args, **kwargs)
+    
+    def form_valid(self, form):
+        self.lib_save = lib_save = form.save()
+      
+        return super(LibraryUpdate, self).form_valid(form)
+
+    
+    
+
+    def get_context_data(self, **kwargs):
+        context = {
+            "library_active": "active",
+            "library_list_active": "active",
+        }
+        kwargs.update(context)
+        return super(LibraryUpdate, self).get_context_data(**kwargs)
+

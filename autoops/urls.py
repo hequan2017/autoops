@@ -32,8 +32,11 @@ urlpatterns = [
     url(r'^names/', include('names.urls', namespace="names", app_name='names'), ),
     url(r'^library/', include('library.urls', namespace="library", app_name='library'), ),
     url(r'^upload/',  AssetUpload.as_view()),
-    url(r'^ueditor/', include('ueditor.urls')),
+    url(r'^ueditor/',include('DjangoUeditor.urls' )),
 ]
 
-
+if settings.DEBUG:
+    from django.conf.urls.static import static
+    urlpatterns += static(
+        settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
