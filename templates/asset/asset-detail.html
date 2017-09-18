@@ -153,7 +153,7 @@
                                         </tr>
                                         <tr>
                                             <td width="20%">文件:</td>
-                                            <td ><b><a href="{{ assets.file.url }}">{{  assets.file.name | lowers }}</a></b></td>
+                                            <td ><b>  {% if  asset.file  %} <a   href="{{ assets.file.url }} " >{{  assets.file.name | lowers }}</a> {% endif %}</b></td>
                                         </tr>
                                         <tr>
                                             <td width="20%">备注:</td>

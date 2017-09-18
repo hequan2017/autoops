@@ -72,8 +72,8 @@
                                                     href="{% url  "asset:asset_detail"   row.id %}">{{ row.network_ip }}</a>
                                             </td>
                                             <td class="center">{{ row.manage_ip }}</td>
-                                            <td class="center">{% for i in row.product_line.all %}
-                                                {{ i }} {% endfor %}</td>
+                                            <td class="center">{{ row.product_line }}
+                                                </td>
                                         </tr>
                                     {% endfor %}
 

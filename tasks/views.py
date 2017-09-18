@@ -50,7 +50,7 @@ def cmd(request):  ##命令行
             assets = asset.objects.get(id=i)
             if checker.has_perm('delete_asset', assets, ) == True:
                 ids1.append(i)
-        print(ids1)
+
         user = request.user
         idstring = ','.join(ids1)
         if not ids:
@@ -240,7 +240,7 @@ def tools_script_post(request):
                             data2['data'] = "脚本类型错误"
                     except  Exception as  e:
                         data2['ip'] = h.network_ip
-                        data2['data'] = "账号密码不对,请修改{}".format(e)
+                        data2['data'] = "账号密码不对,或没有权限,请修改{}".format(e)
                         data1.append(data2)
 
                 ret['data'] = data1

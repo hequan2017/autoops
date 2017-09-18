@@ -13,7 +13,7 @@ from guardian.shortcuts import get_objects_for_user, get_objects_for_group
 from guardian.models import UserObjectPermission, GroupObjectPermission
 from django.views.generic import TemplateView, ListView, View, CreateView, UpdateView, DeleteView, DetailView
 from django.urls import reverse_lazy
-from common.mixins import JSONResponseMixin
+# from common.mixins import JSONResponseMixin
 
 
 from  tasks.ansible_runner.runner   import AdHocRunner
@@ -136,7 +136,7 @@ class AssetDetail(DetailView):
         return super(AssetDetail, self).get_context_data(**kwargs)
 
 
-class AssetDel(JSONResponseMixin, View):
+class AssetDel(View):
     model = asset
 
     @method_decorator(login_required)
@@ -415,17 +415,16 @@ def system_user_asset(request, nid):
                                                             "system_user_list_active": "active"})
 
 
-class AssetUpload(View):
+class  AssetUpload(View):
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(AssetUpload, self).dispatch(*args, **kwargs)
 
     def get(self, request, *args, **kwargs):
-        f = open('{}'.format(request.path[1:]), 'rb')
-        url = request.path
-        urls = url.split("/")[-1]
-        response = HttpResponse(f, content_type='application/octet-stream')
-        response['Content-Disposition'] = 'attachment;	filename={}'.format(urls)
-        f.close()
-        return response
+        with open('{}'.format(request.path[1:]), 'rb')  as f:
+            url = request.path
+            urls = url.split("/")[-1]
+            response = HttpResponse(f, content_type='application/octet-stream')
+            response['Content-Disposition'] = 'attachment;	filename={}'.format(urls)
+            return response

@@ -28,7 +28,7 @@ class asset(models.Model):
     product_line =  models.ForeignKey(to=Group,to_field='id',on_delete=models.SET_NULL,verbose_name='产品线',null=True)
     is_active = models.BooleanField(default=True, verbose_name=('是否启用'))
     ps = models.CharField(max_length=1024,verbose_name="备注",null=True,blank=True)
-    file = models.FileField(upload_to = '%Y%m%d{}'.format(random.randint(0,9999)),null=True,blank=True)
+    file = models.FileField(upload_to = '%Y%m%d{}'.format(random.randint(0,99999)),null=True,blank=True,default=None)
 
     ctime= models.DateTimeField(auto_now_add=True,null=True,verbose_name='创建时间',blank=True)
     utime = models.DateTimeField(auto_now=True, null=True,verbose_name='更新时间',blank=True)
