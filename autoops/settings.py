@@ -42,11 +42,14 @@ INSTALLED_APPS = [
     'asset.apps.AssetConfig',
     'names.apps.NamesConfig',
     'tasks.apps.TasksConfig',
+    'library.apps.LibraryConfig',
     'rest_framework',
     'rest_framework.authtoken',
     'djcelery',
     'djkombu',
     'guardian',
+    'ueditor',
+
 ]
 
 MIDDLEWARE = [

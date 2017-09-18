@@ -72,7 +72,12 @@ def cmd(request):  ##命令行
                 s = ssh(ip=i.network_ip, port=i.port, username=i.system_user.username, password=i.system_user.password,
                         cmd=cmd)
                 historys = history.objects.create(ip=i.network_ip, root=i.system_user, port=i.port, cmd=cmd, user=user)
+                if s == None  or  s['data'] == '':
+                    s={}
+                    s['ip']=i.network_ip
+                    s['data']="返回值为空,可能是权限不够。"
                 ret['data'].append(s)
+                print(ret)
             except Exception as e:
                 ret['data'].append({"ip": i.network_ip, "data": "账号密码不对,{}".format(e)})
         return HttpResponse(json.dumps(ret))

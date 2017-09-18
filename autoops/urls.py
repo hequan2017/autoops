@@ -18,6 +18,8 @@ from django.contrib import admin
 from names.views import index,login_view,logout
 from django.conf.urls import handler404, handler500
 from asset.views import  AssetUpload
+from django.conf import settings
+
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls,name="admin1"),
@@ -28,5 +30,10 @@ urlpatterns = [
     url(r'^asset/', include('asset.urls', namespace="asset", app_name='asset'), ),
     url(r'^tasks/', include('tasks.urls', namespace="tasks", app_name='tasks'), ),
     url(r'^names/', include('names.urls', namespace="names", app_name='names'), ),
+    url(r'^library/', include('library.urls', namespace="library", app_name='library'), ),
     url(r'^upload/',  AssetUpload.as_view()),
+    url(r'^ueditor/', include('ueditor.urls')),
 ]
+
+
+

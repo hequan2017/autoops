@@ -43,6 +43,18 @@
 
                 </ul>
             </li>
+
+            <li class="{{ library_active }}">
+                <a href="#"><i class="fa fa-snapchat-ghost"></i> <span class="nav-label">技术文档</span>
+                    <span  class="fa arrow"> </span></a>
+                <ul class="nav nav-second-level">
+
+                    <li  class="{{ library_add_active }}"><a href="{% url    'library:libray_add' %}">文档添加</a></li>
+                </ul>
+            </li>
+
+
+
               <li class="{{ autoops_active }}">
                 <a href="#"><i class="fa fa-snapchat-ghost"></i> <span class="nav-label">平台管理</span>
                     <span  class="fa arrow"> </span></a>
