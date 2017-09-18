@@ -9,4 +9,3 @@ django-kombu==0.9.4
 flower
 djangorestframework
 django-guardian
-pysqlite2
