@@ -49,6 +49,8 @@ class AssetAdd(CreateView):
         return super(AssetAdd, self).dispatch(*args, **kwargs)
 
     def form_valid(self, form):
+        a = form.cleaned_data['file']
+        print(a)
         self.asset_save = asset_save = form.save()
         myproduct = asset.objects.get(network_ip=form.cleaned_data['network_ip']).product_line
         mygroup = Group.objects.get(name=myproduct)
@@ -293,6 +295,7 @@ def system_user_list(request):
     user = User.objects.get(username=request.user)
     checker = ObjectPermissionChecker(user)
     l = []
+
     for i in obj:
         system_u = system_users.objects.get(id=i.id)
         if checker.has_perm('read_system_users', system_u) == True:

@@ -66,7 +66,7 @@ class LibraryUpdate(UpdateView):
     model = librarys
     form_class = LibrarysForm
     template_name = 'library/library-update.html'
-    success_url = reverse_lazy('library:libray_add')
+    success_url = reverse_lazy('library:library_list')
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
@@ -76,8 +76,6 @@ class LibraryUpdate(UpdateView):
         self.lib_save = lib_save = form.save()
       
         return super(LibraryUpdate, self).form_valid(form)
-
-    
     
 
     def get_context_data(self, **kwargs):

@@ -5,7 +5,7 @@ from DjangoUeditor.models import UEditorField
 
 class librarys(models.Model):
     title = models.CharField(max_length=128, verbose_name='标题', null=True,unique=True)
-    content = UEditorField('内容', height=300, width=1000,
+    content = UEditorField('内容', height=300, width=1000,max_length=1024000000000,
                            default=u'', blank=True, imagePath="library/images/",
                            toolbars='besttome', filePath='library/files/')
     
