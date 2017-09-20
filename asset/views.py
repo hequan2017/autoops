@@ -49,8 +49,6 @@ class AssetAdd(CreateView):
         return super(AssetAdd, self).dispatch(*args, **kwargs)
 
     def form_valid(self, form):
-        a = form.cleaned_data['file']
-        print(a)
         self.asset_save = asset_save = form.save()
         myproduct = asset.objects.get(network_ip=form.cleaned_data['network_ip']).product_line
         mygroup = Group.objects.get(name=myproduct)

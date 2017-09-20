@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block  title %}文档{% endblock %}
+
+{% block header-css %}
+{% endblock %}
+
+
+{% block page-content %}
+<div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <h2>文档</h2>
+            <ol class="breadcrumb">
+                <li>
+                    <a href="/index.html">主页</a>
+                </li>
+                <li>
+                    <a href="library.html">文档列表</a>
+                </li>
+                <li class="active">
+                    <strong>文档</strong>
+                </li>
+            </ol>
+        </div>
+        <div class="col-lg-2">
+
+        </div>
+    </div>
+
+   <div class="wrapper wrapper-content  animated fadeInRight article">
+            <div class="row">
+                <div class="col-lg-10 col-lg-offset-1">
+                    <div class="ibox">
+                        <div class="ibox-content">
+                            <div class="pull-right">
+                                <button class="btn btn-white btn-xs" type="button">{{ librarys.classify }}</button>
+
+                            </div>
+                            <div class="text-center article-title">
+                                    {{ librarys.ctime }}
+                                <h1>
+                                    {{ librarys.title }}
+                                </h1>
+                            </div>
+                            {% autoescape off %}
+                                    {{ librarys.content }}
+                            {% endautoescape %}
+                            <hr>
+
+
+
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+
+
+
+
+
+
+{% endblock %}
+
+{% block footer-js %}
+{% endblock %}

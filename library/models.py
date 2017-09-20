@@ -10,7 +10,6 @@ class librarys(models.Model):
                            toolbars='besttome', filePath='library/files/')
     
     classify = models.CharField(max_length=128, verbose_name='分类', null=True,blank=True)
-    creater  = models.CharField(max_length=128, verbose_name='创建人', null=True,blank=True)
     ctime= models.DateTimeField(auto_now_add=True,null=True,verbose_name='创建时间',blank=True)
     utime = models.DateTimeField(auto_now=True, null=True,verbose_name='更新时间',blank=True)
 

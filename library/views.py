@@ -37,7 +37,7 @@ class LibraryListAll(TemplateView):
 
 
 
-class LibraryAdd(CreateView):
+class LibraryAdd(CreateView,View):
     model = librarys
     form_class = LibrarysForm
     template_name = 'library/library-add.html'
@@ -47,9 +47,9 @@ class LibraryAdd(CreateView):
     def dispatch(self, *args, **kwargs):
         return super(LibraryAdd, self).dispatch(*args, **kwargs)
 
-    def form_valid(self, form):
+    def form_valid(self,form,):
         self.lib_save = lib_save = form.save()
-    
+
         return super(LibraryAdd, self).form_valid(form)
 
     def get_context_data(self, **kwargs):
@@ -73,10 +73,12 @@ class LibraryUpdate(UpdateView):
         return super(LibraryUpdate, self).dispatch(*args, **kwargs)
     
     def form_valid(self, form):
-        self.lib_save = lib_save = form.save()
-      
+        self.lib_save  = form.save()
         return super(LibraryUpdate, self).form_valid(form)
-    
+
+    def form_invalid(self, form):
+        print(form.errors)
+        return super(LibraryUpdate, self).form_invalid(form)
 
     def get_context_data(self, **kwargs):
         context = {
@@ -86,3 +88,59 @@ class LibraryUpdate(UpdateView):
         kwargs.update(context)
         return super(LibraryUpdate, self).get_context_data(**kwargs)
 
+    def get_success_url(self):
+        return super(LibraryUpdate, self).get_success_url()
+
+class LibraryDetail(DetailView):
+    model = librarys
+    template_name = 'library/library-detail.html'
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(LibraryDetail, self).dispatch(*args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        pk = self.kwargs.get(self.pk_url_kwarg, None)
+        detail = librarys.objects.get(id=pk)
+        context = {
+            "library_active": "active",
+            "library_list_active": "active",
+            "librarys": detail,
+            "nid": pk,
+        }
+        kwargs.update(context)
+        return super(LibraryDetail, self).get_context_data(**kwargs)
+
+
+
+
+
+
+
+
+
+
+
+
+class LibraryDel(View):
+    model = librarys
+    form_class = LibrarysForm
+
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(LibraryDel, self).dispatch(*args, **kwargs)
+
+    def post(self, request):
+        ret = {'status': True, 'error': None, }
+        try:
+            id = request.POST.get('nid', None)
+            lib = librarys.objects.get(id=id)
+            lib.delete()
+            print(ret)
+        except Exception as e:
+            ret = {
+                "static": False,
+                "error": '删除请求错误,{}'.format(e)
+            }
+        return HttpResponse(json.dumps(ret))
