@@ -53,12 +53,23 @@
 
                           <div class="table-responsive">
 
-                            <a href="{% url    'asset:asset_add' %}" class="btn btn-primary  ">
+
+
+
+                          <form id="cha" class="form-horizontal"  action="{% url 'asset:asset_list' %}"   method="post">
+                               {% csrf_token %}
+                                 <input type="text"  name="name"   required >
+
+                                <button class="btn btn-primary"   type="submit">查询</button>
+
+                                                          <a href="{% url    'asset:asset_add' %}" class="btn btn-primary  ">
                                 添加</a>
 
                             <a class="btn btn-danger" data-toggle="modal"
                                data-target="#myModal2">批量删除
                             </a>
+                          </form>
+
 
 
 

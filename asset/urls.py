@@ -11,6 +11,9 @@ urlpatterns = [
     url(r'^asset-update-(?P<pk>[0-9]+).html$', views.AssetUpdate.as_view(), name='asset_update'),
 
 
+
+
+
     url(r'^asset-hardware-update.html$', views.asset_hardware_update, name='asset_hardware_update'),
     url(r'^asset-performance-(?P<nid>\d+).html$', views.asset_performance, name='asset_performance'),
     url(r'^asset-webssh.html$', views.asset_web_ssh, name='asset_web_ssh'),
