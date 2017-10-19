@@ -1,7 +1,7 @@
 from celery import Celery, platforms
 from asset.models import asset,performance
 from tasks.views import ssh
-import threading,time
+import threading,time,datetime
 
 
 platforms.C_FORCE_ROOT = True
@@ -68,6 +68,11 @@ def  cmd_job(host,cmd):
     return  ret['data']
 
 
+@app.task
+def  clean_history_host_monitor():
+    now = datetime.datetime.now()
+    last_time = now + datetime.timedelta(days=-7)
+    a = performance.objects.filter(cdate__lt=last_time).delete()
 
 
 

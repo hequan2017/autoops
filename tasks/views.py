@@ -77,7 +77,6 @@ def cmd(request):  ##命令行
                     s['ip']=i.network_ip
                     s['data']="返回值为空,可能是权限不够。"
                 ret['data'].append(s)
-                print(ret)
             except Exception as e:
                 ret['data'].append({"ip": i.network_ip, "data": "账号密码不对,{}".format(e)})
         return HttpResponse(json.dumps(ret))

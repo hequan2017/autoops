@@ -169,13 +169,12 @@ class AssetDel(View):
             if checker.has_perm('delete_asset', assets, ) == True:
                 assets.delete()
                 GroupObjectPermission.objects.filter(object_pk=id).delete()
-            print(ret)
         except Exception as e:
             ret = {
                 "static": False,
                 "error": '删除请求错误,{}'.format(e)
             }
-        return HttpResponse(json.dumps(ret))
+        return   HttpResponse(json.dumps(ret))
 
 
 @login_required(login_url="/login.html")
@@ -264,13 +263,12 @@ def asset_hardware_update(request):
                     for i in range(len(memory2)):
                         memory0.append((int(int(memory2[i]) / 1024)))
 
+                memory = "+".join(map(str, memory0)) + '    共计:{} GB'.format((sum(map(int, memory0))))
 
             except Exception as e:
-                memory0 =  None
+                memory =  '    共计:{} GB'.format(round((data['ansible_memtotal_mb']/ 1000)))
 
 
-
-            memory = "+".join(map(str, memory0)) + '    共计:{} GB'.format((sum(map(int, memory0))))
             sn = data['ansible_product_serial']
             model =data["ansible_system_vendor"] + " " +data['ansible_product_name']
             cpu = data['ansible_processor'][1] + "  {}核心".format(data['ansible_processor_count']*data["ansible_processor_cores"])
@@ -281,7 +279,7 @@ def asset_hardware_update(request):
                 s = ssh(ip=ip, port=port, username=username, password=password, cmd=a)
                 manage = s['data']
             except Exception as e:
-                manage = "请安装ipmitool"
+                manage = None
 
             try:
                 if data['ansible_eth0']:
@@ -316,7 +314,7 @@ def asset_hardware_update(request):
 
         except Exception as e:
             ret['status'] = False
-            ret['error'] = '硬件更新错误{}'.format(e)
+            ret['error'] = '登陆账号权限不够，或更新错误{}'.format(e)
         return HttpResponse(json.dumps(ret))
 
 

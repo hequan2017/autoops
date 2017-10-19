@@ -24,8 +24,8 @@ GOPATH=/opt/webconsole go install
 ##启动停止
 #/opt/webconsole/bin/apibox   start   |   stop
 
-##修改templates/asset/asset.html
+##修改autoops       templates/asset/asset.html
 # 第239和255 行 的地址 和端口，修改成自己webssh服务器端地址。
 
 
-##具体可以看 https://github.com/shibingli/webconsole
+##具体可以看   https://github.com/shibingli/webconsole

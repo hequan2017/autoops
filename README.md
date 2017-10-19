@@ -1,24 +1,28 @@
 ## AutoOps
 
-AutoOps是一款基础django开发的，面向运维工程师使用,可以管理资产，批量执行命令、脚本，web ssh管理，技术文档，整理保存笔记。
+AutoOps是一款基于1.11版本django开发的，主要面向linux运维工程师使用,管理资产信息，批量执行命令、脚本，获取流量图，web ssh管理，技术文档等功能。
+
 
 
 ###  Demo
 
-  -  地址:`http://42.62.55.58:8003/`    账号`admin`   密码`1qaz.2wsx`
-  -  交流群号：`620176501`     <a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=bbe5716e8bd2075cb27029bd5dd97e22fc4d83c0f61291f47ed3ed6a4195b024"><img border="0" src="https://github.com/hequan2017/cmdb/blob/master/static/img/group.png"  alt="autoops开发讨论群" title="autoops开发讨论群"></a>
-  -  后台地址 `http://42.62.55.58:8003/admin`  账号`admin`   密码`1qaz.2wsx`
+  -  地址:`http://42.62.55.58:8003/`        账号`admin`      密码`1qaz.2wsx`
+  -  交流群号：`620176501`   欢迎交流！   <a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=bbe5716e8bd2075cb27029bd5dd97e22fc4d83c0f61291f47ed3ed6a4195b024"><img border="0" src="https://github.com/hequan2017/cmdb/blob/master/static/img/group.png"  alt="autoops开发讨论群" title="autoops开发讨论群"></a>
+  -  后台地址 `http://42.62.55.58:8003/admin`     账号`admin`   密码`1qaz.2wsx`
   -  资产api地址 `http://42.62.55.58:8003/asset/api/asset.html`
-  -  博客:`http://hequan.blog.51cto.com/`   
-  
+  -  博客:`http://hequan.blog.51cto.com/`
+  -  github:`https://github.com/hequan2017/autoops/`
+  -  码云:`https://gitee.com/hequan2020/autoops`
+
+
   
 ![图片](https://github.com/hequan2017/autoops/blob/master/static/demo/autuops.png)  
 
 
 
 ### 更新记录
-  -  1.3.2.1   硬盘、内存显示优化，修复核心数显示不正确。
-  -  1.3.2  新增 资产查询、管理网IP、网卡MAC地址、内存显示优化等。
+  -  1.3.3  增加删除历史获取的流量、CPU、内存等数据。
+  -  1.3.2  新增 资产查询、管理网IP、网卡MAC地址、内存显示优化等。 硬盘、内存显示优化，修复核心数显示不正确。
   -  1.3    新增 技术文档 板块。
   -  1.2    权限管理完善。 增加附件上传下载功能。
   -  1.1.5  新增 权限管理。 根据后台用户组，区分不同权限。如：在后台先建一个 测试机 组，把普通用户加入到此组。在前端添加资产时，在产品线中会出现测试机 。 测试机组下的用户 只管管理测试机产品线的资产。             
@@ -35,7 +39,7 @@ AutoOps是一款基础django开发的，面向运维工程师使用,可以管理
 
 ### 环境
    * Python 3.6.2 
-   * Django 1.11.4
+   * Django 1.11.6
    
 ### 安装 
    1. 下载，安装基本环境,安装目录为/opt下，如是其他目录，请修改supervisor.conf中的相应设置即可。
@@ -54,7 +58,7 @@ pip3 install https://github.com/darklow/django-suit/tarball/v2
 
 
 ```
-    添加的资产 里面 请执行   ```yum install  ipmitool     dmidecode   -y``` 以获取信息
+    添加的资产 里面 请执行   yum install  ipmitool     dmidecode   -y 以获取信息
    2. 安装其他组件
  
  * 执行 `install_redis.sh` 
@@ -87,6 +91,7 @@ password=123
 
   * 启动supervisor进程管理  `/usr/bin/python2.7 /usr/bin/supervisord -c /etc/supervisord.conf`
   * 启动主服务     `python manage.py  runserver  0.0.0.0:8001`    
+  * 打开0.0.0.0:9001  账号user  密码123 进入进程管理界面
 
 ### 截图
 ![图片](https://github.com/hequan2017/autoops/blob/master/static/demo/1.png)
