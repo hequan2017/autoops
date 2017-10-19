@@ -248,7 +248,7 @@ def asset_hardware_update(request):
 
 
             try:
-                a1 = "dmidecode | grep -P -A5 \"Memory\s+Device\"  | grep Size   | grep -v \"No Module Installed\" | awk -F\":\" \'{print $2}\'  | awk -F\" \"  \'{print  $1}\'"
+                a1 = "dmidecode | grep -P -A5 \"Memory\s+Device\"  | grep Size   | grep -v \"No Module Installed\" | grep -v \"0\"   | awk -F\":\" \'{print $2}\'  | awk -F\" \"  \'{print  $1}\'"
                 s = ssh(ip=ip, port=port, username=username, password=password, cmd=a1)
                 memory1 = s['data']
 
