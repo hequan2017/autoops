@@ -222,27 +222,6 @@ def asset_hardware_update(request):
                     "password": password,
                 },
             ]
-            try:
-                a = "ipmitool lan print | grep -w \"IP Address \"   | awk -F\":\" \ '{print $2}\'"
-                s = ssh(ip=ip, port=port, username=username, password=password, cmd=a)
-                manage = s['data']
-            except Exception as e:
-                manage = None
-
-            try:
-                a1 = "dmidecode|grep -P -A5 \"Memory\s+Device\"  | grep Size   | grep -v \"No Module Installed\" | awk -F\":\" \'{print $2}\'  | awk -F\" \"  \'{print  $1}\'"
-                s = ssh(ip=ip, port=port, username=username, password=password, cmd=a1)
-                memory1 = s['data']
-
-                memory2 = memory1.rstrip().split("\n")
-                memory0 = []
-
-                for i in range(len(memory2)):
-                    memory0.append((int(int(memory2[i]) / 1024)))
-
-
-            except Exception as e:
-                memory0 = None
 
             try:
                 a2 = "fdisk -l  | grep   \"Disk /dev/[a-z]d\"  | awk -F\"[ ]\"  \'{print $3}\'"
@@ -260,15 +239,49 @@ def asset_hardware_update(request):
             hostname = data['ansible_nodename']
 
             system = data['ansible_distribution'] + " " + data['ansible_distribution_version']
+
+
             # disk = "+".join(map(str, disk2)) + " 共计{}".format(str(sum([int(data["ansible_devices"][i]["sectors"]) * \
             #                 int(data["ansible_devices"][i]["sectorsize"]) / 1024 / 1024 / 1024 \
             #                 for i in data["ansible_devices"] if i[0:2] in ("vd", "ss", "sd")])) + str(" GB"))
 
-            disk = "+".join(map(str, disk2)) + " 共计:{} GB".format((sum(map(float, disk2))))
-            memory = "+".join(map(str, memory0)) + '  共计:{} GB'.format((sum(map(int, memory0))))
+            disk = "+".join(map(str, disk2)) + "   共计:{} GB".format(round(sum(map(float, disk2))))
+
+
+            try:
+                a1 = "dmidecode | grep -P -A5 \"Memory\s+Device\"  | grep Size   | grep -v \"No Module Installed\" | awk -F\":\" \'{print $2}\'  | awk -F\" \"  \'{print  $1}\'"
+                s = ssh(ip=ip, port=port, username=username, password=password, cmd=a1)
+                memory1 = s['data']
+
+
+                if memory1  == "" :
+                    memory0 = []
+                    memory0.append(int(round((data['ansible_memtotal_mb']) / 1000)))
+                else:
+                    memory2 = memory1.rstrip().split("\n")
+                    memory0 = []
+
+                    for i in range(len(memory2)):
+                        memory0.append((int(int(memory2[i]) / 1024)))
+
+
+            except Exception as e:
+                memory0 =  None
+
+
+
+            memory = "+".join(map(str, memory0)) + '    共计:{} GB'.format((sum(map(int, memory0))))
             sn = data['ansible_product_serial']
             model =data["ansible_system_vendor"] + " " +data['ansible_product_name']
             cpu = data['ansible_processor'][1] + "  {}核心".format(data['ansible_processor_count']*data["ansible_processor_cores"])
+
+
+            try:
+                a = "ipmitool lan print | grep -w \"IP Address \"   | awk -F\":\" \ '{print $2}\'"
+                s = ssh(ip=ip, port=port, username=username, password=password, cmd=a)
+                manage = s['data']
+            except Exception as e:
+                manage = "请安装ipmitool"
 
             try:
                 if data['ansible_eth0']:

@@ -54,6 +54,7 @@ pip3 install https://github.com/darklow/django-suit/tarball/v2
 
 
 ```
+    添加的资产 里面 请执行   ```yum install  ipmitool     dmidecode   -y``` 以获取信息
    2. 安装其他组件
  
  * 执行 `install_redis.sh` 

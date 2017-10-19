@@ -222,7 +222,6 @@ def tools_script_post(request):
                             data2['ip'] = h.network_ip
                             data2['data'] = r['contacted'][h.hostname]['stdout']
                             data1.append(data2)
-                            print(data1)
 
 
                         elif s.tool_run_type == 1:
