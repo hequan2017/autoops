@@ -51,28 +51,23 @@
                     </div>
                     <div class="ibox-content">
 
-                          <div class="table-responsive">
+                        <div class="table-responsive">
 
 
+                            <form id="cha" class="form-horizontal" action="{% url 'asset:asset_list' %}" method="post">
+                                {% csrf_token %}
+                                <div class="col-md-2"><input type="text" class="form-control" name="name" required>
+                                </div>
 
+                                <button class="btn btn-primary" type="submit">查询</button>
 
-                          <form id="cha" class="form-horizontal"  action="{% url 'asset:asset_list' %}"   method="post">
-                               {% csrf_token %}
-                                 <input type="text"  name="name"   required >
+                                <a href="{% url    'asset:asset_add' %}" class="btn btn-primary  ">
+                                    添加</a>
 
-                                <button class="btn btn-primary"   type="submit">查询</button>
-
-                                                          <a href="{% url    'asset:asset_add' %}" class="btn btn-primary  ">
-                                添加</a>
-
-                            <a class="btn btn-danger" data-toggle="modal"
-                               data-target="#myModal2">批量删除
-                            </a>
-                          </form>
-
-
-
-
+                                <a class="btn btn-danger" data-toggle="modal"
+                                   data-target="#myModal2">批量删除
+                                </a>
+                            </form>
 
 
                             <form id="del_form_asset_all" class="form-horizontal  ">
@@ -94,19 +89,19 @@
                                     {% for   row   in   asset_list %}
 
                                         <tr class="gradeA" id="{{ row.id }}">
-                                            <td><input type="checkbox" value="{{ row.id }}"  name="id"></td>
+                                            <td><input type="checkbox" value="{{ row.id }}" name="id"></td>
                                             <td class="center"><a
                                                     href="{% url  "asset:asset_detail"   pk=row.id %}">{{ row.network_ip }}</a>
                                             </td>
                                             <td class="center">{{ row.manage_ip }}</td>
-                                            <td class="center">{{  row.product_line.name }}</td>
+                                            <td class="center">{{ row.product_line.name }}</td>
                                             <td class="center">{{ row.data_center }}</td>
                                             <td class="center">{{ row.uplink_port }}</td>
                                             <td class="center">{{ row.sn }}</td>
                                             <td><a class="btn btn-primary  btn-xs "
                                                    href="{% url  "asset:asset_update"  pk=row.id %}">编辑</a>
-                                                <a class="btn btn-danger  btn-xs  asset_del_id"     data-toggle="modal"
-                                                        data-target="#myModal1">删除
+                                                <a class="btn btn-danger  btn-xs  asset_del_id" data-toggle="modal"
+                                                   data-target="#myModal1">删除
                                                 </a>
                                                 <a class="btn btn-primary  btn-xs "
                                                    href="{% url    "asset:asset_performance"   row.id %}">性能</a>
@@ -232,7 +227,7 @@
             });
 
 
-        $('.webssh').click(function () {
+            $('.webssh').click(function () {
 
                 var id_a = $(this).parent().parent().attr('id');
                 $.ajax({

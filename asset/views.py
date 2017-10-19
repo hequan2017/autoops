@@ -15,13 +15,10 @@ from django.views.generic import TemplateView, ListView, View, CreateView, Updat
 from django.urls import reverse_lazy
 from tasks.views import ssh
 
-
 # from common.mixins import JSONResponseMixin
 
-from  tasks.ansible_runner.runner   import AdHocRunner
+from  tasks.ansible_runner.runner import AdHocRunner
 from django.db.models import Q
-
-
 
 
 class AssetListAll(TemplateView):
@@ -40,21 +37,20 @@ class AssetListAll(TemplateView):
         kwargs.update(context)
         return super(AssetListAll, self).get_context_data(**kwargs)
 
-
     def post(self, request):
-            query = request.POST.get("name")
-            print(query)
-            a = asset.objects.filter(Q(network_ip=query)| Q(manage_ip=query)|Q(hostname=query)|Q(inner_ip=query)|Q(model=query)|Q(eth0=query)|Q(eth1=query)|Q(eth2=query)|Q(eth3=query)|
-                                     Q(system=query) |Q(system_user__username=query)|Q(data_center__data_center_list=query)|Q(cabinet=query)|
-                                     Q(position=query) |Q(sn=query)
-                                     |Q(uplink_port=query)|
-                                     Q(product_line__name=query))
+        query = request.POST.get("name")
+        print(query)
+        a = asset.objects.filter(
+            Q(network_ip=query) | Q(manage_ip=query) | Q(hostname=query) | Q(inner_ip=query) | Q(model=query) | Q(
+                eth0=query) | Q(eth1=query) | Q(eth2=query) | Q(eth3=query) |
+            Q(system=query) | Q(system_user__username=query) | Q(data_center__data_center_list=query) | Q(
+                cabinet=query) |
+            Q(position=query) | Q(sn=query)
+            | Q(uplink_port=query) |
+            Q(product_line__name=query))
 
-
-
-            return render(request, 'asset/asset.html',
-                          {"asset_active": "active", "asset_list_active": "active", "asset_list": a})
-
+        return render(request, 'asset/asset.html',
+                      {"asset_active": "active", "asset_list_active": "active", "asset_list": a})
 
 
 class AssetAdd(CreateView):
@@ -182,19 +178,6 @@ class AssetDel(View):
         return HttpResponse(json.dumps(ret))
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 @login_required(login_url="/login.html")
 def asset_all_del(request):
     ret = {'status': True, 'error': None, }
@@ -240,76 +223,83 @@ def asset_hardware_update(request):
                 },
             ]
             try:
-                a="ipmitool lan print | grep -w \"IP Address \"   | awk -F\":\" \ '{print $2}\'"
-                s = ssh(ip=ip, port=port, username=username, password=password,cmd=a)
+                a = "ipmitool lan print | grep -w \"IP Address \"   | awk -F\":\" \ '{print $2}\'"
+                s = ssh(ip=ip, port=port, username=username, password=password, cmd=a)
                 manage = s['data']
             except Exception as e:
-                manage=None
-            finally:
-                try:
-                    a = "dmidecode|grep -P -A5 \"Memory\s+Device\"  | grep Size   | grep -v \"No Module Installed\" | awk -F\":\" \'{print $2}\'  | awk -F\" \"  \'{print  $1}\'"
-                    s = ssh(ip=ip, port=port, username=username, password=password, cmd=a)
-                    memory1 = s['data']
+                manage = None
 
-                    memory2=memory1.rstrip().split("\n")
-                    print(memory2)
-                    memory0=[]
+            try:
+                a1 = "dmidecode|grep -P -A5 \"Memory\s+Device\"  | grep Size   | grep -v \"No Module Installed\" | awk -F\":\" \'{print $2}\'  | awk -F\" \"  \'{print  $1}\'"
+                s = ssh(ip=ip, port=port, username=username, password=password, cmd=a1)
+                memory1 = s['data']
 
+                memory2 = memory1.rstrip().split("\n")
+                memory0 = []
 
-                    for i in  range(len(memory2)):
-                          memory0.append((int(int(memory2[i])/1024)))
-                    print(memory0)
-
-                except Exception as e:
-                    memory0 =None
-                finally:
-                    task_tuple = (('setup', ''),)
-                    runner = AdHocRunner(assets)
-                    result = runner.run(task_tuple=task_tuple, pattern='all', task_name='Ansible Ad-hoc')
-                    data = result['contacted']['host'][0]['ansible_facts']
+                for i in range(len(memory2)):
+                    memory0.append((int(int(memory2[i]) / 1024)))
 
 
-                    hostname = data['ansible_nodename']
+            except Exception as e:
+                memory0 = None
 
-                    system = data['ansible_distribution'] + " " + data['ansible_distribution_version']
-                    disk = str(sum([int(data["ansible_devices"][i]["sectors"]) * \
-                                    int(data["ansible_devices"][i]["sectorsize"]) / 1024 / 1024 / 1024 \
-                                    for i in data["ansible_devices"] if i[0:2] in ("vd", "ss", "sd")])) + str(" GB")
+            try:
+                a2 = "fdisk -l  | grep   \"Disk /dev/[a-z]d\"  | awk -F\"[ ]\"  \'{print $3}\'"
+                s = ssh(ip=ip, port=port, username=username, password=password, cmd=a2)
+                disk1 = s['data']
+                disk2 = disk1.rstrip().split("\n")
+            except Exception  as  e:
+                disk2 = None
 
-                    memory = "+".join(map(str,memory0)) + '  共计{} GB'.format(int(data['ansible_memtotal_mb'] / 1024))
-                    sn = data['ansible_product_serial']
-                    model = data['ansible_product_name']
-                    cpu = data['ansible_processor'][1] + " {}核".format(data['ansible_processor_count'])
+            task_tuple = (('setup', ''),)
+            runner = AdHocRunner(assets)
+            result = runner.run(task_tuple=task_tuple, pattern='all', task_name='Ansible Ad-hoc')
+            data = result['contacted']['host'][0]['ansible_facts']
+
+            hostname = data['ansible_nodename']
+
+            system = data['ansible_distribution'] + " " + data['ansible_distribution_version']
+            # disk = "+".join(map(str, disk2)) + " 共计{}".format(str(sum([int(data["ansible_devices"][i]["sectors"]) * \
+            #                 int(data["ansible_devices"][i]["sectorsize"]) / 1024 / 1024 / 1024 \
+            #                 for i in data["ansible_devices"] if i[0:2] in ("vd", "ss", "sd")])) + str(" GB"))
+
+            disk = "+".join(map(str, disk2)) + " 共计:{} GB".format((sum(map(float, disk2))))
+            memory = "+".join(map(str, memory0)) + '  共计:{} GB'.format((sum(map(int, memory0))))
+            sn = data['ansible_product_serial']
+            model =data["ansible_system_vendor"] + " " +data['ansible_product_name']
+            cpu = data['ansible_processor'][1] + "  {}核心".format(data['ansible_processor_count']*data["ansible_processor_cores"])
+
+            try:
+                if data['ansible_eth0']:
+                    eth0 = data['ansible_eth0']['macaddress']
+            except Exception as e:
+                eth0 = None
+
+            try:
+                if data['ansible_eth1']:
+                    eth1 = data['ansible_eth1']['macaddress']
+            except Exception as e:
+                eth1 = None
+
+            try:
+                if data['ansible_eth2']:
+                    eth2 = data['ansible_eth2']['macaddress']
+            except Exception as e:
+                eth2 = None
+
+            try:
+                if data['ansible_eth3']:
+                    eth3 = data['ansible_eth3']['macaddress']
+            except Exception as e:
+                eth3 = None
 
 
-                    try :
-                        if  data['ansible_eth0'] :
-                            eth0=data['ansible_eth0']['macaddress']
-                    except Exception as e:
-                            eth0=None
 
-                    try :
-                        if  data['ansible_eth1'] :
-                            eth1=data['ansible_eth1']['macaddress']
-                    except Exception as e:
-                            eth1=None
-
-                    try:
-                        if data['ansible_eth2']:
-                            eth2 = data['ansible_eth2']['macaddress']
-                    except Exception as e:
-                            eth2= None
-
-                    try:
-                         if data['ansible_eth3']:
-                             eth3 = data['ansible_eth3']['macaddress']
-                    except Exception as e:
-                             eth3 = None
-
-                    ass = asset.objects.filter(id=id).update(hostname=hostname,manage_ip=manage,system=system, memory=memory,
-                                                             disk=disk, sn=sn, model=model, cpu=cpu,eth0=eth0,eth1=eth1,eth2=eth2,eth3=eth3)
-
-
+            ass = asset.objects.filter(id=id).update(hostname=hostname, manage_ip=manage, system=system,
+                                                     memory=memory,
+                                                     disk=disk, sn=sn, model=model, cpu=cpu, eth0=eth0,
+                                                     eth1=eth1, eth2=eth2, eth3=eth3)
 
         except Exception as e:
             ret['status'] = False
@@ -502,8 +492,7 @@ def system_user_asset(request, nid):
                                                             "system_user_list_active": "active"})
 
 
-class  AssetUpload(View):
-
+class AssetUpload(View):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(AssetUpload, self).dispatch(*args, **kwargs)
