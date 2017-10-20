@@ -277,46 +277,20 @@ def asset_hardware_update(request):
             except Exception as e:
                 manage = None
 
-            try:
-                if data['ansible_eth0']  or data['ansible_em1']:
-                    if data['ansible_eth0']:
-                        eth0 = data['ansible_eth0']['macaddress']
-                    else:
-                        eth0 = data['ansible_em1']['macaddress']
-            except Exception as e:
-                eth0 = None
+            net =  data["ansible_interfaces"][1:]
+
+            net.sort()
 
             try:
-                if data['ansible_eth1']  or data['ansible_em2']:
-                    if data['ansible_eth1']:
-                        eth1 = data['ansible_eth1']['macaddress']
-                    else:
-                        eth1 = data['ansible_em2']['macaddress']
+                 eth0= data['ansible_{}'.format(net[0])]['macaddress']
+                 eth1 = data['ansible_{}'.format(net[1])]['macaddress']
+                 eth2 = data['ansible_{}'.format(net[2])]['macaddress']
+                 eth3 = data['ansible_{}'.format(net[3])]['macaddress']
             except Exception as e:
-                eth1 = None
-
-            try:
-                if data['ansible_eth2']  or data['ansible_em3']:
-                    if data['ansible_eth2']:
-                        eth2 = data['ansible_eth2']['macaddress']
-                    else:
-                        eth2 = data['ansible_em3']['macaddress']
-            except Exception as e:
-                eth2 = None
-
-
-            try:
-                if data['ansible_eth3']  or data['ansible_em4']:
-                    if data['ansible_eth3']:
-                        eth3 = data['ansible_eth3']['macaddress']
-                    else:
-                        eth3 = data['ansible_em4']['macaddress']
-            except Exception as e:
-                eth3 = None
-
+                 eth0,eth1,eth2,eth3 = None,None,None,None
 
             ass = asset.objects.filter(id=id).update(hostname=hostname, manage_ip=manage, system=system,
-                                                     memory=memory,disk=disk, sn=sn, model=model, cpu=cpu, eth0=eth0,eth1=eth1, eth2=eth2, eth3=eth3)
+                                                     memory=memory,disk=disk, sn=sn, model=model, cpu=cpu, eth0=eth0,eth1=eth1,eth2=eth2,eth3=eth3)
 
         except Exception as e:
             ret['status'] = False
