@@ -248,12 +248,12 @@ def asset_hardware_update(request):
 
 
             try:
-                a1 = "dmidecode | grep -P -A5 \"Memory\s+Device\"  | grep Size   | grep -v \"No Module Installed\" | grep -v \"0\"   | awk -F\":\" \'{print $2}\'  | awk -F\" \"  \'{print  $1}\'"
+                a1 = "dmidecode | grep -P -A5 \"Memory\ Device\"  | grep Size   | grep -v \"No Module Installed\" | grep -v \"0\"   | awk -F\":\" \'{print $2}\'  | awk -F\" \"  \'{print  $1}\'"
                 s = ssh(ip=ip, port=port, username=username, password=password, cmd=a1)
                 memory1 = s['data']
 
 
-                if memory1  == "" :
+                if memory1  ==   "" :
                     memory0 = []
                     memory0.append(int(round((data['ansible_memtotal_mb']) / 1000)))
                 else:
@@ -305,12 +305,8 @@ def asset_hardware_update(request):
             except Exception as e:
                 eth3 = None
 
-
-
             ass = asset.objects.filter(id=id).update(hostname=hostname, manage_ip=manage, system=system,
-                                                     memory=memory,
-                                                     disk=disk, sn=sn, model=model, cpu=cpu, eth0=eth0,
-                                                     eth1=eth1, eth2=eth2, eth3=eth3)
+                                                     memory=memory,disk=disk, sn=sn, model=model, cpu=cpu, eth0=eth0,eth1=eth1, eth2=eth2, eth3=eth3)
 
         except Exception as e:
             ret['status'] = False
