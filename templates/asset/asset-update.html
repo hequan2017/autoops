@@ -79,10 +79,6 @@
                         <div class="form-group">
                             <div class="col-sm-10 col-sm-offset-0">
                                <h3>硬件</h3>
-                                 {% bootstrap_field form.eth0 layout="horizontal" %}
-                                {% bootstrap_field form.eth1 layout="horizontal" %}
-                                 {% bootstrap_field form.eth2 layout="horizontal" %}
-                                 {% bootstrap_field form.eth3 layout="horizontal" %}
 
                                  {% bootstrap_field form.data_center layout="horizontal" %}
                                 {% bootstrap_field form.cabinet layout="horizontal" %}
@@ -94,6 +90,12 @@
                                 {% bootstrap_field form.cpu layout="horizontal" %}
                                 {% bootstrap_field form.memory layout="horizontal" %}
                                 {% bootstrap_field form.disk layout="horizontal" %}
+
+                              {% bootstrap_field form.eth0 layout="horizontal" %}
+                                {% bootstrap_field form.eth1 layout="horizontal" %}
+                                 {% bootstrap_field form.eth2 layout="horizontal" %}
+                                 {% bootstrap_field form.eth3 layout="horizontal" %}
+
 
                             </div>
                         </div>

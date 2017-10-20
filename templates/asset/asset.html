@@ -78,8 +78,8 @@
                                         <th>外网IP</th>
                                         <th>管理IP</th>
                                         <th>产品线</th>
-                                        <th>数据中心</th>
-                                        <th>上联端口</th>
+                                        <th>位置</th>
+                                        <th>型号</th>
                                         <th>SN</th>
                                         <th>动作{{ error_performance }}</th>
                                     </tr>
@@ -95,8 +95,8 @@
                                             </td>
                                             <td class="center">{{ row.manage_ip }}</td>
                                             <td class="center">{{ row.product_line.name }}</td>
-                                            <td class="center">{{ row.data_center }}</td>
-                                            <td class="center">{{ row.uplink_port }}</td>
+                                            <td class="center">{{ row.cabinet }} {{ row.position }}</td>
+                                            <td class="center">{{ row.model }}</td>
                                             <td class="center">{{ row.sn }}</td>
                                             <td><a class="btn btn-primary  btn-xs "
                                                    href="{% url  "asset:asset_update"  pk=row.id %}">编辑</a>
