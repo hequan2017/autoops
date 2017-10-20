@@ -222,13 +222,6 @@ def asset_hardware_update(request):
                 },
             ]
 
-            try:
-                a2 = "fdisk -l  | grep   \"Disk /dev/[a-z]d\"  | awk -F\"[ ]\"  \'{print $3}\'"
-                s = ssh(ip=ip, port=port, username=username, password=password, cmd=a2)
-                disk1 = s['data']
-                disk2 = disk1.rstrip().split("\n")
-            except Exception  as  e:
-                disk2 = None
 
             task_tuple = (('setup', ''),)
             runner = AdHocRunner(assets)
@@ -236,22 +229,25 @@ def asset_hardware_update(request):
             data = result['contacted']['host'][0]['ansible_facts']
 
             hostname = data['ansible_nodename']
-
             system = data['ansible_distribution'] + " " + data['ansible_distribution_version']
 
 
-            # disk = "+".join(map(str, disk2)) + " 共计{}".format(str(sum([int(data["ansible_devices"][i]["sectors"]) * \
-            #                 int(data["ansible_devices"][i]["sectorsize"]) / 1024 / 1024 / 1024 \
-            #                 for i in data["ansible_devices"] if i[0:2] in ("vd", "ss", "sd")])) + str(" GB"))
-
-            disk = "+".join(map(str, disk2)) + "   共计:{} GB".format(round(sum(map(float, disk2))))
+            try:
+                a2 = "parted -l  | grep   \"Disk \/dev\/[a-z]d\"  | awk -F\"[ ]\"  '{print $3}' | awk  -F\"GB\"  '{print $1}'"
+                s = ssh(ip=ip, port=port, username=username, password=password, cmd=a2)
+                disk1 = s['data']
+                disk2 = disk1.rstrip().split("\n")
+                disk = "+".join(map(str, disk2)) + "   共计:{} GB".format(round(sum(map(float, disk2))))
+            except Exception  as  e:
+                    disk =  " 共计{}".format(str(sum([int(data["ansible_devices"][i]["sectors"]) * \
+                             int(data["ansible_devices"][i]["sectorsize"]) / 1024 / 1024 / 1024 \
+                          for i in data["ansible_devices"] if i[0:2] in ("vd", "ss", "sd")])) + str(" GB"))
 
 
             try:
                 a1 = "dmidecode | grep -P -A5 \"Memory\ Device\"  | grep Size   | grep -v \"No Module Installed\" | grep -v \"0\"   | awk -F\":\" \'{print $2}\'  | awk -F\" \"  \'{print  $1}\'"
                 s = ssh(ip=ip, port=port, username=username, password=password, cmd=a1)
                 memory1 = s['data']
-
 
                 if memory1  ==   "" :
                     memory0 = []
@@ -282,35 +278,49 @@ def asset_hardware_update(request):
                 manage = None
 
             try:
-                if data['ansible_eth0']:
-                    eth0 = data['ansible_eth0']['macaddress']
+                if data['ansible_eth0']  or data['ansible_em1']:
+                    if data['ansible_eth0']:
+                        eth0 = data['ansible_eth0']['macaddress']
+                    else:
+                        eth0 = data['ansible_em1']['macaddress']
             except Exception as e:
                 eth0 = None
 
             try:
-                if data['ansible_eth1']:
-                    eth1 = data['ansible_eth1']['macaddress']
+                if data['ansible_eth1']  or data['ansible_em2']:
+                    if data['ansible_eth1']:
+                        eth1 = data['ansible_eth1']['macaddress']
+                    else:
+                        eth1 = data['ansible_em2']['macaddress']
             except Exception as e:
                 eth1 = None
 
             try:
-                if data['ansible_eth2']:
-                    eth2 = data['ansible_eth2']['macaddress']
+                if data['ansible_eth2']  or data['ansible_em3']:
+                    if data['ansible_eth2']:
+                        eth2 = data['ansible_eth2']['macaddress']
+                    else:
+                        eth2 = data['ansible_em3']['macaddress']
             except Exception as e:
                 eth2 = None
 
+
             try:
-                if data['ansible_eth3']:
-                    eth3 = data['ansible_eth3']['macaddress']
+                if data['ansible_eth3']  or data['ansible_em4']:
+                    if data['ansible_eth3']:
+                        eth3 = data['ansible_eth3']['macaddress']
+                    else:
+                        eth3 = data['ansible_em4']['macaddress']
             except Exception as e:
                 eth3 = None
+
 
             ass = asset.objects.filter(id=id).update(hostname=hostname, manage_ip=manage, system=system,
                                                      memory=memory,disk=disk, sn=sn, model=model, cpu=cpu, eth0=eth0,eth1=eth1, eth2=eth2, eth3=eth3)
 
         except Exception as e:
             ret['status'] = False
-            ret['error'] = '登陆账号权限不够，或更新错误{}'.format(e)
+            ret['error'] = '登陆账号权限不够，请在被添加的主机安装ipmitool dmidecode 或更新错误{}'.format(e)
         return HttpResponse(json.dumps(ret))
 
 
