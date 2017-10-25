@@ -317,18 +317,21 @@ def asset_web_ssh(request):
 @login_required(login_url="/login.html")
 def asset_performance(request, nid):
     try:
-        i = asset.objects.get(id=nid)
-        cpu_1 = ssh(ip=i.network_ip, port=i.port, username=i.system_user.username, password=i.system_user.password,
-                    cmd=" top -bn 1 -i -c | grep Cpu   ")
-        cpu_2 = cpu_1['data'].split()
-        cpu = cpu_2[1].split('%')[0]
+        # i = asset.objects.get(id=nid)
+        # cpu_1 = ssh(ip=i.network_ip, port=i.port, username=i.system_user.username, password=i.system_user.password,
+        #             cmd=" top -bn 1 -i -c | grep Cpu   ")
+        # cpu_2 = cpu_1['data'].split()
+        # cpu = cpu_2[1].split('%')[0]
+        #
+        # total = ssh(ip=i.network_ip, port=i.port, username=i.system_user.username, password=i.system_user.password,
+        #             cmd=" free | grep  Mem:  ")
+        # list = total['data'].split(" ")
+        # while '' in list:
+        #     list.remove('')
+        # mem = float('%.2f' % (float('%.3f' % (int(list[2]) / int(list[1]))) * 100))
 
-        total = ssh(ip=i.network_ip, port=i.port, username=i.system_user.username, password=i.system_user.password,
-                    cmd=" free | grep  Mem:  ")
-        list = total['data'].split(" ")
-        while '' in list:
-            list.remove('')
-        mem = float('%.2f' % (float('%.3f' % (int(list[2]) / int(list[1]))) * 100))
+
+
 
         all = performance.objects.all()
         date, cpu_use, mem_use, in_use, out_use = [], [], [], [], []
@@ -340,6 +343,14 @@ def asset_performance(request, nid):
                 mem_use.append(i.mem_use)
                 in_use.append(i.in_use)
                 out_use.append(i.out_use)
+        if  cpu_use :
+            cpu = cpu_use[-1]
+            mem = mem_use[-1]
+        else:
+            cpu = 0
+            mem = 0
+
+
         return render(request, 'asset/asset-performance.html', {'cpu': cpu, 'mem': mem, "asset_id": id,
                                                                 'date': date, 'cpu_use': cpu_use, 'mem_use': mem_use,
                                                                 'in_use': in_use, 'out_use': out_use,
@@ -348,7 +359,7 @@ def asset_performance(request, nid):
 
     except Exception as e:
         obj = asset.objects.all()
-        error = "错误,{}".format(e)
+        error = "  错误, {}".format(e)
         return render(request, 'asset/asset.html',
                       {'asset_list': obj, "asset_active": "active", "asset_list_active": "active",
                        "error_performance": error})
