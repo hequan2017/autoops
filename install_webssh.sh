@@ -1,14 +1,25 @@
 #!/bin/bash
 
 cd /opt
+yum  install git -y
 wget  https://storage.googleapis.com/golang/go1.8.1.linux-amd64.tar.gz
 tar zxvf go1.8.1.linux-amd64.tar.gz -C /usr/local
 echo 'export PATH="/usr/local/go/bin:$PATH"' >> /etc/profile
 source    /etc/profile
+
 cd  /opt && git clone --recurse-submodules https://github.com/shibingli/webconsole.git && cd webconsole && git submodule update --init --recursive
+
+# 如果报错  可以把上面的 --recurse-submodules   删除掉
 cd /opt/webconsole/src/apibox.club/apibox
 GOPATH=/opt/webconsole go install
 
+
+#centos 6 的系统会报错,需要执行以下下面的命令。 7的如果也报错的话，也可以试一下。
+#cd /opt/webconsole/src/golang.org/x/
+#rm -rf crypto/
+#git clone https://github.com/golang/crypto.git
+#cd /opt/webconsole/src/apibox.club/apibox
+#GOPATH=/opt/webconsole go install
 
 ##以下为需要修改的内容。
 

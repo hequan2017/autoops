@@ -226,6 +226,7 @@ def asset_hardware_update(request):
             task_tuple = (('setup', ''),)
             runner = AdHocRunner(assets)
             result = runner.run(task_tuple=task_tuple, pattern='all', task_name='Ansible Ad-hoc')
+
             data = result['contacted']['host'][0]['ansible_facts']
 
             hostname = data['ansible_nodename']
@@ -239,7 +240,8 @@ def asset_hardware_update(request):
                 disk2 = disk1.rstrip().split("\n")
                 disk = "+".join(map(str, disk2)) + "   共计:{} GB".format(round(sum(map(float, disk2))))
             except Exception  as  e:
-                    disk =  " 共计{}".format(str(sum([int(data["ansible_devices"][i]["sectors"]) * \
+
+                disk =  " 共计{}".format(str(sum([int(data["ansible_devices"][i]["sectors"]) * \
                              int(data["ansible_devices"][i]["sectorsize"]) / 1024 / 1024 / 1024 \
                           for i in data["ansible_devices"] if i[0:2] in ("vd", "ss", "sd")])) + str(" GB"))
 
@@ -294,7 +296,7 @@ def asset_hardware_update(request):
 
         except Exception as e:
             ret['status'] = False
-            ret['error'] = '登陆账号权限不够，请在被添加的主机安装ipmitool dmidecode 或更新错误{}'.format(e)
+            ret['error'] = '登陆账号权限不够，请在被添加的主机安装parted  ipmitool dmidecode 或更新错误{}'.format(e)
         return HttpResponse(json.dumps(ret))
 
 
