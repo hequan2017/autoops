@@ -12,6 +12,8 @@ cd  /opt && git clone --recurse-submodules https://github.com/shibingli/webconso
 # 如果报错  可以把上面的 --recurse-submodules   删除掉
 cd /opt/webconsole/src/apibox.club/apibox
 GOPATH=/opt/webconsole go install
+cp   /opt/webconsole/conf/webconsole  /etc/init.d/   && chmod   755 /etc/init.d/webconsole
+chkconfig   --add  webconsole  &&  chkconfig    webconsole   on  && service webconsole   start
 
 
 #centos 6 的系统会报错,需要执行以下下面的命令。 7的如果也报错的话，也可以试一下。
@@ -31,9 +33,6 @@ GOPATH=/opt/webconsole go install
 # "cors_white_list": "42.62.6.54,42.62.6.54:9000,"  这里输入的地址为需要跨域访问的，添加webssh服务器端的地址。
 
 
-
-##启动停止
-#/opt/webconsole/bin/apibox   start   |   stop
 
 ##修改autoops       templates/asset/asset.html
 # 第239和255 行 的地址 和端口，修改成自己webssh服务器端地址。
