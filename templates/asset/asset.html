@@ -258,7 +258,7 @@
                         }).done(function (data) {
                             var json = (data);
                             if (json.ok) {
-                                location.href = "http://42.62.6.54:9000" + json.data;
+                                window.open("http://42.62.6.54:9000" + json.data);
                             } else {
                                 alert("登陆失败，请确认您的登陆信息。");
                             }
