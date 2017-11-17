@@ -21,6 +21,7 @@ AutoOps是一款基于1.11版本django开发的，主要面向linux运维工程�
 
 
 ### 更新记录
+  -  1.3.4  数据库切换为mysql数据库。
   -  1.3.3  增加删除历史获取的流量、CPU、内存等数据。优化性能页面打开速度。
   -  1.3.2  新增 资产查询、管理网IP、网卡MAC地址、内存显示优化等。 硬盘、内存显示优化，修复核心数显示不正确。
   -  1.3    新增 技术文档 板块。
@@ -34,12 +35,13 @@ AutoOps是一款基于1.11版本django开发的，主要面向linux运维工程�
     - api
   - names用户（预留模块）
   - tasks任务
-  - webssh
+  - webssh登陆
   - 技术文档 (真正运维人员的管理平台，自带技术文档，有问题不用再去别的地方找)
 
 ### 环境
    * Python 3.6.2 
    * Django 1.11.6
+   * Python  2.7  (用来启动 supervisor)
    
 ### 安装 
    1. 下载，安装基本环境,安装目录为/opt下，如是其他目录，请修改supervisor.conf中的相应设置即可。
@@ -62,16 +64,17 @@ pip3 install https://github.com/darklow/django-suit/tarball/v2
    2. 安装其他组件
  
  * 执行 `install_redis.sh` 
- * 执行 `install_webssh.sh` ,需要修改的内容见脚本内
+ * 执行 `install_webssh.sh` ,需要修改的内容见脚本内，如果不需要webssh，可暂时不用安装。
  * 安装 `supervisor  `
  
-  ```
+```
  pip2   install    supervisor   
  
  echo_supervisord_conf > /etc/supervisord.conf 
  
  mkdir /etc/supervisord.d/
-  ``` 
+``` 
+  
   
 ``` 
  vim /etc/supervisord.conf
@@ -84,14 +87,45 @@ port=0.0.0.0:9001
 username=user
 password=123
 ``` 
- * 配置文件  `cp /opt/autoops/supervisor.conf  /etc/supervisord.d/`
+ * 配置文件  `cp   /opt/autoops/supervisor.conf  /etc/supervisord.d/`
  
 
 ### 启动
 
-  * 启动supervisor进程管理  `/usr/bin/python2.7 /usr/bin/supervisord -c /etc/supervisord.conf`
-  * 启动主服务     `python manage.py  runserver  0.0.0.0:8001`    
-  * 打开0.0.0.0:9001  账号user  密码123 进入进程管理界面
+  * 启动supervisor进程管理  `/usr/bin/python2.7   /usr/bin/supervisord -c /etc/supervisord.conf`
+  * 关于数据库 请修改autops/settings文件, 如果没有mysql，请选择上面那种，注释下面的。如果有，则可以启用mysql，设置相关连接地址。关于mysql安装方法，可参考我的博客 `http://hequan.blog.51cto.com/5701886/1982428`
+``` 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'autoops',
+        'USER': 'root',
+        'PASSWORD': '123456',
+        'HOST': '192.168.10.24',
+        'PORT': '3306',
+    }
+}
+
+```
+  * 初始化数据库
+```
+python manage.py makemigrations
+python manage.py  migrate
+python manage.py  createsuperuser      创建管理员
+``` 
+  
+  
+  * 启动主服务     `python manage.py  runserver  0.0.0.0:80`    
+  * 打开0.0.0.0:9001  账号user  密码123 进入进程管理界面，管理redis,webssh,celery等启动关闭。
+
+
 
 ### 截图
 ![图片](https://github.com/hequan2017/autoops/blob/master/static/demo/1.png)
@@ -104,9 +138,7 @@ password=123
 ![图片](https://github.com/hequan2017/autoops/blob/master/static/demo/8.png)
 
 
-
 ### 贡献者
-
 
 #### 1.0
 - 何全
