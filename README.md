@@ -14,10 +14,8 @@ AutoOps是一款基于1.11版本django开发的，主要面向linux运维工程�
   -  github:`https://github.com/hequan2017/autoops/`
   -  码云:`https://gitee.com/hequan2020/autoops`
 
-
   
 ![图片](https://github.com/hequan2017/autoops/blob/master/static/demo/autuops.png)  
-
 
 
 ### 更新记录
@@ -124,10 +122,11 @@ python manage.py  createsuperuser      创建管理员
 ``` 
   
   
-  * 启动主服务     `python manage.py  runserver  0.0.0.0:80`    
+  * 启动主服务     `python manage.py  runserver  0.0.0.0:80`  或者   命令启动： `uwsgi --http :80 --chdir /opt/autoops/ -w autoops.wsgi --static-map=/static=static   `
   * 打开0.0.0.0:9001  账号user  密码123 进入进程管理界面，管理redis,webssh,celery等启动关闭。
 
-  *  如果想在生产环境部署、启动，可以参考 http://hequan.blog.51cto.com/5701886/1982769，进行 uwsgi 和 nginx的配置。
+  *  如果想在生产环境部署、启动, 可以参考 http://hequan.blog.51cto.com/5701886/1982769，进行 uwsgi 和 nginx的配置。
+  
 
 ### 截图
 ![图片](https://github.com/hequan2017/autoops/blob/master/static/demo/1.png)
