@@ -44,14 +44,14 @@ AutoOps是一款基于1.11版本django开发的，主要面向linux运维工程�
 ### 安装 
 
    * 开发环境部署：
+   
+   
    1. 下载，安装基本环境,安装目录为/opt下，如是其他目录，请修改supervisor.conf中的相应设置即可。
  ```
  cd /opt
- 
-git  clone  git@github.com:hequan2017/autoops.git
+ git  clone  git@github.com:hequan2017/autoops.git
 
 cd autoops/
-
 yum install sshpass -y
 
 pip3 install -r requirements.txt     
@@ -61,7 +61,8 @@ pip3 install https://github.com/darklow/django-suit/tarball/v2
 
 ```
     添加的资产 里面 请执行   yum install  ipmitool     dmidecode   -y 以获取信息
-   2. 安装其他组件
+  
+    2. 安装其他组件
  
  * 执行 `install_redis.sh` 
  * 执行 `install_webssh.sh` ,需要修改的内容见脚本内，如果不需要webssh，可暂时不用安装。
@@ -93,7 +94,9 @@ password=123
 ### 启动
 
   * 启动supervisor进程管理  `/usr/bin/python2.7   /usr/bin/supervisord -c /etc/supervisord.conf`
-  * 关于数据库 请修改autops/settings文件, 如果没有mysql，请选择上面那种，注释下面的。如果有，则可以启用mysql，设置相关连接地址。关于mysql安装方法，可参考我的博客 `http://hequan.blog.51cto.com/5701886/1982428`
+  * 关于数据库 请修改 `autops/settings`文件, 如果没有mysql，请选择上面那种，注释下面的。如果有，则可以启用mysql，设置相关连接地址。
+  
+    关于mysql安装方法，可参考我的博客 `http://hequan.blog.51cto.com/5701886/1982428`
 ``` 
 # DATABASES = {
 #     'default': {
@@ -123,9 +126,9 @@ python manage.py  createsuperuser      创建管理员
   
   
   * 启动主服务     `python manage.py  runserver  0.0.0.0:80`  或者   命令启动： `uwsgi --http :80 --chdir /opt/autoops/ -w autoops.wsgi --static-map=/static=static   `
-  * 打开0.0.0.0:9001  账号user  密码123 进入进程管理界面，管理redis,webssh,celery等启动关闭。
+  * 打开   0.0.0.0:9001  账号user  密码123    进入进程管理界面，管理redis,webssh,celery等启动关闭。
 
-  *  如果想在生产环境部署、启动, 可以参考 http://hequan.blog.51cto.com/5701886/1982769，进行 uwsgi 和 nginx的配置。
+  *  如果想在生产环境部署、启动, 可以参考 `http://hequan.blog.51cto.com/5701886/1982769`
   
 
 ### 截图
