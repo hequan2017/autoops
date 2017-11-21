@@ -128,7 +128,7 @@ pip3 install https://github.com/darklow/django-suit/tarball/v2
   * 启动主服务     `python manage.py  runserver  0.0.0.0:80`  或者   命令启动： `uwsgi --http :80 --chdir /opt/autoops/ -w autoops.wsgi --static-map=/static=static   `
   * 打开   0.0.0.0:9001  账号user  密码123    进入进程管理界面，管理redis,webssh,celery等启动关闭。
   * 登陆后台，设置定时获取主机图
- ![图片](https://github.com/hequan2017/autoops/blob/master/static/demo/8.png)
+ ![图片](https://github.com/hequan2017/autoops/blob/master/static/demo/9.png)
 
  
  
