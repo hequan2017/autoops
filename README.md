@@ -3,7 +3,6 @@
 AutoOps是一款基于1.11版本django开发的，主要面向linux运维工程师使用,管理资产信息，批量执行命令、脚本，获取流量图，web ssh管理，技术文档等功能。
 
 
-
 ###  Demo
 
   -  地址:`http://42.62.55.58:8003/`        账号`admin`      密码`1qaz.2wsx`
@@ -68,66 +67,71 @@ pip3 install https://github.com/darklow/django-suit/tarball/v2
  * 执行 `install_webssh.sh` ,需要修改的内容见脚本内，如果不需要webssh，可暂时不用安装。
  * 安装 `supervisor  `
  
-```
- pip2   install    supervisor   
- 
- echo_supervisord_conf > /etc/supervisord.conf 
- 
- mkdir /etc/supervisord.d/
-``` 
-  
-  
-``` 
- vim /etc/supervisord.conf
- 
-[include]
-files = /etc/supervisord.d/*.conf
-
-[inet_http_server] 
-port=0.0.0.0:9001 
-username=user
-password=123
-``` 
+    ```
+     pip2   install    supervisor   
+     
+     echo_supervisord_conf > /etc/supervisord.conf 
+     
+     mkdir /etc/supervisord.d/
+    ``` 
+      
+      
+    ``` 
+     vim /etc/supervisord.conf
+     
+    [include]
+    files = /etc/supervisord.d/*.conf
+    
+    [inet_http_server] 
+    port=0.0.0.0:9001 
+    username=user
+    password=123
+    ``` 
  * 配置文件  `cp   /opt/autoops/supervisor.conf  /etc/supervisord.d/`
  
 
 ### 启动
 
   * 启动supervisor进程管理  `/usr/bin/python2.7   /usr/bin/supervisord -c /etc/supervisord.conf`
+  * 启动webssh    `service webconsole   start`
   * 关于数据库 请修改 `autops/settings`文件, 如果没有mysql，请选择上面那种，注释下面的。如果有，则可以启用mysql，设置相关连接地址。
   
     关于mysql安装方法，可参考我的博客 `http://hequan.blog.51cto.com/5701886/1982428`
-``` 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#     }
-# }
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'autoops',
-        'USER': 'root',
-        'PASSWORD': '123456',
-        'HOST': '192.168.10.24',
-        'PORT': '3306',
+    ``` 
+    # DATABASES = {
+    #     'default': {
+    #         'ENGINE': 'django.db.backends.sqlite3',
+    #         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    #     }
+    # }
+    
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'autoops',
+            'USER': 'root',
+            'PASSWORD': '123456',
+            'HOST': '192.168.10.24',
+            'PORT': '3306',
+        }
     }
-}
-
-```
+    
+    ```
   * 初始化数据库
-```
-python manage.py makemigrations
-python manage.py  migrate
-python manage.py  createsuperuser      创建管理员
-``` 
-  
+    ```
+    python manage.py makemigrations
+    python manage.py  migrate
+    python manage.py  createsuperuser      创建管理员
+    ``` 
+      
   
   * 启动主服务     `python manage.py  runserver  0.0.0.0:80`  或者   命令启动： `uwsgi --http :80 --chdir /opt/autoops/ -w autoops.wsgi --static-map=/static=static   `
   * 打开   0.0.0.0:9001  账号user  密码123    进入进程管理界面，管理redis,webssh,celery等启动关闭。
+  * 登陆后台，设置定时获取主机图
+ ![图片](https://github.com/hequan2017/autoops/blob/master/static/demo/8.png)
 
+ 
+ 
   *  如果想在生产环境部署、启动, 可以参考 `http://hequan.blog.51cto.com/5701886/1982769`
   
 
