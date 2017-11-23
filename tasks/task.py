@@ -15,9 +15,10 @@ def   job(id):  ##计划任务
     print(i.network_ip, i.port, i.system_user.username, i.system_user.password)
     cpu1 = ssh(ip=i.network_ip, port=i.port, username=i.system_user.username, password=i.system_user.password, cmd=" top -bn 1 -i -c | grep Cpu   ")
 
-    cpu2 = cpu1['data'].split()
-    cpu3 = cpu2[1].split('%')
-    cpu = cpu3[0]
+    cpu3 = cpu1[1].split('%')
+    cpu4 = cpu1[3].split('%')
+
+    cpu = str(float(str(cpu3[0])) + float(str(cpu4[0])))
 
 
     total = ssh(ip=i.network_ip, port=i.port, username=i.system_user.username, password=i.system_user.password, cmd=" free | grep  Mem:  ")
