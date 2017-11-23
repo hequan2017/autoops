@@ -13,7 +13,9 @@ cd  /opt && git clone --recurse-submodules https://github.com/shibingli/webconso
 cd /opt/webconsole/src/apibox.club/apibox
 GOPATH=/opt/webconsole go install
 cp   /opt/webconsole/conf/webconsole  /etc/init.d/   && chmod   755 /etc/init.d/webconsole
-chkconfig   --add  webconsole  &&  chkconfig    webconsole   on  && service webconsole   start
+chkconfig   --add  webconsole  &&  chkconfig    webconsole   on
+
+##service webconsole   start    不用此命令启动， 统一用supervisor 管理 进程启动
 
 
 #centos 6 的系统会报错,需要执行以下下面的命令。 7的如果也报错的话，也可以试一下。
