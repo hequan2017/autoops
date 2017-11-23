@@ -280,16 +280,29 @@ def asset_hardware_update(request):
                 manage = None
 
             net =  data["ansible_interfaces"][1:]
-
             net.sort()
 
             try:
                  eth0= data['ansible_{}'.format(net[0])]['macaddress']
-                 eth1 = data['ansible_{}'.format(net[1])]['macaddress']
-                 eth2 = data['ansible_{}'.format(net[2])]['macaddress']
-                 eth3 = data['ansible_{}'.format(net[3])]['macaddress']
             except Exception as e:
-                 eth0,eth1,eth2,eth3 = None,None,None,None
+                 eth0= None
+
+            try:
+                 eth1= data['ansible_{}'.format(net[1])]['macaddress']
+            except Exception as e:
+                 eth1= None
+
+            try:
+                 eth2= data['ansible_{}'.format(net[2])]['macaddress']
+            except Exception as e:
+                 eth2= None
+
+            try:
+                 eth3= data['ansible_{}'.format(net[3])]['macaddress']
+            except Exception as e:
+                 eth3= None
+
+
 
             ass = asset.objects.filter(id=id).update(hostname=hostname, manage_ip=manage, system=system,
                                                      memory=memory,disk=disk, sn=sn, model=model, cpu=cpu, eth0=eth0,eth1=eth1,eth2=eth2,eth3=eth3)
