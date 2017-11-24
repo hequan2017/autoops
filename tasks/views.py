@@ -8,6 +8,7 @@ from guardian.shortcuts import get_objects_for_user, get_objects_for_group
 from django.contrib.auth.models import User
 from guardian.core import ObjectPermissionChecker
 
+
 from   tasks.ansible_runner.runner      import AdHocRunner,PlayBookRunner
 from   tasks.ansible_runner.callback    import CommandResultCallback
 
@@ -36,6 +37,7 @@ def ssh(ip, port, username, password, cmd):
 def cmd(request):  ##命令行
 
     if request.method == "GET":
+
         obj = get_objects_for_user(request.user, 'asset.change_asset')
         return render(request, 'tasks/cmd.html', {'asset_list': obj, "tasks_active": "active", "cmd_active": "active"})
 
@@ -259,3 +261,20 @@ def tools_script_get(request, nid):
         obj = get_objects_for_user(request.user, 'asset.change_asset')
         sh = toolsscript.objects.filter(id=nid)
         return render(request, 'tasks/tools-script.html', {"asset_list": obj, "sh": sh, "tools_active": "active"})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

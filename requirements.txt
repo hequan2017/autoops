@@ -10,3 +10,5 @@ flower
 djangorestframework
 django-guardian
 pymysql
+xlwt
+uwsgi

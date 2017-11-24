@@ -28,4 +28,7 @@ urlpatterns = [
     
     url(r'^api/asset.html$',api.AssetList.as_view(),name='asset_api_list'),
     url(r'^api/asset-detail-(?P<pk>\d+).html$', api.AssetDetail.as_view(), name='asset_api_detail'),
+
+
+    url(r'^asset-export.html$',views.export,name='asset_export'),
 ]

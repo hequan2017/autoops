@@ -1,14 +1,14 @@
 ## AutoOps
 
-AutoOps是一款基于1.11版本django开发的，主要面向linux运维工程师使用,管理资产信息，批量执行命令、脚本，获取流量图，web ssh管理，技术文档等功能。
+AutoOps是一款基于1.11版本django开发的，主要面向linux运维工程师使用,管理资产信息，批量执行命令、脚本，获取流量图，web ssh管理，技术文档等功能。欢迎大家测试使用，有问题可反馈。
 
 
 ###  Demo
 
   -  地址:`http://42.62.55.58:8003/`        账号`admin`      密码`1qaz.2wsx`
   -  交流群号：`620176501`   欢迎交流！   <a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=bbe5716e8bd2075cb27029bd5dd97e22fc4d83c0f61291f47ed3ed6a4195b024"><img border="0" src="https://github.com/hequan2017/cmdb/blob/master/static/img/group.png"  alt="autoops开发讨论群" title="autoops开发讨论群"></a>
+ 
   -  后台地址 `http://42.62.55.58:8003/admin`     账号`admin`   密码`1qaz.2wsx`
-  -  资产api地址 `http://42.62.55.58:8003/asset/api/asset.html`
   -  博客:`http://hequan.blog.51cto.com/`
   -  github:`https://github.com/hequan2017/autoops/`
   -  码云:`https://gitee.com/hequan2020/autoops`
@@ -18,6 +18,7 @@ AutoOps是一款基于1.11版本django开发的，主要面向linux运维工程�
 
 
 ### 更新记录
+  -  1.3.5  增加导出全部功能。
   -  1.3.4  数据库切换为mysql数据库。
   -  1.3.3  增加删除历史获取的流量、CPU、内存等数据。优化性能页面打开速度。
   -  1.3.2  新增 资产查询、管理网IP、网卡MAC地址、内存显示优化等。 硬盘、内存显示优化，修复核心数显示不正确。
@@ -29,16 +30,26 @@ AutoOps是一款基于1.11版本django开发的，主要面向linux运维工程�
 
 ###  功能
   - asset资产
-    - api
+    - api  `http://42.62.55.58:8003/asset/api/asset.html`
+    - 自动获取服务器信息
   - names用户（预留模块）
-  - tasks任务
-  - webssh登陆
+  - tasks任务 
+     - 命令行
+     - 工具  
+        - shell 
+        - python
+        - yml
+  - webssh登陆 （用复制粘贴的时候，会显示二份，但实际只有一个，不影响使用，请忽略。）
   - 技术文档 (真正运维人员的管理平台，自带技术文档，有问题不用再去别的地方找)
+
+
 
 ### 环境
    * Python 3.6.2 
    * Django 1.11.6
    * Python  2.7  (用来启动 supervisor)
+ 
+ 
    
 ### 安装 
 
@@ -46,26 +57,29 @@ AutoOps是一款基于1.11版本django开发的，主要面向linux运维工程�
    
    
    1. 下载，安装基本环境,安装目录为/opt下，如是其他目录，请修改supervisor.conf中的相应设置即可。
- ```
- cd /opt
- git  clone  git@github.com:hequan2017/autoops.git
-
-cd autoops/
-yum install sshpass -y
-
-pip3 install -r requirements.txt     
-
-pip3 install https://github.com/darklow/django-suit/tarball/v2
-
-
-```
-    添加的资产 里面 请执行   yum install  ipmitool     dmidecode   -y 以获取信息
+ 
+     ```
+     cd /opt
+     git  clone  git@github.com:hequan2017/autoops.git
+    
+    cd autoops/
+    yum install sshpass -y
+    
+    pip3 install -r requirements.txt     
+    
+    pip3 install https://github.com/darklow/django-suit/tarball/v2
+    
+    
+    ```
+    
+   添加的资产 里面 请执行  ` yum install  ipmitool     dmidecode   -y  `以获取更多信息
   
     2. 安装其他组件
  
- * 执行 `install_redis.sh` 
+ * 执行 `install_redis.sh`   
  * 执行 `install_webssh.sh` ,需要修改的内容见脚本内，如果不需要webssh，可暂时不用安装。
- * 安装 `supervisor  `
+ 
+ * 安装   `supervisor  `
  
     ```
      pip2   install    supervisor   
@@ -73,9 +87,9 @@ pip3 install https://github.com/darklow/django-suit/tarball/v2
      echo_supervisord_conf > /etc/supervisord.conf 
      
      mkdir /etc/supervisord.d/
+     
     ``` 
-      
-      
+       
     ``` 
      vim /etc/supervisord.conf
      
@@ -87,16 +101,17 @@ pip3 install https://github.com/darklow/django-suit/tarball/v2
     username=user
     password=123
     ``` 
- * 配置文件  `cp   /opt/autoops/supervisor.conf  /etc/supervisord.d/`
+    
+ * 配置文件    `cp   /opt/autoops/supervisor.conf  /etc/supervisord.d/   `
  
 
 ### 启动
 
-  * 启动supervisor进程管理  `/usr/bin/python2.7   /usr/bin/supervisord -c /etc/supervisord.conf`
-  * 启动webssh    `service webconsole   start`
   * 关于数据库 请修改 `autops/settings`文件, 如果没有mysql，请选择上面那种，注释下面的。如果有，则可以启用mysql，设置相关连接地址。
-  
     关于mysql安装方法，可参考我的博客 `http://hequan.blog.51cto.com/5701886/1982428`
+    
+    
+    
     ``` 
     # DATABASES = {
     #     'default': {
@@ -117,21 +132,28 @@ pip3 install https://github.com/darklow/django-suit/tarball/v2
     }
     
     ```
-  * 初始化数据库
+  * 初始化数据库（先删除文件夹的 db.sqlite3, 如不想删除，请忽略下面3个命令）
     ```
     python manage.py makemigrations
     python manage.py  migrate
     python manage.py  createsuperuser      创建管理员
     ``` 
       
-  
-  * 启动: 统一用supervisor 管理,打开   0.0.0.0:9001  账号user  密码123    进入进程管理界面，管理uwsgi,redis,webssh,celery等启动关闭。
+  * 启动supervisor进程管理  `/usr/bin/python2.7   /usr/bin/supervisord -c /etc/supervisord.conf`
+
+  * 启动: 统一用supervisor 管理,打开   0.0.0.0:9001  账号user  密码123    进入进程管理界面，管理uwsgi,redis,webssh,celery 等启动关闭。
+ 
   * 登陆后台，设置定时获取主机图
  ![图片](https://github.com/hequan2017/autoops/blob/master/static/demo/9.png)
 
+
+  * 如果想在windows 下的 pycharm打开，请注释  asset/views.py  第20行,     tasks/views.py   12  13 行。（因为ansible不好安装在windows 下环境。）
  
- 
-  *  如果想在生产环境部署、启动, 可以参考 `http://hequan.blog.51cto.com/5701886/1982769`
+  * 如果想在生产环境部署、启动, 可以参考   `http://hequan.blog.51cto.com/5701886/1982769`
+  
+  
+  
+
   
 
 ### 截图

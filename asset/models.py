@@ -19,7 +19,7 @@ class asset(models.Model):
 
 
     system_user = models.ForeignKey(to="system_users",to_field='id',on_delete=models.SET_NULL, null=True,verbose_name='登陆用户',blank=True)
-    data_center =  models.ForeignKey(to="data_centers",to_field='id',on_delete=models.SET_NULL, null=True,verbose_name='数据中心',blank=True)
+    data_center =  models.ForeignKey(to="data_centers",to_field='id',on_delete=models.SET_NULL, null=True,verbose_name='数据中心')
     cabinet = models.CharField(max_length=64,verbose_name='机柜',null=True,blank=True)
     position = models.CharField(max_length=64,verbose_name='位置',null=True,blank=True)
 
@@ -36,7 +36,7 @@ class asset(models.Model):
     product_line =  models.ForeignKey(to=Group,to_field='id',on_delete=models.SET_NULL,verbose_name='产品线',null=True)
     is_active = models.BooleanField(default=True, verbose_name=('是否启用'))
     ps = models.CharField(max_length=1024,verbose_name="备注",null=True,blank=True)
-    file = models.FileField(upload_to = '%Y%m%d{}'.format(random.randint(0,99999)),null=True,blank=True,default=None)
+    file = models.FileField(upload_to = '%Y%m%d{}'.format(random.randint(0,99999)),verbose_name="文件",null=True,blank=True,default=None)
 
     ctime= models.DateTimeField(auto_now_add=True,null=True,verbose_name='创建时间',blank=True)
     utime = models.DateTimeField(auto_now=True, null=True,verbose_name='更新时间',blank=True)
@@ -57,6 +57,8 @@ class asset(models.Model):
 
 class   data_centers(models.Model):
     data_center_list = models.CharField(max_length=128, verbose_name='数据中心', null=True)
+
+
 
     class Meta:
         db_table = "data_centers"

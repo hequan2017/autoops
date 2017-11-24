@@ -19,7 +19,7 @@ from tasks.views import ssh
 
 from  tasks.ansible_runner.runner import AdHocRunner
 from django.db.models import Q
-
+import xlwt,time
 
 class AssetListAll(TemplateView):
     template_name = 'asset/asset.html'
@@ -346,8 +346,6 @@ def asset_performance(request, nid):
         # mem = float('%.2f' % (float('%.3f' % (int(list[2]) / int(list[1]))) * 100))
 
 
-
-
         all = performance.objects.all()
         date, cpu_use, mem_use, in_use, out_use = [], [], [], [], []
 
@@ -521,3 +519,55 @@ class AssetUpload(View):
             response = HttpResponse(f, content_type='application/octet-stream')
             response['Content-Disposition'] = 'attachment;	filename={}'.format(urls)
             return response
+
+
+
+@login_required(login_url="/login.html")
+def   export(request):
+    if request.method == "GET":
+        a = asset.objects.all()
+        bt = ['主机名', '外网IP', '管理IP', '内网IP', 'ssh端口', '型号', '系统版本', "网卡1mac地址", "网卡2mac地址", "网卡3mac地址", "网卡4mac地址",
+              '登陆用户', '数据中心', '机柜', '位置', '序列号', 'CPU', '内存', "硬盘", "上联端口", "出厂时间", "到保时间", '产品线', '是否启用', "备注"
+             ,'创建时间', '更新时间',]
+        wb = xlwt.Workbook(encoding='utf-8')
+        sh = wb.add_sheet("详情")
+
+        dateFormat = xlwt.XFStyle()
+        dateFormat.num_format_str = 'yyyy/mm/dd'
+
+        for  i in range(len(bt)):
+            sh.write(0,i,bt[i])
+
+        for i in range(len(a)):
+                sh.write(i + 1, 0, a[i].hostname)
+                sh.write(i + 1, 1, a[i].network_ip)
+                sh.write(i + 1, 2, a[i].manage_ip)
+                sh.write(i + 1, 3, a[i].inner_ip)
+                sh.write(i + 1, 4, a[i].port)
+                sh.write(i + 1, 5, a[i].model)
+                sh.write(i + 1, 6, a[i].system)
+                sh.write(i + 1, 7, a[i].eth0)
+                sh.write(i + 1, 8, a[i].eth1)
+                sh.write(i + 1, 9, a[i].eth2)
+                sh.write(i + 1, 10, a[i].eth3)
+                sh.write(i + 1, 11, a[i].system_user.name)
+                sh.write(i + 1, 12, a[i].data_center.data_center_list)
+                sh.write(i + 1, 13, a[i].cabinet)
+                sh.write(i + 1, 14, a[i].position)
+                sh.write(i + 1, 15, a[i].sn)
+                sh.write(i + 1, 16, a[i].cpu)
+                sh.write(i + 1, 17, a[i].memory)
+                sh.write(i + 1, 18, a[i].disk)
+                sh.write(i + 1, 19, a[i].uplink_port)
+                sh.write(i + 1, 20, a[i].ship_time,dateFormat)
+                sh.write(i + 1, 21, a[i].end_time,dateFormat)
+                sh.write(i + 1, 22, a[i].product_line.name)
+                sh.write(i + 1, 23, a[i].is_active)
+                sh.write(i + 1, 24, a[i].ps)
+                sh.write(i + 1, 25, a[i].ctime,dateFormat)
+                sh.write(i + 1, 26, a[i].utime,dateFormat)
+
+        response = HttpResponse(content_type='application/vnd.ms-excel')
+        response['Content-Disposition'] = 'attachment; filename=asset' + time.strftime('%Y%m%d', time.localtime(time.time())) + '.xls'
+        wb.save(response)
+        return response
