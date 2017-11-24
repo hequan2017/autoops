@@ -58,7 +58,7 @@ AutoOps是一款基于1.11版本django开发的，主要面向linux运维工程�
    
    1. 下载，安装基本环境,安装目录为/opt下，如是其他目录，请修改supervisor.conf中的相应设置即可。
  
-     ```
+    
      cd /opt
      git  clone  git@github.com:hequan2017/autoops.git
     
@@ -70,7 +70,7 @@ AutoOps是一款基于1.11版本django开发的，主要面向linux运维工程�
     pip3 install https://github.com/darklow/django-suit/tarball/v2
     
     
-    ```
+   
     
    添加的资产 里面 请执行  ` yum install  ipmitool     dmidecode   -y  `以获取更多信息
   
