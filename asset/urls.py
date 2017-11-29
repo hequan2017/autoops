@@ -31,4 +31,5 @@ urlpatterns = [
 
 
     url(r'^asset-export.html$',views.export,name='asset_export'),
+    url(r'^asset-show.html$',views.AssetShow,name='asset_show'),
 ]

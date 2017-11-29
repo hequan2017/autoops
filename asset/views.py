@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from    django.utils.decorators import method_decorator
-from asset.models import asset, system_users, performance, web_history
+from asset.models import asset, system_users, performance, web_history,data_centers
 from .form import AssetForm, SystemUserForm
 import json
 from django.contrib.auth.models import User, Group
@@ -20,6 +20,10 @@ from tasks.views import ssh
 from  tasks.ansible_runner.runner import AdHocRunner
 from django.db.models import Q
 import xlwt,time
+
+
+
+
 
 class AssetListAll(TemplateView):
     template_name = 'asset/asset.html'
@@ -571,3 +575,28 @@ def   export(request):
         response['Content-Disposition'] = 'attachment; filename=asset' + time.strftime('%Y%m%d', time.localtime(time.time())) + '.xls'
         wb.save(response)
         return response
+
+
+@login_required(login_url="/login.html")
+def AssetShow(request):  ## 展示
+
+    asse = Group.objects.all()
+    product = []
+    products = []
+    for i  in asse:
+        x = asset.objects.filter(product_line=i).count()
+        product.append(i.name)
+        products.append(x)
+
+    da = data_centers.objects.all()
+    data = []
+    datas = []
+    for i  in da:
+        x = asset.objects.filter(data_center=i).count()
+        data.append(i.data_center_list)
+        datas.append(x)
+
+
+
+    ret = {'product':product,"products":products,"data":data,"datas":datas}
+    return HttpResponse(json.dumps(ret))

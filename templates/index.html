@@ -4,16 +4,193 @@
 {% block header-css %}
 {% endblock %}
 
-{{ user }}
+
+
+
+
+
 
 
 
 {% block page-content %}
 
+<div class="wrapper wrapper-content animated fadeInRight chart"    >
+            <div class="row"  >
+                <div class="col-sm-6">
+                    <div class="ibox float-e-margins">
 
+                    <div class="ibox-title">
+                            <h5>产品线</h5>
+                              <div class="ibox-tools">
+                                <a class="collapse-links">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                    <i class="fa fa-wrench"></i>
+                                </a>
+                                <ul class="dropdown-menu dropdown-user">
+                                    <li><a href="#">配置选项 1</a>
+                                    </li>
+                                    <li><a href="#">配置选项 2</a>
+                                    </li>
+                                </ul>
+                                <a class="close-link">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
+
+                        </div>
+
+                    <div class="ibox-content" >
+                        <div   style="height:300px;" id="asset-product"></div>
+                    </div>
+
+
+
+
+                </div>
+
+            </div>
+
+
+          <div class="col-sm-6">
+                    <div class="ibox float-e-margins">
+
+                    <div class="ibox-title">
+                            <h5>数据中心</h5>
+                              <div class="ibox-tools">
+                                <a class="collapse-links">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                    <i class="fa fa-wrench"></i>
+                                </a>
+                                <ul class="dropdown-menu dropdown-user">
+                                    <li><a href="#">配置选项 1</a>
+                                    </li>
+                                    <li><a href="#">配置选项 2</a>
+                                    </li>
+                                </ul>
+                                <a class="close-link">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
+
+                        </div>
+
+                    <div class="ibox-content" >
+                        <div   style="height:300px;" id="asset-data"></div>
+                    </div>
+
+
+
+
+                </div>
+
+            </div>
+
+
+        </div>
+        </div>
 
 
 {% endblock %}
 
 {% block footer-js %}
+
+
+    <script src="/static/js/echarts.min.js"></script>
+
+    <script>
+    $(function () {
+        var server_info;
+
+        var myChart = echarts.init(document.getElementById('asset-product'));
+        var option = {
+            title: {
+                text: ''
+            },
+            tooltip: {},
+            legend: {
+                data:['产品线']
+            },
+            xAxis: {
+                data: {{ product  | safe }}
+            },
+            yAxis: {},
+            series: [{
+                name: '数量',
+                type: 'bar',
+                data: {{ products   | safe }}
+            }]
+        };
+        myChart.setOption(option, true);
+
+        var data_info;
+
+        var myChart1 = echarts.init(document.getElementById('asset-data'));
+        var option1 = {
+            title: {
+                text: ''
+            },
+            tooltip: {},
+            legend: {
+                data:['产品线']
+            },
+            xAxis: {
+                data: {{ data | safe }}
+            },
+            yAxis: {},
+            series: [{
+                name: '数量',
+                type: 'bar',
+                data: {{ datas   | safe }}
+            }]
+        };
+        myChart1.setOption(option1, true);
+
+
+
+{#        myChart.showLoading();#}
+        setInterval( function () {
+
+                $.ajax({
+                    type: 'GET',
+                    url: '/asset/asset-show.html',
+                    dataType: 'json',
+                    success: function (json) {
+                        server_info = eval(json);
+                    }
+                });
+
+                    option.xAxis.data =  server_info.product;
+                    option.series[0].data = server_info.products;
+                    option1.xAxis.data =  server_info.data;
+                    option1.series[0].data = server_info.datas;
+{#                    myChart.hideLoading();#}
+                    myChart.setOption(option, true);
+                    myChart1.setOption(option1, true);
+
+                }, 60000);
+
+         window.onresize = function () {
+            myChart.resize();
+            myChart1.resize();
+        };
+
+
+    });
+
+
+
+
+
+</script>
+
+
+
+
+
+
+
 {% endblock %}

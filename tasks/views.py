@@ -13,6 +13,10 @@ from   tasks.ansible_runner.runner      import AdHocRunner,PlayBookRunner
 from   tasks.ansible_runner.callback    import CommandResultCallback
 
 
+
+
+
+
 def ssh(ip, port, username, password, cmd):
     try:
         ssh = paramiko.SSHClient()  # 创建ssh对象
@@ -31,6 +35,12 @@ def ssh(ip, port, username, password, cmd):
         error = "账号或密码错误,{}".format(e)
         ret = {"ip": ip, "data": error}
         return ret
+
+
+
+
+
+
 
 
 @login_required(login_url="/login.html")

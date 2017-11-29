@@ -9,11 +9,32 @@ from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password, check_password
 from  asset.models import web_history
 from  tasks.models import history
+from django.contrib.auth.models import User, Group
+from asset.models import asset,data_centers
+
 
 
 @login_required(login_url="/login.html")
 def index(request):
-    return render(request, 'index.html')
+
+    asse = Group.objects.all()
+    product = []
+    products = []
+    for i  in asse:
+        x = asset.objects.filter(product_line=i).count()
+        product.append(i.name)
+        products.append(x)
+
+    da = data_centers.objects.all()
+    data = []
+    datas = []
+    for i  in da:
+        x = asset.objects.filter(data_center=i).count()
+        data.append(i.data_center_list)
+        datas.append(x)
+
+
+    return render(request, 'index.html',{'product': product, 'products': products,'data':data,"datas":datas},)
 
 
 def login_view(request):
