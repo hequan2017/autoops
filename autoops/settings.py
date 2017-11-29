@@ -15,7 +15,6 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
@@ -25,8 +24,7 @@ SECRET_KEY = 'mo2+&!_l_7z0ty4%e75a#gdf%*&es4p6n$y90xk=18uao*&8*y'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*',]
-
+ALLOWED_HOSTS = ['*', ]
 
 # Application definition
 
@@ -62,7 +60,7 @@ MIDDLEWARE = [
 ]
 
 AUTHENTICATION_BACKENDS = (
-    'django.contrib.auth.backends.ModelBackend', # default
+    'django.contrib.auth.backends.ModelBackend',  # default
     'guardian.backends.ObjectPermissionBackend',
 )
 ANONYMOUS_USER_ID = -1
@@ -87,7 +85,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'autoops.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
@@ -144,7 +141,6 @@ AUTH_PASSWORD_VALIDATORS = [
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 LOGIN_URL = '/login.html'
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
@@ -163,12 +159,13 @@ DATE_FORMAT = 'Y-m-d'
 
 
 STATIC_URL = '/static/'
-STATIC_ROOT = ''
+STATIC_ROOT = '/static/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
 
 import djcelery
+
 djcelery.setup_loader()
 
 BROKER_URL = 'redis://127.0.0.1:6379/0'
@@ -181,19 +178,17 @@ CELERY_TIMEZONE = 'Asia/Shanghai'
 
 CELERY_IMPORTS = ('tasks.task',)
 
-
 CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
 
-REST_FRAMEWORK	=	{
-    'DEFAULT_AUTHENTICATION_CLASSES':	(
-           'rest_framework.authentication.BasicAuthentication',
-           'rest_framework.authentication.SessionAuthentication',
-           'rest_framework.authentication.TokenAuthentication',
-            ),
-    'DEFAULT_PERMISSION_CLASSES':	(
-           'rest_framework.permissions.IsAdminUser',)
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAdminUser',)
 }
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'upload/')
-MEDIA_URL = '/upload/' #这个是在浏览器上访问该上传文件的url的前缀
-
+MEDIA_URL = '/upload/'  # 这个是在浏览器上访问该上传文件的url的前缀

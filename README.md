@@ -167,6 +167,9 @@ uwsgi  --ini    /opt/autoops/script/uwsgi.ini   # 启动uwsgi配置  也可以�
 uwsgi  --stop   /opt/autoops/script/uwsgi.pid # 关闭uwsgi
 uwsgi  --reload  /opt/autoops/script/uwsgi.pid  #重新加载
 ```
+ 
+请修改 `autoops/settings.py                  26 DEBUG = True `  改成 False
+
 
 nginx 配置文件修改如下
 

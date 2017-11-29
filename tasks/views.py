@@ -8,7 +8,7 @@ from guardian.shortcuts import get_objects_for_user, get_objects_for_group
 from django.contrib.auth.models import User
 from guardian.core import ObjectPermissionChecker
 
-
+#
 from   tasks.ansible_runner.runner      import AdHocRunner,PlayBookRunner
 from   tasks.ansible_runner.callback    import CommandResultCallback
 

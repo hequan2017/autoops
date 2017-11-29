@@ -1,28 +1,24 @@
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from    django.utils.decorators import method_decorator
-from asset.models import asset, system_users, performance, web_history,data_centers
+from django.utils.decorators import method_decorator
+from asset.models import asset, system_users, performance, web_history, data_centers
 from .form import AssetForm, SystemUserForm
-import json
+
 from django.contrib.auth.models import User, Group
 from guardian.shortcuts import assign_perm, get_perms
 from guardian.core import ObjectPermissionChecker
 from guardian.decorators import permission_required_or_403
-from tasks.views import ssh
+
 from guardian.shortcuts import get_objects_for_user, get_objects_for_group
 from guardian.models import UserObjectPermission, GroupObjectPermission
 from django.views.generic import TemplateView, ListView, View, CreateView, UpdateView, DeleteView, DetailView
 from django.urls import reverse_lazy
 from tasks.views import ssh
 
-# from common.mixins import JSONResponseMixin
-
 from  tasks.ansible_runner.runner import AdHocRunner
+
 from django.db.models import Q
-import xlwt,time
-
-
-
+import xlwt, time, json
 
 
 class AssetListAll(TemplateView):
@@ -178,7 +174,7 @@ class AssetDel(View):
                 "static": False,
                 "error": '删除请求错误,{}'.format(e)
             }
-        return   HttpResponse(json.dumps(ret))
+        return HttpResponse(json.dumps(ret))
 
 
 @login_required(login_url="/login.html")
@@ -226,7 +222,6 @@ def asset_hardware_update(request):
                 },
             ]
 
-
             task_tuple = (('setup', ''),)
             runner = AdHocRunner(assets)
             result = runner.run(task_tuple=task_tuple, pattern='all', task_name='Ansible Ad-hoc')
@@ -236,7 +231,6 @@ def asset_hardware_update(request):
             hostname = data['ansible_nodename']
             system = data['ansible_distribution'] + " " + data['ansible_distribution_version']
 
-
             try:
                 a2 = "parted -l  | grep   \"Disk \/dev\/[a-z]d\"  | awk -F\"[ ]\"  '{print $3}' | awk  -F\"GB\"  '{print $1}'"
                 s = ssh(ip=ip, port=port, username=username, password=password, cmd=a2)
@@ -245,17 +239,17 @@ def asset_hardware_update(request):
                 disk = "+".join(map(str, disk2)) + "   共计:{} GB".format(round(sum(map(float, disk2))))
             except Exception  as  e:
 
-                disk =  " 共计{}".format(str(sum([int(data["ansible_devices"][i]["sectors"]) * \
-                             int(data["ansible_devices"][i]["sectorsize"]) / 1024 / 1024 / 1024 \
-                          for i in data["ansible_devices"] if i[0:2] in ("vd", "ss", "sd")])) + str(" GB"))
-
+                disk = " 共计{}".format(str(sum([int(data["ansible_devices"][i]["sectors"]) * \
+                                               int(data["ansible_devices"][i]["sectorsize"]) / 1024 / 1024 / 1024 \
+                                               for i in data["ansible_devices"] if
+                                               i[0:2] in ("vd", "ss", "sd")])) + str(" GB"))
 
             try:
                 a1 = "dmidecode | grep -P -A5 \"Memory\ Device\"  | grep Size   | grep -v \"No Module Installed\" | grep -v \"0\"   | awk -F\":\" \'{print $2}\'  | awk -F\" \"  \'{print  $1}\'"
                 s = ssh(ip=ip, port=port, username=username, password=password, cmd=a1)
                 memory1 = s['data']
 
-                if memory1  ==   "" :
+                if memory1 == "":
                     memory0 = []
                     memory0.append(int(round((data['ansible_memtotal_mb']) / 1000)))
                 else:
@@ -268,13 +262,12 @@ def asset_hardware_update(request):
                 memory = "+".join(map(str, memory0)) + '    共计:{} GB'.format((sum(map(int, memory0))))
 
             except Exception as e:
-                memory =  '    共计:{} GB'.format(round((data['ansible_memtotal_mb']/ 1000)))
-
+                memory = '    共计:{} GB'.format(round((data['ansible_memtotal_mb'] / 1000)))
 
             sn = data['ansible_product_serial']
-            model =data["ansible_system_vendor"] + " " +data['ansible_product_name']
-            cpu = data['ansible_processor'][1] + "  {}核心".format(data['ansible_processor_count']*data["ansible_processor_cores"])
-
+            model = data["ansible_system_vendor"] + " " + data['ansible_product_name']
+            cpu = data['ansible_processor'][1] + "  {}核心".format(
+                data['ansible_processor_count'] * data["ansible_processor_cores"])
 
             try:
                 a = "ipmitool lan print | grep -w \"IP Address \"   | awk -F\":\" \ '{print $2}\'"
@@ -283,33 +276,32 @@ def asset_hardware_update(request):
             except Exception as e:
                 manage = None
 
-            net =  data["ansible_interfaces"][1:]
+            net = data["ansible_interfaces"][1:]
             net.sort()
 
             try:
-                 eth0= data['ansible_{}'.format(net[0])]['macaddress']
+                eth0 = data['ansible_{}'.format(net[0])]['macaddress']
             except Exception as e:
-                 eth0= None
+                eth0 = None
 
             try:
-                 eth1= data['ansible_{}'.format(net[1])]['macaddress']
+                eth1 = data['ansible_{}'.format(net[1])]['macaddress']
             except Exception as e:
-                 eth1= None
+                eth1 = None
 
             try:
-                 eth2= data['ansible_{}'.format(net[2])]['macaddress']
+                eth2 = data['ansible_{}'.format(net[2])]['macaddress']
             except Exception as e:
-                 eth2= None
+                eth2 = None
 
             try:
-                 eth3= data['ansible_{}'.format(net[3])]['macaddress']
+                eth3 = data['ansible_{}'.format(net[3])]['macaddress']
             except Exception as e:
-                 eth3= None
-
-
+                eth3 = None
 
             ass = asset.objects.filter(id=id).update(hostname=hostname, manage_ip=manage, system=system,
-                                                     memory=memory,disk=disk, sn=sn, model=model, cpu=cpu, eth0=eth0,eth1=eth1,eth2=eth2,eth3=eth3)
+                                                     memory=memory, disk=disk, sn=sn, model=model, cpu=cpu, eth0=eth0,
+                                                     eth1=eth1, eth2=eth2, eth3=eth3)
 
         except Exception as e:
             ret['status'] = False
@@ -360,13 +352,12 @@ def asset_performance(request, nid):
                 mem_use.append(i.mem_use)
                 in_use.append(i.in_use)
                 out_use.append(i.out_use)
-        if  cpu_use :
+        if cpu_use:
             cpu = cpu_use[-1]
             mem = mem_use[-1]
         else:
             cpu = 0
             mem = 0
-
 
         return render(request, 'asset/asset-performance.html', {'cpu': cpu, 'mem': mem, "asset_id": id,
                                                                 'date': date, 'cpu_use': cpu_use, 'mem_use': mem_use,
@@ -525,54 +516,54 @@ class AssetUpload(View):
             return response
 
 
-
 @login_required(login_url="/login.html")
-def   export(request):
+def export(request):
     if request.method == "GET":
         a = asset.objects.all()
         bt = ['主机名', '外网IP', '管理IP', '内网IP', 'ssh端口', '型号', '系统版本', "网卡1mac地址", "网卡2mac地址", "网卡3mac地址", "网卡4mac地址",
               '登陆用户', '数据中心', '机柜', '位置', '序列号', 'CPU', '内存', "硬盘", "上联端口", "出厂时间", "到保时间", '产品线', '是否启用', "备注"
-             ,'创建时间', '更新时间',]
+            , '创建时间', '更新时间', ]
         wb = xlwt.Workbook(encoding='utf-8')
         sh = wb.add_sheet("详情")
 
         dateFormat = xlwt.XFStyle()
         dateFormat.num_format_str = 'yyyy/mm/dd'
 
-        for  i in range(len(bt)):
-            sh.write(0,i,bt[i])
+        for i in range(len(bt)):
+            sh.write(0, i, bt[i])
 
         for i in range(len(a)):
-                sh.write(i + 1, 0, a[i].hostname)
-                sh.write(i + 1, 1, a[i].network_ip)
-                sh.write(i + 1, 2, a[i].manage_ip)
-                sh.write(i + 1, 3, a[i].inner_ip)
-                sh.write(i + 1, 4, a[i].port)
-                sh.write(i + 1, 5, a[i].model)
-                sh.write(i + 1, 6, a[i].system)
-                sh.write(i + 1, 7, a[i].eth0)
-                sh.write(i + 1, 8, a[i].eth1)
-                sh.write(i + 1, 9, a[i].eth2)
-                sh.write(i + 1, 10, a[i].eth3)
-                sh.write(i + 1, 11, a[i].system_user.name)
-                sh.write(i + 1, 12, a[i].data_center.data_center_list)
-                sh.write(i + 1, 13, a[i].cabinet)
-                sh.write(i + 1, 14, a[i].position)
-                sh.write(i + 1, 15, a[i].sn)
-                sh.write(i + 1, 16, a[i].cpu)
-                sh.write(i + 1, 17, a[i].memory)
-                sh.write(i + 1, 18, a[i].disk)
-                sh.write(i + 1, 19, a[i].uplink_port)
-                sh.write(i + 1, 20, a[i].ship_time,dateFormat)
-                sh.write(i + 1, 21, a[i].end_time,dateFormat)
-                sh.write(i + 1, 22, a[i].product_line.name)
-                sh.write(i + 1, 23, a[i].is_active)
-                sh.write(i + 1, 24, a[i].ps)
-                sh.write(i + 1, 25, a[i].ctime,dateFormat)
-                sh.write(i + 1, 26, a[i].utime,dateFormat)
+            sh.write(i + 1, 0, a[i].hostname)
+            sh.write(i + 1, 1, a[i].network_ip)
+            sh.write(i + 1, 2, a[i].manage_ip)
+            sh.write(i + 1, 3, a[i].inner_ip)
+            sh.write(i + 1, 4, a[i].port)
+            sh.write(i + 1, 5, a[i].model)
+            sh.write(i + 1, 6, a[i].system)
+            sh.write(i + 1, 7, a[i].eth0)
+            sh.write(i + 1, 8, a[i].eth1)
+            sh.write(i + 1, 9, a[i].eth2)
+            sh.write(i + 1, 10, a[i].eth3)
+            sh.write(i + 1, 11, a[i].system_user.name)
+            sh.write(i + 1, 12, a[i].data_center.data_center_list)
+            sh.write(i + 1, 13, a[i].cabinet)
+            sh.write(i + 1, 14, a[i].position)
+            sh.write(i + 1, 15, a[i].sn)
+            sh.write(i + 1, 16, a[i].cpu)
+            sh.write(i + 1, 17, a[i].memory)
+            sh.write(i + 1, 18, a[i].disk)
+            sh.write(i + 1, 19, a[i].uplink_port)
+            sh.write(i + 1, 20, a[i].ship_time, dateFormat)
+            sh.write(i + 1, 21, a[i].end_time, dateFormat)
+            sh.write(i + 1, 22, a[i].product_line.name)
+            sh.write(i + 1, 23, a[i].is_active)
+            sh.write(i + 1, 24, a[i].ps)
+            sh.write(i + 1, 25, a[i].ctime, dateFormat)
+            sh.write(i + 1, 26, a[i].utime, dateFormat)
 
         response = HttpResponse(content_type='application/vnd.ms-excel')
-        response['Content-Disposition'] = 'attachment; filename=asset' + time.strftime('%Y%m%d', time.localtime(time.time())) + '.xls'
+        response['Content-Disposition'] = 'attachment; filename=asset' + time.strftime('%Y%m%d', time.localtime(
+            time.time())) + '.xls'
         wb.save(response)
         return response
 
@@ -583,7 +574,7 @@ def AssetShow(request):  ## 展示
     asse = Group.objects.all()
     product = []
     products = []
-    for i  in asse:
+    for i in asse:
         x = asset.objects.filter(product_line=i).count()
         product.append(i.name)
         products.append(x)
@@ -591,12 +582,10 @@ def AssetShow(request):  ## 展示
     da = data_centers.objects.all()
     data = []
     datas = []
-    for i  in da:
+    for i in da:
         x = asset.objects.filter(data_center=i).count()
         data.append(i.data_center_list)
         datas.append(x)
 
-
-
-    ret = {'product':product,"products":products,"data":data,"datas":datas}
+    ret = {'product': product, "products": products, "data": data, "datas": datas}
     return HttpResponse(json.dumps(ret))
