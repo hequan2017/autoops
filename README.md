@@ -1,19 +1,23 @@
 ## AutoOps
 
-AutoOps是一款基于1.11版本django开发的，主要面向linux运维工程师使用,管理资产信息，批量执行命令、脚本，获取流量图，web ssh管理，技术文档等功能。欢迎大家测试使用，有问题可反馈。
+AutoOps 是一款基于1.11 版本django开发的，主要面向linux运维工程师使用,管理linux资产信息，批量执行命令、脚本,获取流量图，web ssh管理，技术文档等功能。
+
+欢迎大家测试使用，有问题可反馈。
 
 
 ###  Demo
 
-  -  地址:`http://42.62.55.58:8003/`        账号`admin`      密码`1qaz.2wsx`
-  -  交流群号：`620176501`   欢迎交流！   <a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=bbe5716e8bd2075cb27029bd5dd97e22fc4d83c0f61291f47ed3ed6a4195b024"><img border="0" src="https://github.com/hequan2017/cmdb/blob/master/static/img/group.png"  alt="autoops开发讨论群" title="autoops开发讨论群"></a>
+  -  地址:  `http://42.62.55.58:8003/`        账号`admin`      密码`1qaz.2wsx`
+  -  交流群号： `620176501`   欢迎交流！   <a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=bbe5716e8bd2075cb27029bd5dd97e22fc4d83c0f61291f47ed3ed6a4195b024"><img border="0" src="https://github.com/hequan2017/cmdb/blob/master/static/img/group.png"  alt="autoops开发讨论群" title="autoops开发讨论群"></a>
  
   -  后台地址 `http://42.62.55.58:8003/admin`     账号`admin`   密码`1qaz.2wsx`
-  -  博客:`http://hequan.blog.51cto.com/`
-  -  github:`https://github.com/hequan2017/autoops/`
-  -  码云:`https://gitee.com/hequan2020/autoops`
+  -  博客:    `http://hequan.blog.51cto.com/`
+  -  github:  `https://github.com/hequan2017/autoops/`
+  -  码云:    `https://gitee.com/hequan2020/autoops`
 
-  
+###  架构图
+
+ 
 ![图片](https://github.com/hequan2017/autoops/blob/master/static/demo/autuops.png)  
 
 
@@ -45,6 +49,7 @@ AutoOps是一款基于1.11版本django开发的，主要面向linux运维工程�
 
 
 ### 环境
+
    * Python 3.6.2 
    * Django 1.11.6
    * Python  2.7  (用来启动 supervisor)
@@ -59,8 +64,9 @@ AutoOps是一款基于1.11版本django开发的，主要面向linux运维工程�
    1. 下载，安装基本环境,安装目录为/opt下，如是其他目录，请修改supervisor.conf中的相应设置即可。
  
     
-     cd /opt
-     git  clone  git@github.com:hequan2017/autoops.git
+    cd /opt
+    yum install git -y 
+    git  clone  git@github.com:hequan2017/autoops.git
     
     cd autoops/
     yum install sshpass -y
@@ -70,28 +76,28 @@ AutoOps是一款基于1.11版本django开发的，主要面向linux运维工程�
     pip3 install https://github.com/darklow/django-suit/tarball/v2
     
     
-   
+
     
    添加的资产 里面 请执行  ` yum install  ipmitool     dmidecode   -y  `以获取更多信息
+   
   
     2. 安装其他组件
+    
  
- * 执行 `install_redis.sh`   
- * 执行 `install_webssh.sh` ,需要修改的内容见脚本内，如果不需要webssh，可暂时不用安装。
+ * 执行 `srcipt/install_redis.sh`   
+ * 安装 `script/install_webssh.sh` ,  需要修改的内容见脚本内，如果不需要webssh，可暂时不用安装。
  
  * 安装   `supervisor  `
  
-    ```
-     pip2   install    supervisor   
+
+    pip2   install    supervisor   
      
-     echo_supervisord_conf > /etc/supervisord.conf 
+    echo_supervisord_conf > /etc/supervisord.conf 
      
-     mkdir /etc/supervisord.d/
+    mkdir /etc/supervisord.d/
      
-    ``` 
-       
-    ``` 
-     vim /etc/supervisord.conf
+
+    vim /etc/supervisord.conf
      
     [include]
     files = /etc/supervisord.d/*.conf
@@ -100,9 +106,9 @@ AutoOps是一款基于1.11版本django开发的，主要面向linux运维工程�
     port=0.0.0.0:9001 
     username=user
     password=123
-    ``` 
+   
     
- * 配置文件    `cp   /opt/autoops/supervisor.conf  /etc/supervisord.d/   `
+ * 配置文件    ` cp   /opt/autoops/script/supervisor.conf    /etc/supervisord.d/   `
  
 
 ### 启动
@@ -112,7 +118,7 @@ AutoOps是一款基于1.11版本django开发的，主要面向linux运维工程�
     
     
     
-    ``` 
+    
     # DATABASES = {
     #     'default': {
     #         'ENGINE': 'django.db.backends.sqlite3',
@@ -131,30 +137,58 @@ AutoOps是一款基于1.11版本django开发的，主要面向linux运维工程�
         }
     }
     
-    ```
-  * 初始化数据库（先删除文件夹的 db.sqlite3, 如不想删除，请忽略下面3个命令）
-    ```
+    
+  * 初始化数据库（可删除文件夹的 db.sqlite3, 如不想删除，请忽略下面3个命令）
+```
     python manage.py makemigrations
     python manage.py  migrate
     python manage.py  createsuperuser      创建管理员
-    ``` 
+``` 
+      
+      
+         
       
   * 启动supervisor进程管理  `/usr/bin/python2.7   /usr/bin/supervisord -c /etc/supervisord.conf`
-
-  * 启动: 统一用supervisor 管理,打开   0.0.0.0:9001  账号user  密码123    进入进程管理界面，管理uwsgi,redis,webssh,celery 等启动关闭。
+    加到linux 开机启动里面  `chmod +x  /etc/rc.d/rc.local ` 把上面的命令放到这个文件里面  
+  
+  * 启动: 统一用supervisor 管理进程,  打开   0.0.0.0:9001  账号user  密码123    进入进程管理界面，管理uwsgi,redis,webssh,celery 等启动关闭。
+此方法不涉及到nginx。
  
-  * 登陆后台，设置定时获取主机图
+  * 登陆后台，设置定时获取主机图，设置数据中心、组。
+  
  ![图片](https://github.com/hequan2017/autoops/blob/master/static/demo/9.png)
 
-
-  * 如果想在windows 下的 pycharm打开，请注释  asset/views.py  第20行,     tasks/views.py   12  13 行。（因为ansible不好安装在windows 下环境。）
+  * 如果想在windows 下的 pycharm打开，请注释  `asset/views.py`  第20行,     `tasks/views.py`   12  13 行。（因为ansible不好安装在windows 下环境）
  
-  * 如果想在生产环境部署、启动, 可以参考   `http://hequan.blog.51cto.com/5701886/1982769`
-  
-  
-  
+   
+  * 如果想在生产环境部署、启动, 用nginx去处理。 可以参考   `http://hequan.blog.51cto.com/5701886/1982769` , 请把`supervisor.conf` 中 关于uwsgi的部分删除掉, 
+用以下方式控制UWSGI的启动 关闭.
+```
+uwsgi  --ini    /opt/autoops/script/uwsgi.ini   # 启动uwsgi配置  也可以把这个命令写到开机的文件里面
+uwsgi  --stop   /opt/autoops/script/uwsgi.pid # 关闭uwsgi
+uwsgi  --reload  /opt/autoops/script/uwsgi.pid  #重新加载
+```
 
-  
+nginx 配置文件修改如下
+```  
+root         /opt/autoops;
+   
+   
+   
+    location / {
+
+        include uwsgi_params;
+        uwsgi_connect_timeout 30;
+        uwsgi_pass unix:/opt/autoops/script/uwsgi.sock;
+        
+    }
+    location /static/ {
+            alias  /opt/autoops/static/;
+            index  index.html index.htm;
+    }
+     
+```
+
 
 ### 截图
 ![图片](https://github.com/hequan2017/autoops/blob/master/static/demo/1.png)
