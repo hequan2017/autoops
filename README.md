@@ -34,18 +34,23 @@ AutoOps 是一款基于1.11 版本django开发的，主要面向linux运维工�
 
 ###  功能
   - asset资产
-    - api  `http://42.62.55.58:8003/asset/api/asset.html`
+    - api     `http://42.62.55.58:8003/asset/api/asset.html`
     - 自动获取服务器信息
-  - names用户（预留模块）
+    - 全部导出
+    - CPU 内存 流量图
+  - names 用户（预留模块）
   - tasks任务 
      - 命令行
      - 工具  
         - shell 
         - python
         - yml
-  - webssh登陆 （用复制粘贴的时候，会显示二份，但实际只有一个，不影响使用，请忽略。）
-  - 技术文档 (真正运维人员的管理平台，自带技术文档，有问题不用再去别的地方找)
-
+        
+  - webssh  登陆 （用复制粘贴的时候，会显示二份，但实际只有一个，不影响使用，请忽略。）
+  - library 技术文档 (真正运维人员的管理平台，自带技术文档，有问题不用再去别的地方找)
+    - DjangoUeditor 富文本编辑器
+    
+  - 后台管理
 
 
 ### 环境
@@ -63,21 +68,18 @@ AutoOps 是一款基于1.11 版本django开发的，主要面向linux运维工�
    
    1. 下载，安装基本环境,安装目录为/opt下，如是其他目录，请修改supervisor.conf中的相应设置即可。
  
+```bash
+cd /opt
+yum install git   sshpass -y 
+git  clone  git@github.com:hequan2017/autoops.git
     
-    cd /opt
-    yum install git -y 
-    git  clone  git@github.com:hequan2017/autoops.git
+cd autoops/
+pip3 install -r requirements.txt     
     
-    cd autoops/
-    yum install sshpass -y
+pip3 install https://github.com/darklow/django-suit/tarball/v2
+```
     
-    pip3 install -r requirements.txt     
-    
-    pip3 install https://github.com/darklow/django-suit/tarball/v2
-    
-    
-
-    
+  
    添加的资产 里面 请执行  ` yum install  ipmitool     dmidecode   -y  `以获取更多信息
    
   
@@ -89,24 +91,22 @@ AutoOps 是一款基于1.11 版本django开发的，主要面向linux运维工�
  
  * 安装   `supervisor  `
  
-
-    pip2   install    supervisor   
-     
-    echo_supervisord_conf > /etc/supervisord.conf 
-     
-    mkdir /etc/supervisord.d/
+```bash
+pip2   install    supervisor   
+echo_supervisord_conf > /etc/supervisord.conf 
+mkdir /etc/supervisord.d/
      
 
-    vim /etc/supervisord.conf
+vim /etc/supervisord.conf
      
-    [include]
-    files = /etc/supervisord.d/*.conf
+[include]
+files = /etc/supervisord.d/*.conf
     
-    [inet_http_server] 
-    port=0.0.0.0:9001 
-    username=user
-    password=123
-   
+[inet_http_server] 
+port=0.0.0.0:9001 
+username=user
+password=123
+```  
     
  * 配置文件    ` cp   /opt/autoops/script/supervisor.conf    /etc/supervisord.d/   `
  
@@ -115,34 +115,32 @@ AutoOps 是一款基于1.11 版本django开发的，主要面向linux运维工�
 
   * 关于数据库 请修改 `autops/settings`文件, 如果没有mysql，请选择上面那种，注释下面的。如果有，则可以启用mysql，设置相关连接地址。
     关于mysql安装方法，可参考我的博客 `http://hequan.blog.51cto.com/5701886/1982428`
-    
-    
-    
-    
-    # DATABASES = {
-    #     'default': {
-    #         'ENGINE': 'django.db.backends.sqlite3',
-    #         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    #     }
-    # }
-    
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'autoops',
-            'USER': 'root',
-            'PASSWORD': '123456',
-            'HOST': '192.168.10.24',
-            'PORT': '3306',
+
+```djangotemplate
+DATABASES = {
+     'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+     }
+ }
+DATABASES = {
+       'default': {
+           'ENGINE': 'django.db.backends.mysql',
+           'NAME': 'autoops',
+           'USER': 'root',
+           'PASSWORD': '123456',
+           'HOST': '192.168.10.24',
+           'PORT': '3306',
         }
-    }
-    
+}
+``` 
     
   * 初始化数据库（可删除文件夹的 db.sqlite3, 如不想删除，请忽略下面3个命令）
-```
-    python manage.py makemigrations
-    python manage.py  migrate
-    python manage.py  createsuperuser      创建管理员
+  
+```bash
+python manage.py makemigrations
+python manage.py  migrate
+python manage.py  createsuperuser      创建管理员
 ``` 
       
       
@@ -163,20 +161,21 @@ AutoOps 是一款基于1.11 版本django开发的，主要面向linux运维工�
    
   * 如果想在生产环境部署、启动, 用nginx去处理。 可以参考   `http://hequan.blog.51cto.com/5701886/1982769` , 请把`supervisor.conf` 中 关于uwsgi的部分删除掉, 
 用以下方式控制UWSGI的启动 关闭.
-```
+
+```bash
 uwsgi  --ini    /opt/autoops/script/uwsgi.ini   # 启动uwsgi配置  也可以把这个命令写到开机的文件里面
 uwsgi  --stop   /opt/autoops/script/uwsgi.pid # 关闭uwsgi
 uwsgi  --reload  /opt/autoops/script/uwsgi.pid  #重新加载
 ```
 
 nginx 配置文件修改如下
-```  
+
+```html
 root         /opt/autoops;
    
    
    
     location / {
-
         include uwsgi_params;
         uwsgi_connect_timeout 30;
         uwsgi_pass unix:/opt/autoops/script/uwsgi.sock;
@@ -188,6 +187,8 @@ root         /opt/autoops;
     }
      
 ```
+
+
 
 
 ### 截图
