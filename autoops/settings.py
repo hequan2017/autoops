@@ -102,7 +102,7 @@ DATABASES = {
 #         'NAME': 'autoops',
 #         'USER': 'root',
 #         'PASSWORD': '123456',
-#         'HOST': '192.168.10.24',
+#         'HOST': '192.168.10.29',
 #         'PORT': '3306',
 #     }
 # }
@@ -170,6 +170,8 @@ djcelery.setup_loader()
 
 BROKER_URL = 'redis://127.0.0.1:6379/0'
 CELERY_RESULT_BACKEND = 'djcelery.backends.database:DatabaseBackend'
+
+
 
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
