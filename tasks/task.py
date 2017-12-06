@@ -12,11 +12,14 @@ app= Celery('autoops',)
 def   job(id):  ##计划任务
 
     i = asset.objects.filter(id=id).first()
+
     print(i.network_ip, i.port, i.system_user.username, i.system_user.password)
     cpu1 = ssh(ip=i.network_ip, port=i.port, username=i.system_user.username, password=i.system_user.password, cmd=" top -bn 1 -i -c | grep Cpu   ")
 
-    cpu3 = cpu1[1].split('%')
-    cpu4 = cpu1[3].split('%')
+    cpu2 = cpu1['data'].split()
+
+    cpu3 = cpu2[1].split('%')
+    cpu4 = cpu2[3].split('%')
 
     cpu = str(float(str(cpu3[0])) + float(str(cpu4[0])))
 
@@ -48,6 +51,8 @@ def monitor_job():
     i_list = []
     for i in object:
         i_list.append(i.id)
+
+
     print(i_list)
 
     t_list = []
