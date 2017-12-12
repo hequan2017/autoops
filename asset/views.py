@@ -224,6 +224,7 @@ def asset_hardware_update(request):
 
             task_tuple = (('setup', ''),)
             runner = AdHocRunner(assets)
+
             result = runner.run(task_tuple=task_tuple, pattern='all', task_name='Ansible Ad-hoc')
 
             data = result['contacted']['host'][0]['ansible_facts']

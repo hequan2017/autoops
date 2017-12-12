@@ -255,7 +255,7 @@ def tools_script_post(request):
                             data2['data'] = "脚本类型错误"
                     except  Exception as  e:
                         data2['ip'] = h.network_ip
-                        data2['data'] = "账号密码不对,或没有权限,请修改{}".format(e)
+                        data2['data'] = "账号密码不对,或没有权限,请修改{},  请查看主机资产中的 主机名 ,此值不能为空,可随便填写一个。 ".format(e)
                         data1.append(data2)
 
                 ret['data'] = data1
