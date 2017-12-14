@@ -8,7 +8,7 @@ from guardian.shortcuts import get_objects_for_user, get_objects_for_group
 from django.contrib.auth.models import User
 from guardian.core import ObjectPermissionChecker
 
-#
+
 from   tasks.ansible_runner.runner      import AdHocRunner,PlayBookRunner
 from   tasks.ansible_runner.callback    import CommandResultCallback
 
@@ -23,6 +23,7 @@ def ssh(ip, port, username, password, cmd):
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect(hostname=ip, port=int(port), username=username, password=password, )
         stdin, stdout, stderr = ssh.exec_command(cmd, timeout=10)
+
         result = stdout.read()
         result1 = result.decode()
         error = stderr.read().decode('utf-8')
@@ -35,6 +36,157 @@ def ssh(ip, port, username, password, cmd):
         error = "账号或密码错误,{}".format(e)
         ret = {"ip": ip, "data": error}
         return ret
+
+
+
+def sftp(ip, port, username, password,local_path,server_path):
+    try:
+        t = paramiko.Transport(ip,port)
+        t.connect(username=username, password=password)
+        sftp = paramiko.SFTPClient.from_transport(t)
+        sftp.put(local_path, server_path)
+        t.close()
+        ret = {"ip": ip, "data": "上传成功"}
+        return  ret
+    except Exception as e:
+        error = "上传失败,{}".format(e)
+        ret = {"ip": ip, "data": error}
+        return ret
+
+
+def sftp_down_file(ip, port, username, password,local_path,server_path):
+    try:
+        t = paramiko.Transport(ip,port)
+        t.connect(username=username, password=password)
+        sftp = paramiko.SFTPClient.from_transport(t)
+        sftp.get(server_path,local_path,)
+        t.close()
+        ret = {"ip": ip, "data": "下载成功"}
+        return  ret
+    except Exception as e:
+        error = "下载失败,{}".format(e)
+        ret = {"ip": ip, "data": error}
+        return ret
+
+
+
+
+@login_required(login_url="/login.html")
+def sftp_file(request):  ##上传
+
+    if request.method == "GET":
+
+        obj = get_objects_for_user(request.user, 'asset.change_asset')
+        return render(request, 'tasks/sftp.html', {'asset_list': obj, "tasks_active": "active", "sftp_active": "active"})
+
+    if request.method == 'POST':
+        ids = request.POST.getlist('id')
+
+        user = User.objects.get(username=request.user)
+        checker = ObjectPermissionChecker(user)
+
+        local_path= request.POST.get("local_path")
+        server_path= request.POST.get("server_path")
+
+
+        ids1 = []
+        for i in ids:
+            assets = asset.objects.get(id=i)
+            if checker.has_perm('delete_asset', assets, ) == True:
+                ids1.append(i)
+
+        user = request.user
+        idstring = ','.join(ids1)
+        if not ids:
+            error_1 = "请选择主机"
+            ret = {"error": error_1, "status": False}
+            return HttpResponse(json.dumps(ret))
+        elif not local_path or not server_path :
+            error_2 = "请输入上传文件目录及文件名"
+            ret = {"error": error_2, "status": False}
+            return HttpResponse(json.dumps(ret))
+
+        obj = asset.objects.extra(where=['id IN (' + idstring + ')'])
+
+        ret = {}
+
+        ret['data'] = []
+        for i in obj:
+            try:
+                s = sftp(ip=i.network_ip, port=i.port, username=i.system_user.username, password=i.system_user.password,local_path=local_path, server_path=server_path
+                        )
+                historys = history.objects.create(ip=i.network_ip, root=i.system_user, port=i.port, cmd="上传{}".format(server_path), user=user)
+                if s == None  or  s['data'] == '':
+                    s={}
+                    s['ip']=i.network_ip
+                    s['data']="返回值为空,可能是权限不够。"
+                ret['data'].append(s)
+            except Exception as e:
+                ret['data'].append({"ip": i.network_ip, "data": "账号密码不对,{}".format(e)})
+        return HttpResponse(json.dumps(ret))
+
+
+@login_required(login_url="/login.html")
+def sftp_down(request):  ##下载
+
+    if request.method == "GET":
+
+        obj = get_objects_for_user(request.user, 'asset.change_asset')
+        return render(request, 'tasks/sftp.html', {'asset_list': obj, "tasks_active": "active", "sftp_active": "active"})
+
+    if request.method == 'POST':
+        ids = request.POST.getlist('id')
+
+        user = User.objects.get(username=request.user)
+        checker = ObjectPermissionChecker(user)
+
+        local_path= request.POST.get("local_path")
+        server_path= request.POST.get("server_path")
+
+
+        ids1 = []
+        for i in ids:
+            assets = asset.objects.get(id=i)
+            if checker.has_perm('delete_asset', assets, ) == True:
+                ids1.append(i)
+
+        user = request.user
+        idstring = ','.join(ids1)
+        if not ids:
+            error_1 = "请选择主机"
+            ret = {"error": error_1, "status": False}
+            return HttpResponse(json.dumps(ret))
+        elif not local_path  or not server_path:
+            error_2 = "请输入下载文件目录及文件名1"
+            ret = {"error": error_2, "status": False}
+            return HttpResponse(json.dumps(ret))
+
+        obj = asset.objects.extra(where=['id IN (' + idstring + ')'])
+
+        ret = {}
+
+        ret['data'] = []
+        for i in obj:
+            try:
+                s = sftp_down_file(ip=i.network_ip, port=i.port, username=i.system_user.username, password=i.system_user.password,local_path=local_path, server_path=server_path
+                        )
+                historys = history.objects.create(ip=i.network_ip, root=i.system_user, port=i.port, cmd="下载{}".format(server_path), user=user)
+                if s == None  or  s['data'] == '':
+                    s={}
+                    s['ip']=i.network_ip
+                    s['data']="返回值为空,可能是权限不够。"
+                ret['data'].append(s)
+            except Exception as e:
+                ret['data'].append({"ip": i.network_ip, "data": "账号密码不对,{}".format(e)})
+        return HttpResponse(json.dumps(ret))
+
+
+
+
+
+
+
+
 
 
 

@@ -12,7 +12,7 @@
   </component>
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$" />
-    <orderEntry type="jdk" jdkName="Remote Python 3.5.2 (ssh://root@42.62.55.52:22/usr/bin/python)" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Python 3.6.2 (E:\Program Files (x86)\python362\python.exe)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="jumpserver" />
     <orderEntry type="module" module-name="Static_Full_Version汉化" />
