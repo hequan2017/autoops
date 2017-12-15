@@ -32,7 +32,6 @@ ALLOWED_HOSTS = ['*', ]
 # Application definition
 
 INSTALLED_APPS = [
-    'asset.apps.SuitConfig',
     'bootstrap3',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -40,14 +39,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'asset.apps.AssetConfig',
-    'names.apps.NamesConfig',
-    'tasks.apps.TasksConfig',
-    'library.apps.LibraryConfig',
+    'asset',
+    'names',
+    'tasks',
+    'library',
     'rest_framework',
     'rest_framework.authtoken',
     'djcelery',
-    'djkombu',
     'guardian',
     'DjangoUeditor',
 ]

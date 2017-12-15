@@ -22,6 +22,7 @@ AutoOps 是一款基于1.11 版本django开发的，主要面向linux运维工�
 
 
 ### 更新记录
+  -  1.4.1  更新django 为2.0。 如果想用django1.11版本，请看git 标记 v1.4-dj1.11
   -  1.4    增加上传下载功能
   -  1.3    新增 技术文档 板块。
   -  1.2    权限管理完善。 增加附件上传下载功能。
@@ -53,8 +54,8 @@ AutoOps 是一款基于1.11 版本django开发的，主要面向linux运维工�
 ### 环境
 
    * Python 3.6.2 
-   * Django 1.11.6
-   * Python  2.7  (用来启动 supervisor)
+   * Django 2.0
+   * Python 2.7  (用来启动 supervisor)
  
  
    

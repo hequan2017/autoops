@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect, HttpResponse
 from    django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
 from django.views.generic import View
-from  django.core.urlresolvers import reverse_lazy
 from .models import login_log
 from .form import UserPasswordForm
 from django.contrib.auth.models import User
