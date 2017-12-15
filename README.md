@@ -18,7 +18,7 @@ AutoOps 是一款基于1.11 版本django开发的，主要面向linux运维工�
 ###  架构图
 
  
-![图片](https://github.com/hequan2017/autoops/blob/master/static/demo/autuops.png)  
+![DEMO](https://github.com/hequan2017/autoops/blob/master/static/demo/autoops.png)
 
 
 ### 更新记录
