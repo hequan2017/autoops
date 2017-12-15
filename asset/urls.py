@@ -11,7 +11,7 @@ urlpatterns = [
     path('asset-update-<int:pk>.html', views.AssetUpdate.as_view(), name='asset_update'),
 
     path('asset-hardware-update.html', views.asset_hardware_update, name='asset_hardware_update'),
-    path('asset-performance-<int:pk>.html', views.asset_performance, name='asset_performance'),
+    path('asset-performance-<int:nid>.html', views.asset_performance, name='asset_performance'),
     path('asset-webssh.html', views.asset_web_ssh, name='asset_web_ssh'),
 
     path('system-user.html', views.system_user_list, name='system_user'),
