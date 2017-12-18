@@ -15,11 +15,11 @@ urlpatterns = [
     path('asset-webssh.html', views.asset_web_ssh, name='asset_web_ssh'),
 
     path('system-user.html', views.system_user_list, name='system_user'),
-    path('system-user-asset-<int:pk>.html', views.system_user_asset, name='system_user_asset'),
+    path('system-user-asset-<int:nid>.html', views.system_user_asset, name='system_user_asset'),
     path('system-user-add.html', views.system_user_add, name='system_user_add'),
     path('system-user-del.html', views.system_user_del, name='system_user_del'),
-    path('system-user-detail-<int:pk>.html', views.system_user_detail, name='system_user_detail'),
-    path('system-user-update-<int:pk>.html', views.system_user_update, name='system_user_update'),
+    path('system-user-detail-<int:nid>.html', views.system_user_detail, name='system_user_detail'),
+    path('system-user-update-<int:nid>.html', views.system_user_update, name='system_user_update'),
 
     path('api/asset.html',api.AssetList.as_view(),name='asset_api_list'),
     path('api/asset-detail-<int:pk>.html', api.AssetDetail.as_view(), name='asset_api_detail'),
