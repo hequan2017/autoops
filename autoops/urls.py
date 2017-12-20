@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
+import xadmin
 from names.views import index,login_view,logout
 from django.conf.urls import handler404, handler500
 from asset.views import  AssetUpload
@@ -23,7 +24,8 @@ from django.urls  import path
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls,name="admin1"),
+    path('admin/', xadmin.site.urls,name="xadmin"),
+    path('oldadmin/', admin.site.urls,name="oldadmin"),
     path('', index),
     path('login.html', login_view,name="login_view"),
     path('logout.html', logout,name="logout"),

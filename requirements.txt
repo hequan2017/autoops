@@ -12,3 +12,4 @@ django-guardian
 pymysql
 xlwt
 uwsgi
+django-crispy-forms
