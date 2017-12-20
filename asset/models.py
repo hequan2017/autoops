@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth.models import Group
 import random
 
-
 class asset(models.Model):
     hostname = models.CharField(max_length=64, verbose_name='主机名', null=True,blank=True)
     network_ip = models.GenericIPAddressField(verbose_name='外网IP',unique=True)

@@ -39,7 +39,6 @@ class AssetListAll(TemplateView):
 
     def post(self, request):
         query = request.POST.get("name")
-        print(query)
         a = asset.objects.filter(
             Q(network_ip=query) | Q(manage_ip=query) | Q(hostname=query) | Q(inner_ip=query) | Q(model=query) | Q(
                 eth0=query) | Q(eth1=query) | Q(eth2=query) | Q(eth3=query) |
@@ -300,9 +299,20 @@ def asset_hardware_update(request):
             except Exception as e:
                 eth3 = None
 
-            ass = asset.objects.filter(id=id).update(hostname=hostname, manage_ip=manage, system=system,
-                                                     memory=memory, disk=disk, sn=sn, model=model, cpu=cpu, eth0=eth0,
-                                                     eth1=eth1, eth2=eth2, eth3=eth3)
+            ass = asset.objects.filter(id=id).first()
+            ass.hostname=hostname
+            ass.manage_ip=manage
+            ass.system=system
+            ass.memory=memory
+            ass.disk=disk
+            ass.sn=sn
+            ass.model=model
+            ass.cpu=cpu
+            ass.eth0=eth0
+            ass.eth1=eth1
+            ass.eth2=eth2
+            ass.eth3=eth3
+            ass.save()
 
         except Exception as e:
             ret['status'] = False
