@@ -56,12 +56,15 @@
                     <form class="form-horizontal" class="form-horizontal"
                           action=""
                           method="post" enctype="multipart/form-data">
+
                         {% csrf_token %}
                         {% if form.no_field_errors %}
                             <div class="alert alert-danger" style="margin: 20px auto 0px">
                                 {{ form.non_field_errors }}
                             </div>
                         {% endif %}
+
+
                         <div class="form-group">
                             <div class="col-sm-10 col-sm-offset-0">
                                 <h3>基本</h3>

@@ -58,6 +58,7 @@
                                         <th width="20"><input type="checkbox" id="CheckedAll"></th>
                                         <th>外网IP</th>
                                         <th>管理IP</th>
+                                        <th>用户</th>
                                         <th>产品线</th>
 
                                     </tr>
@@ -72,6 +73,7 @@
                                                      href="{% url  "asset:asset_detail"   pk=row.id %}">{{ row.network_ip }}</a>
                                             </td>
                                             <td class="center">{{ row.manage_ip }}</td>
+                                             <td class="center">{{ row.system_user }}</td>
                                             <td class="center">{{ row.product_line }} </td>
                                         </tr>
                                     {% endfor %}

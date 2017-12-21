@@ -21,7 +21,8 @@ AutoOps 是一款基于 2.0 版本django开发的，主要面向linux运维工�
 ![DEMO](https://github.com/hequan2017/autoops/blob/master/static/demo/autoops.png)
 
 
-### 更新记录
+### 更新记录   实际生产使用推荐 v1.4-dj1.11 
+  -  1.5.1  数据库操作自动审核（预览版），需要按照script/install_Inception.sh的步骤，先安装Inception。
   -  1.5    后台更新为xadmin, 原有系统自带的admin保留，更名为oldadmin.
         -  目前 xadmin兼容有问题。  看不见task里面的任务名字。  想要添加，格式为tasks.task.XXX。
         具体名字可去  tasks/task.py 里面查找 或自定义。例如： tasks.task.clean_history_host_monitor.

@@ -1,0 +1,199 @@
+{% extends "base.html" %}
+{% block  title %}资产详情{% endblock %}
+{% load  mytags %}
+{% block header-css %}
+
+{% load bootstrap3 %}
+{% endblock %}
+
+
+{% block  page-content %}
+
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <h2>数据库详情</h2>
+            <ol class="breadcrumb">
+                <li>
+                    <a href="/index.html">主页</a>
+                </li>
+                <li>
+                    <a href="db.html">数据库管理</a>
+                </li>
+                <li class="active">
+                    <strong>数据库详情</strong>
+                </li>
+            </ol>
+        </div>
+        <div class="col-lg-2">
+
+        </div>
+    </div>
+
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="panel-options">
+                        <ul class="nav nav-tabs">
+                            <li class="active">
+                                <a class="text-center"><i class="fa fa-laptop"></i>数据库详情</a>
+                            </li>
+                            <li class="pull-right">
+                                <a class="btn btn-outline btn-default" href="{% url "db:db_update"  nid %}"><i
+                                        class="fa fa-edit"></i>编辑</a>
+                            </li>
+                            <li class="pull-right">
+                                <a class="btn btn-outline btn-danger" data-toggle="modal" data-target="#myModal1">
+                                    <i class="fa fa-edit"></i>删除
+                                </a>
+                            </li>
+
+                        </ul>
+                    </div>
+                    <div class="tab-content">
+                        <div class="col-sm-7" style="padding-left: 0">
+                            <div class="ibox float-e-margins">
+                                <div class="ibox-title">
+                                    <span class="label"><b>{{ assets.network_ip }}</b></span>
+                                    <div class="ibox-tools">
+                                        <a class="collapse-link">
+                                            <i class="fa fa-chevron-up"></i>
+                                        </a>
+                                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                            <i class="fa fa-wrench"></i>
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-user">
+                                        </ul>
+                                        <a class="close-link">
+                                            <i class="fa fa-times"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="ibox-content">
+
+                                    <table class="table">
+                                        <tbody>
+                                        <tr>
+                                            <td style=" border-top: none !important;" width="20%">名字:</td>
+                                            <td style=" border-top: none !important;"><b>{{ dbs.hostname }}</b>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td width="20%">IP:</td>
+                                            <td><b>{{ dbs.ip }}</b>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td width="20%">端口:</td>
+                                            <td><b>{{ dbs.port }}</b></td>
+                                        </tr>
+                                        <tr>
+                                            <td width="20%">登陆用户:</td>
+                                            <td><b>{{ dbs.db_user }}</b></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td width="20%">产品线:</td>
+                                            <td><b>{{ dbs.product_line }}</b></td>
+                                        </tr>
+                                        <tr>
+                                            <td width="20%">是否启用:</td>
+                                            <td><b>{{ dbs.is_active }}</b></td>
+                                        </tr>
+                                        <tr>
+                                            <td width="20%">数据中心:</td>
+                                            <td><b>{{ dbs.data_center }}</b></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td width="20%">型号:</td>
+                                            <td><b>{{ dbs.model }}</b></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td width="20%">备注:</td>
+                                            <td><b>{{ dbs.ps }}</b></td>
+                                        </tr>
+                                        <tr>
+                                            <td width="20%">创建时间:</td>
+                                            <td><b>{{ dbs.ctime }}</b></td>
+                                        </tr>
+                                        <tr>
+                                            <td width="20%">更新时间:</td>
+                                            <td><b>{{ dbs.utime }}</b></td>
+                                        </tr>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal inmodal" id="myModal1" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content animated fadeIn">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span
+                            aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <i class="fa fa-clock-o modal-icon"></i>
+                    <h4 class="modal-title">删除</h4>
+                    <span id="error" style="color:red;"></span>
+                    <small></small>
+                </div>
+                <form id="db_del_form">
+                    <div class="modal-body">
+
+                        <div class="form-group"><input type="text" name="nid" style="display:none" value="{{ nid }}"/>
+                        </div>
+                        <p><strong>确定删除？</strong></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                        <a class="btn btn-danger m-r-sm db_del">删除</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    {% block footer-js %}
+        <script>
+            $(function () {
+                $('.db_del').click(function () {
+                    $.ajax({
+                        url: "/db/db-del.html",
+                        type: 'POST',
+                        data: $('#db_del_form').serialize(),
+                        success: function (data) {
+                            var obj = JSON.parse(data);
+                            if (obj.status) {
+                                location.href = "{% url "db:db_list" %}"
+                            } else {
+                                $('#error').text(obj.error);
+                            }
+                        }
+                    })
+                });
+
+
+
+            });
+        </script>
+
+
+    {% endblock %}
+
+
+{% endblock %}
+
+

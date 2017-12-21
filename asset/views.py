@@ -140,7 +140,7 @@ class AssetDetail(DetailView):
     def get_context_data(self, **kwargs):
         pk = self.kwargs.get(self.pk_url_kwarg, None)
         detail = asset.objects.get(id=pk)
-        print(detail.file)
+
         context = {
             "asset_active": "active",
             "asset_list_active": "active",

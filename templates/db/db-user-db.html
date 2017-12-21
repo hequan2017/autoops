@@ -1,0 +1,202 @@
+{% extends "base.html" %}
+{% block  title %}关联资产{% endblock %}
+{% block header-css %}
+
+{% load	bootstrap3 %}
+{% endblock %}
+
+
+{% block page-content %}
+
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <h2>关联资产</h2>
+            <ol class="breadcrumb">
+                <li>
+                    <a href="/index.html">主页</a>
+                </li>
+                <li>
+                    <a href="/db/db-user.html">数据库用户管理</a>
+                </li>
+                <li class="active">
+                    <strong>关联资产</strong>
+                </li>
+            </ol>
+        </div>
+        <div class="col-lg-2">
+
+        </div>
+    </div>
+
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="panel-options">
+                        <ul class="nav nav-tabs">
+                            <li >
+                                <a   href="{% url "db:db_user_detail"  nid  %}" class="text-center"><i class="fa fa-laptop"></i>用户详情</a>
+                            </li>
+                              <li class="active">
+
+                                <a class="text-center"    ><i class="fa fa-laptop"></i>关联资产</a>
+                            </li>
+                            <li class="pull-right">
+                                <a class="btn btn-outline btn-default" href="{% url "db:db_user_update"  nid %}"><i
+                                        class="fa fa-edit"></i>编辑</a>
+                            </li>
+                            <li class="pull-right">
+                                <a class="btn btn-outline btn-danger" data-toggle="modal" data-target="#myModal1">
+                                    <i class="fa fa-edit"></i>删除
+                                </a>
+                            </li>
+
+                        </ul>
+                    </div>
+                    <div class="tab-content">
+                        <div class="col-sm-7" style="padding-left: 0">
+                     <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>关联资产</h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                <i class="fa fa-wrench"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-user">
+                                <li><a href="#">选项 1</a>
+                                </li>
+                                <li><a href="#">选项 2</a>
+                                </li>
+                            </ul>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+
+                            <div class="table-responsive">
+
+
+
+
+                            <form id="del_form_db_all" class="form-horizontal  ">
+                                <table class="table table-striped table-bordered table-hover dataTables-example">
+                                    <thead>
+                                    <tr>
+                                        <th width="20"><input type="checkbox" id="CheckedAll"></th>
+                                        <th>名字</th>
+                                        <th>IP</th>
+                                        <th>产品线</th>
+
+                                        <th>型号</th>
+                                        <th>端口</th>
+                                        <th>登陆用户</th>
+
+                                        <th>动作{{ error_performance }}</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    {% for   row   in  db_list %}
+
+                                        <tr class="gradeA" id="{{ row.id }}">
+                                            <td><input type="checkbox" value="{{ row.id }}" name="id"></td>
+                                            <td class="center">
+                                                  {{ row.hostname }}
+                                            </td>
+                                            <td class="center">{{ row.ip }}</td>
+                                            <td class="center">{{ row.product_line.name }}</td>
+
+                                            <td class="center">{{ row.model }}</td>
+                                            <td class="center">{{ row.port }}</td>
+                                            <td class="center">{{ row.db_user }}</td>
+
+                                            <td><a class="btn btn-primary  btn-xs "
+                                                   href="{% url  "db:db_update"  pk=row.id %}">编辑</a>
+                                                <a class="btn btn-danger  btn-xs  db_del_id" data-toggle="modal"
+                                                   data-target="#myModal1">删除
+                                                </a>
+
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+
+                                    </tbody>
+
+                                </table>
+                            </form>
+
+
+                        </div>
+
+                    </div>
+                </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal inmodal" id="myModal1" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content animated fadeIn">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span
+                            aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <i class="fa fa-clock-o modal-icon"></i>
+                    <h4 class="modal-title">删除</h4>
+                    <span id="error" style="color:red;"></span>
+                    <small></small>
+                </div>
+                <form id="db_del_form">
+                    <div class="modal-body">
+
+                        <div class="form-group"><input type="text" name="nid" style="display:none" value="{{ nid }}"/>
+                        </div>
+                        <p><strong>确定删除？</strong></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                        <a class="btn btn-danger m-r-sm db_user_del">删除</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    {% block footer-js %}
+        <script>
+            $(function () {
+                $('.db_user_del').click(function () {
+                    $.ajax({
+                       url: "/db/db-user-del.html",
+                        type: 'POST',
+                        data: $('#db_del_form').serialize(),
+                        success: function (data) {
+                            var obj = JSON.parse(data);
+                            if (obj.status) {
+                                location.href = "{% url "db:db_user" %}"
+                            } else {
+                                $('#error').text(obj.error);
+                            }
+                        }
+                    })
+                });
+
+            });
+        </script>
+
+
+    {% endblock %}
+
+
+{% endblock %}
+
+

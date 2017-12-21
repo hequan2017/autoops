@@ -31,6 +31,7 @@ urlpatterns = [
     path('logout.html', logout,name="logout"),
     path('index.html', index),
     path('asset/', include('asset.urls', namespace="asset", ), ),
+    path('db/', include('db.urls', namespace="db", ), ),
     path('tasks/', include('tasks.urls', namespace="tasks",), ),
     path('names/', include('names.urls', namespace="names",), ),
     path('library/', include('library.urls', namespace="library",), ),

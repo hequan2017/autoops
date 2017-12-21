@@ -4,15 +4,16 @@
             <li class="nav-header">
                 <div class="dropdown profile-element">
                     <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                            <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">{{ user }}</strong>
+                            <span class="clear"> <span class="block m-t-xs"> <strong
+                                    class="font-bold">{{ user }}</strong>
 
                              </span> <span class="text-muted text-xs block">
                                 {% ifequal  user.is_superuser  1 %}
-                                管理员 {% else %} 普通用户 {% endifequal %}
+                                    管理员 {% else %} 普通用户 {% endifequal %}
                                 <b class="caret"></b></span> </span>
                     </a>
                     <ul class="dropdown-menu animated fadeInRight m-t-xs">
-                          <li><a href="{% url  "names:password_update" %}">修改密码</a></li>
+                        <li><a href="{% url  "names:password_update" %}">修改密码</a></li>
                         <li><a href="/logout.html">登出</a></li>
                     </ul>
                 </div>
@@ -22,44 +23,57 @@
             </li>
             <li>
                 <a href="/index.html"><i class="fa fa-th-list"></i> <span class="nav-label">首页</span>
-                   </a>
+                </a>
 
             </li>
             <li class="{{ asset_active }}">
                 <a href="#"><i class="fa fa-drivers-license"></i> <span class="nav-label">资产管理</span>
-                    <span  class="fa arrow"> </span></a>
+                    <span class="fa arrow"> </span></a>
                 <ul class="nav nav-second-level">
-                    <li  class="{{ asset_list_active }}"><a href="{% url    'asset:asset_list' %}">资产信息</a></li>
+                    <li class="{{ asset_list_active }}"><a href="{% url    'asset:asset_list' %}">资产信息</a></li>
 
-                    <li  class="{{ system_user_list_active }}"><a href="{% url    'asset:system_user' %}">系统用户</a></li>
+                    <li class="{{ system_user_list_active }}"><a href="{% url    'asset:system_user' %}">系统用户</a></li>
                 </ul>
             </li>
-             <li class="{{ tasks_active }}">
-                <a href="#"><i class="fa fa-address-book-o"></i> <span class="nav-label">执行任务</span>
-                    <span  class="fa arrow"> </span></a>
+
+
+            <li class="{{ db_active }}">
+                <a href="#"><i class="fa fa-drivers-license"></i> <span class="nav-label">数据库管理</span>
+                    <span class="fa arrow"> </span></a>
                 <ul class="nav nav-second-level">
-                    <li  class="{{ cmd_active }}"><a href="{% url    'tasks:cmd' %}">命令行</a></li>
-                     <li  class="{{ tools_active }}"><a href="{% url    'tasks:tools' %}">工具</a></li>
-                     <li  class="{{ sftp_active }}"><a href="{% url    'tasks:sftp' %}">上传下载</a></li>
+                    <li class="{{ db_list_active }}"><a href="{% url    'db:db_list' %}">数据库信息</a></li>
+
+                    <li class="{{ db_user_active }}"><a href="{% url    'db:db_user_list' %}">数据库用户</a></li>
                 </ul>
             </li>
+
+            <li class="{{ tasks_active }}">
+                <a href="#"><i class="fa fa-address-book-o"></i> <span class="nav-label">执行任务</span>
+                    <span class="fa arrow"> </span></a>
+                <ul class="nav nav-second-level">
+                    <li class="{{ cmd_active }}"><a href="{% url    'tasks:cmd' %}">命令行</a></li>
+                    <li class="{{ tools_active }}"><a href="{% url    'tasks:tools' %}">工具</a></li>
+                    <li class="{{ sftp_active }}"><a href="{% url    'tasks:sftp' %}">上传下载</a></li>
+                    <li class="{{ sql_active }}"><a href="{% url    'tasks:Inception' %}">数据库操作</a></li>
+                </ul>
+            </li>
+
 
             <li class="{{ library_active }}">
                 <a href="#"><i class="fa fa-y-combinator-square"></i> <span class="nav-label">技术文档</span>
-                    <span  class="fa arrow"> </span></a>
+                    <span class="fa arrow"> </span></a>
                 <ul class="nav nav-second-level">
-                     <li  class="{{ library_list_active }}"><a href="{% url    'library:library_list' %}">文档列表</a></li>
+                    <li class="{{ library_list_active }}"><a href="{% url    'library:library_list' %}">文档列表</a></li>
                 </ul>
             </li>
 
 
-
-              <li class="{{ autoops_active }}">
+            <li class="{{ autoops_active }}">
                 <a href="#"><i class="fa fa-align-center"></i> <span class="nav-label">平台管理</span>
-                    <span  class="fa arrow"> </span></a>
+                    <span class="fa arrow"> </span></a>
                 <ul class="nav nav-second-level">
-                    <li ><a href="/admin">后台</a></li>
-                    <li  class="{{ login_log_active }}"><a href="{% url    'names:login_history' %}">历史记录</a></li>
+                    <li><a href="/admin">后台</a></li>
+                    <li class="{{ login_log_active }}"><a href="{% url    'names:login_history' %}">历史记录</a></li>
                 </ul>
             </li>
 
