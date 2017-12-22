@@ -559,9 +559,11 @@ def    Inception(request):  ##Inception 审核
 
         for i in obj:
             try:
+                historys = history.objects.create(ip=i.ip, root=i.db_user.username, port=i.port,
+                                                  cmd="审核:{0}".format(sql_db), user=user)
                 s = sql(user=i.db_user.username, password=i.db_user.password, host=i.ip, port=i.port,sqls=sql_db)
 
-                historys = history.objects.create(ip=i.ip, root=i.db_user.username, port=i.port, cmd=sql_db, user=user)
+
 
                 if s == None  or  s['data'] == '':
                     s={}
@@ -610,9 +612,11 @@ def    Inception_exe(request):  ##Inception 执行
 
         for i in obj:
             try:
+                historys = history.objects.create(ip=i.ip, root=i.db_user.username, port=i.port,
+                                                  cmd="执行:{}".format(sql_db), user=user)
                 s = sql_exe(user=i.db_user.username, password=i.db_user.password, host=i.ip, port=i.port,sqls=sql_db)
 
-                historys = history.objects.create(ip=i.ip, root=i.db_user.username, port=i.port, cmd=sql_db, user=user)
+
 
                 if s == None  or  s['data'] == '':
                     s={}
