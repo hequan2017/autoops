@@ -198,3 +198,9 @@ REST_FRAMEWORK = {
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'upload/')
 MEDIA_URL = '/upload/'  # 这个是在浏览器上访问该上传文件的url的前缀
+
+
+Inception_ip = '192.168.10.83'
+Inception_port = '6669'
+
+Webssh_ip = '42.62.6.54'

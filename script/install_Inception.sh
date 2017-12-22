@@ -15,12 +15,10 @@ cd /usr/local/src/
 wget http://ftp.gnu.org/gnu/m4/m4-1.4.18.tar.gz
 tar -zxvf m4-1.4.18.tar.gz
 cd m4-1.4.18
-
-
 ./configure && make && make install
 
 
-
+cd /usr/local/src/
 wget http://ftp.gnu.org/gnu/bison/bison-2.5.tar.gz
 tar -zxvf bison-2.5.tar.gz
 cd bison-2.5/
@@ -60,7 +58,7 @@ sh inception_build.sh builddir  linux
         if int(self.server_version.split('.', 1)[0]) >= 5:
             self.client_flag |= CLIENT.MULTI_RESULTS
 
-
+##修改下面  注释掉
 vim  /usr/local/python3/lib/python3.5/site-packages/pymysql/cursors.py
 
         if not self._defer_warnings:
@@ -70,7 +68,8 @@ vim  /usr/local/python3/lib/python3.5/site-packages/pymysql/cursors.py
 
 
 
-nohup    /usr/local/inception/builddir/mysql/bin/Inception  --defaults-file=/opt/autoops/script/inc.cnf   >/dev/null  2>&1   &
+##启动，这里不用这样启动，统一用supervisor进行管理启动
+#nohup    /usr/local/inception/builddir/mysql/bin/Inception  --defaults-file=/opt/autoops/script/inc.cnf   >/dev/null  2>&1   &
 
 
 #测试

@@ -100,9 +100,11 @@
                                     <div class="form-group">
                                         <div class="col-sm-6 col-sm-offset-2">
 
-                                            <a id="cmd" class="btn btn-primary" type="submit">自动审核</a>
-                                            <button class="btn btn-white" type="button" onclick='clearBody()'>取消
-                                            </button>
+                                            <a id="sql_check" class="btn btn-primary" type="submit">自动审核</a>
+{#                                            <button class="btn btn-white" type="button" onclick='clearBody()'>取消   </button>#}
+                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                                             <a id="sql_exe" class="btn btn-danger" type="submit">命令执行</a>
                                         </div>
                                     </div>
 
@@ -156,7 +158,7 @@
             $(function () {
 
 
-                $('#cmd').click(function () {
+                $('#sql_check').click(function () {
                     $.ajax({
                         url: "/tasks/Inception.html",
                         type: 'POST',
@@ -180,6 +182,38 @@
 
                     })
                 });
+
+                  $('#sql_exe').click(function () {
+                    $.ajax({
+                        url: "/tasks/Inception-exe.html",
+                        type: 'POST',
+                        data: $('.cmd_from').serialize(),
+                        success: function (data) {
+                            var obj = JSON.parse(data);
+                            cons = "";
+                            if (obj.data) {
+                                $.each(obj, function (data, values) {
+                                    $.each(values, function (index, value) {
+                                        cons += "<pre>" + "主机:" + value.ip + "\n" + "结果: \n " + value.data + "</pre>"
+
+                                    });
+                                    $(".pres").html(cons); //把内容入到这个div中即完成
+                                });
+                            } else {
+                                $('#err').text(obj.error);
+                            }
+
+                        }
+
+                    })
+                });
+
+
+
+
+
+
+
 
 
             });

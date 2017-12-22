@@ -12,7 +12,7 @@ from  db.models import db_mysql,db_users
 from   tasks.ansible_runner.runner      import AdHocRunner,PlayBookRunner
 from   tasks.ansible_runner.callback    import CommandResultCallback
 
-
+from  autoops import settings
 
 
 
@@ -426,18 +426,24 @@ def tools_script_get(request, nid):
 
 
 
-def  sql(user,password,host,port,sqls):
-    sql = '/*--user={0};--password={1};--host={2};--execute=1;--enable-check;--port={3};*/\
+a = getattr(settings, 'Inception_ip'),
+a1 = str(a[0])
+b = getattr(settings, 'Inception_port')
+b1 = int(b)
+
+def  sql(user,password,host,port,sqls):  ## 审核
+    sql = '/*--user={0};--password={1};--host={2};--enable-check;--disable-remote-backup;--port={3};*/\
     inception_magic_start;\
     {4}\
     inception_magic_commit;'.format(user,password,host,port,sqls)
 
-
-
+    print("----------------审核----------------------")
 
     try:
         ret = {"ip": host, "data": None}
-        conn=pymysql.connect(host='192.168.10.83',user='',passwd='',db='',port=6669)
+
+
+        conn = pymysql.connect(host=a1,user='',passwd='',db='',port=b1)
         cursor=conn.cursor()
         cursor.execute(sql)
         results = cursor.fetchall()
@@ -448,15 +454,15 @@ def  sql(user,password,host,port,sqls):
 
         for result in results:
             row_num=row_num+1
-            data.append(['*'.ljust(27,'*'),row_num,'.row', '*'.ljust(27,'*'),'\n'],)
+            data.append('*'.ljust(27, '*') + str(row_num) + '.row' + '*'.ljust(27, '*') + '\n')
 
 
             row = map(lambda x, y: (x,y), (i[0] for i in cursor.description), result)
             for each_column in row:
                 if each_column[0] != 'errormessage':
-                    data.append([each_column[0].rjust(column_name_max_size),":",each_column[1],'\n'])
+                    data.append(str(each_column[0].rjust(column_name_max_size))+" "+":"+" "+str(each_column[1])+'\n')
                 else:
-                    data.append([each_column[0].rjust(column_name_max_size),':',each_column[1].replace('\n','\n'.ljust(column_name_max_size+4)),'\n'])
+                    data.append(str(each_column[0].rjust(column_name_max_size))+" "+":"+" "+str(each_column[1].replace('\n','\n'.ljust(column_name_max_size+4)))+'\n')
 
 
 
@@ -471,14 +477,56 @@ def  sql(user,password,host,port,sqls):
          return ret
 
 
+def  sql_exe(user,password,host,port,sqls):  ## 执行
+    sql = '/*--user={0};--password={1};--host={2};--execute=1;--enable-execute;--enable-ignore-warnings;--disable-remote-backup;--port={3};*/\
+    inception_magic_start;\
+    {4}\
+    inception_magic_commit;'.format(user,password,host,port,sqls)
+
+    print("----------------执行----------------------")
+
+    try:
+        ret = {"ip": host, "data": None}
+
+        conn = pymysql.connect(host=a1, user='', passwd='', db='', port=b1)
+        cursor=conn.cursor()
+        cursor.execute(sql)
+        results = cursor.fetchall()
+        column_name_max_size=max(len(i[0]) for i in cursor.description)
+        row_num=0
+
+        data = []
+
+        for result in results:
+            row_num = row_num + 1
+            data.append('*'.ljust(27, '*') + str(row_num) + '.row' + '*'.ljust(27, '*') + '\n')
+
+            row = map(lambda x, y: (x, y), (i[0] for i in cursor.description), result)
+            for each_column in row:
+                if each_column[0] != 'errormessage':
+                    data.append(
+                        str(each_column[0].rjust(column_name_max_size)) + " " + ":" + " " + str(each_column[1]) + '\n')
+                else:
+                    data.append(str(each_column[0].rjust(column_name_max_size)) + " " + ":" + " " + str(
+                        each_column[1].replace('\n', '\n'.ljust(column_name_max_size + 4))) + '\n')
+
+        ret['data']  = data
+        cursor.close()
+        conn.close()
+        return ret
+
+    except pymysql.Error as e:
+         data = "Mysql Error %d: %s" % (e.args[0], e.args[1])
+         ret = {"ip": host, "data": data}
+         return ret
+
+
 @login_required(login_url="/login.html")
-def    Inception(request):  ##Inception
+def    Inception(request):  ##Inception 审核
 
     if request.method == "GET":
         obj = get_objects_for_user(request.user, 'db.change_db_mysql')
         return render(request, 'tasks/Inception.html', {'sql_list': obj, "tasks_active": "active", "sql_active": "active"})
-
-
 
 
     if request.method == 'POST':
@@ -505,23 +553,15 @@ def    Inception(request):  ##Inception
             return HttpResponse(json.dumps(ret))
 
         obj = db_mysql.objects.extra(where=['id IN (' + idstring + ')'])
-
         ret = {}
-
         ret['data'] = []
-
-
-        print(sql_db)
 
 
         for i in obj:
             try:
-                s = sql(user=i.db_user.username, password=i.db_user.password, host=i.ip, port=i.port,
-                        sqls=sql_db)
-
+                s = sql(user=i.db_user.username, password=i.db_user.password, host=i.ip, port=i.port,sqls=sql_db)
 
                 historys = history.objects.create(ip=i.ip, root=i.db_user.username, port=i.port, cmd=sql_db, user=user)
-
 
                 if s == None  or  s['data'] == '':
                     s={}
@@ -532,7 +572,56 @@ def    Inception(request):  ##Inception
                 ret['data'].append({"ip": i.ip, "data": "账号密码不对,{}".format(e)})
         return HttpResponse(json.dumps(ret))
 
+@login_required(login_url="/login.html")
+def    Inception_exe(request):  ##Inception 执行
 
+    if request.method == "GET":
+        obj = get_objects_for_user(request.user, 'db.change_db_mysql')
+        return render(request, 'tasks/Inception.html', {'sql_list': obj, "tasks_active": "active", "sql_active": "active"})
+
+
+    if request.method == 'POST':
+        ids = request.POST.getlist('id')
+        sql_db = request.POST.get('sql', None)
+
+        user = User.objects.get(username=request.user)
+        checker = ObjectPermissionChecker(user)
+        ids1 = []
+        for i in ids:
+            assets = db_mysql.objects.get(id=i)
+            if checker.has_perm('delete_db_mysql',db_mysql, ) == True:
+                ids1.append(i)
+
+        user = request.user
+        idstring = ','.join(ids1)
+        if not ids:
+            error_1 = "请选择数据库"
+            ret = {"error": error_1, "status": False}
+            return HttpResponse(json.dumps(ret))
+        elif not sql_db:
+            error_2 = "请输入命令"
+            ret = {"error": error_2, "status": False}
+            return HttpResponse(json.dumps(ret))
+
+        obj = db_mysql.objects.extra(where=['id IN (' + idstring + ')'])
+        ret = {}
+        ret['data'] = []
+
+
+        for i in obj:
+            try:
+                s = sql_exe(user=i.db_user.username, password=i.db_user.password, host=i.ip, port=i.port,sqls=sql_db)
+
+                historys = history.objects.create(ip=i.ip, root=i.db_user.username, port=i.port, cmd=sql_db, user=user)
+
+                if s == None  or  s['data'] == '':
+                    s={}
+                    s['ip']=i.ip
+                    s['data']="返回值为空,可能是权限不够。"
+                ret['data'].append(s)
+            except Exception as e:
+                ret['data'].append({"ip": i.ip, "data": "账号密码不对,{}".format(e)})
+        return HttpResponse(json.dumps(ret))
 
 
 

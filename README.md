@@ -1,6 +1,6 @@
 ## AutoOps
 
-AutoOps 是一款基于 2.0 版本django开发的，主要面向linux运维工程师使用,管理linux资产信息，批量执行命令、脚本,获取流量图，web ssh管理，技术文档等功能。
+AutoOps 是一款基于 2.0 版本django开发的，主要面向linux运维工程师使用,管理linux资产信息，Mysql数据库，批量执行命令、脚本,获取流量图，web ssh管理，技术文档等功能。
 
 欢迎大家测试使用，有问题可反馈。
 
@@ -22,8 +22,14 @@ AutoOps 是一款基于 2.0 版本django开发的，主要面向linux运维工�
 
 
 ### 更新记录   实际生产使用推荐 v1.4-dj1.11 
-  -  1.5.1  数据库操作自动审核（预览版），需要按照script/install_Inception.sh的步骤，先安装Inception。
-  -  1.5    后台更新为xadmin, 原有系统自带的admin保留，更名为oldadmin.
+  -  1.6    Mysql数据库操作: 自动审核 + 执行 （目前只适用于Mysql）
+      -  自动审核： 利用软件去审核命令是否正确。
+      -  命令执行： 去数据库执行命令，会忽略报警和警告，使用前建议 先 自动审核一下。
+![数据库操作](https://github.com/hequan2017/autoops/blob/master/static/demo/10.png)    
+![数据库操作](https://github.com/hequan2017/autoops/blob/master/static/demo/11.png)   
+      
+  -  1.5.1  Mysql数据库操作自动审核（预览版）， 需要按照script/install_Inception.sh的步骤，先安装Inception。
+  -  1.5    后台更新为xadmin,   原有系统自带的admin保留，更名为oldadmin.
         -  目前 xadmin兼容有问题。  看不见task里面的任务名字。  想要添加，格式为tasks.task.XXX。
         具体名字可去  tasks/task.py 里面查找 或自定义。例如： tasks.task.clean_history_host_monitor.
         -  xadmin 不兼容 面对对象权限 插件guardian。 如果想设置 面向 对象的权限，请登陆 /oldadmin 进行设置。
@@ -56,7 +62,8 @@ AutoOps 是一款基于 2.0 版本django开发的，主要面向linux运维工�
   - webssh  登陆 （用复制粘贴的时候，会显示二份，但实际只有一个，不影响使用，请忽略。）
   - library 技术文档 (真正运维人员的管理平台，自带技术文档，有问题不用再去别的地方找)
     - DjangoUeditor 富文本编辑器
-    
+  - 数据库自动审核-- 命令执行
+    - Inception 
   - 后台管理
 
 
@@ -95,6 +102,7 @@ pip3 install git+git://github.com/sshwsfc/xadmin.git@django2
  
  * 执行 `srcipt/install_redis.sh`   
  * 安装 `script/install_webssh.sh` ,  需要修改的内容见脚本内，如果不需要webssh，可暂时不用安装。
+ * 安装 `script/install_inception.sh` ,  需要修改的内容见脚本内，如果不需要 数据库自动审核，可暂时不用安装。
  
  * 安装   `supervisor  `
  
@@ -118,7 +126,7 @@ password=123
  * 配置文件    ` cp   /opt/autoops/script/supervisor.conf    /etc/supervisord.d/   `
  
 
-### 启动
+###  环境设置
 
   * 关于数据库 请修改 `autops/settings`文件, 如果没有mysql，请选择上面那种，注释下面的。如果有，则可以启用mysql，设置相关连接地址。
     关于mysql安装方法，可参考我的博客 `http://hequan.blog.51cto.com/5701886/1982428`
@@ -141,6 +149,23 @@ DATABASES = {
         }
 }
 ``` 
+  * 修改settings 自定义参数
+```djangotemplate
+DEBUG = True  ## 实际生产环境实用，请关闭  False
+
+BROKER_URL = 'redis://127.0.0.1:6379/0'  ##Redis地址
+
+Webssh_ip = "42.62.6.54"    ##WebSSH 软件的 访问IP
+Inception_ip = '127.0.0.1'  ## 此为 Inception 软件地址 需要设置
+Inception_port = '6669' ## 此为 Inception 软件端口号
+```  
+  
+  
+  
+
+
+
+
     
   * 初始化数据库（可删除文件夹的 db.sqlite3, 如不想删除，请忽略下面3个命令）
   
@@ -149,25 +174,34 @@ python manage.py makemigrations
 python manage.py  migrate
 python manage.py  createsuperuser      创建管理员
 ``` 
-      
-      
-         
+             
       
   * 启动supervisor进程管理  `/usr/bin/python2.7   /usr/bin/supervisord -c /etc/supervisord.conf`
     加到linux 开机启动里面  `chmod +x  /etc/rc.d/rc.local ` 把上面的命令放到这个文件里面  
   
-  * 启动: 统一用supervisor 管理进程,  打开   0.0.0.0:9001  账号user  密码123    进入进程管理界面，管理uwsgi,redis,webssh,celery 等启动关闭。
+  
+  * 启动: 统一用supervisor 管理进程,  打开   0.0.0.0:9001  账号user  密码123    进入进程管理界面，管理uwsgi,redis,webssh,celery,Inception 等启动关闭。
 此方法不涉及到nginx。
+
  
   * 登陆后台，设置定时获取主机图，设置数据中心、组。
   
+  
  ![图片](https://github.com/hequan2017/autoops/blob/master/static/demo/9.png)
+
+
+
+###  开发设置
 
   * 如果想在windows 下的 pycharm打开，请注释  `asset/views.py`  第20行,     `tasks/views.py`   12  13 行。（因为ansible不好安装在windows 下环境）
  
+    
+   
+###  生产环境   
    
   * 如果想在生产环境部署、启动, 用nginx去处理。 可以参考   `http://hequan.blog.51cto.com/5701886/1982769` , 请把`supervisor.conf` 中 关于uwsgi的部分删除掉, 
 用以下方式控制UWSGI的启动 关闭.
+
 
 ```bash
 uwsgi  --ini    /opt/autoops/script/uwsgi.ini   # 启动uwsgi配置  也可以把这个命令写到开机的文件里面
@@ -175,9 +209,7 @@ uwsgi  --stop   /opt/autoops/script/uwsgi.pid # 关闭uwsgi
 uwsgi  --reload  /opt/autoops/script/uwsgi.pid  #重新加载
 ```
  
-请修改 `autoops/settings.py                  26 DEBUG = True `  改成 False
-
-
+ 
 nginx 配置文件修改如下
 
 ```html
@@ -201,7 +233,7 @@ root         /opt/autoops;
 
 
 
-### 截图
+###   截图
 ![图片](https://github.com/hequan2017/autoops/blob/master/static/demo/1.png)
 ![图片](https://github.com/hequan2017/autoops/blob/master/static/demo/2.png)
 ![图片](https://github.com/hequan2017/autoops/blob/master/static/demo/3.png)

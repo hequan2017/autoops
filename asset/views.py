@@ -14,6 +14,8 @@ from guardian.models import UserObjectPermission, GroupObjectPermission
 from django.views.generic import TemplateView, ListView, View, CreateView, UpdateView, DeleteView, DetailView
 from django.urls import reverse_lazy
 from tasks.views import ssh
+from autoops  import settings
+
 
 from  tasks.ansible_runner.runner import AdHocRunner
 
@@ -29,9 +31,11 @@ class AssetListAll(TemplateView):
         return super(AssetListAll, self).dispatch(*args, **kwargs)
 
     def get_context_data(self, **kwargs):
+
         context = {
             "asset_active": "active",
             "asset_list_active": "active",
+            "Webssh":getattr(settings, 'Webssh_ip'),
             'asset_list': get_objects_for_user(self.request.user, 'asset.read_asset')
         }
         kwargs.update(context)
@@ -49,7 +53,7 @@ class AssetListAll(TemplateView):
             Q(product_line__name=query))
 
         return render(request, 'asset/asset.html',
-                      {"asset_active": "active", "asset_list_active": "active", "asset_list": a})
+                      {"Webssh":getattr(settings, 'Webssh_ip'),"asset_active": "active", "asset_list_active": "active", "asset_list": a})
 
 
 class AssetAdd(CreateView):

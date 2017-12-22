@@ -1,6 +1,5 @@
 {% extends "base.html" %}
-
-
+{% load  mytags %}
 {% block  title %}资产信息{% endblock %}
 
 {% block page-content %}
@@ -245,7 +244,7 @@
                         var password = obj.password;
 
                         $.ajax({
-                            url: "http://42.62.6.54:9000/console/login?rnd=" + Math.random(),
+                            url: "http://{{  Webssh  }}:9000/console/login?rnd=" + Math.random(),
                             method: "POST",
                             data: {
                                 "vm_addr": ip,
@@ -261,7 +260,7 @@
                         }).done(function (data) {
                             var json = (data);
                             if (json.ok) {
-                                window.open("http://42.62.6.54:9000" + json.data);
+                                window.open("http://{{ Webssh }}:9000" + json.data);
                             } else {
                                 alert("登陆失败，请确认您的登陆信息。");
                             }
