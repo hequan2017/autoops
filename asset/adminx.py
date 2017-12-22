@@ -4,6 +4,8 @@ from djcelery.models import IntervalSchedule, CrontabSchedule,PeriodicTask,Worke
 import xadmin
 from xadmin import views
 
+
+
 @xadmin.sites.register(views.website.IndexView)
 class MainDashboard(object):
     widgets = [

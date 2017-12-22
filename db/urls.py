@@ -17,7 +17,7 @@ urlpatterns = [
     path('db-user-update-<int:pk>.html', views.DbUserUpdate.as_view(), name='db_user_update'),
     path('db-user-del.html', views.DbUserDel.as_view(), name='db_del'),
     path('db-user-detail-<int:pk>.html', views.DbUserDetail.as_view(), name='db_user_detail'),
-    path('db-user-asset-<int:nid>.html', views.Db_user_db, name='db_user_db'),
+    path('db-user-db-<int:nid>.html', views.Db_user_db, name='db_user_db'),
 ]
 
 

@@ -2,8 +2,8 @@
 <project version="4">
   <component name="WebServers">
     <option name="servers">
-      <webServer id="8b900ba7-a0cb-4b90-8636-7a852ac50577" name="autoops1" url="http://42.62.55.52">
-        <fileTransfer host="42.62.55.52" port="22" rootFolder="/opt/autoops" accessType="SFTP">
+      <webServer id="8b900ba7-a0cb-4b90-8636-7a852ac50577" name="autoops1" url="http://42.62.55.51">
+        <fileTransfer host="42.62.55.51" port="22" rootFolder="/opt/autoops" accessType="SFTP">
           <advancedOptions>
             <advancedOptions dataProtectionLevel="Private" />
           </advancedOptions>

@@ -510,9 +510,8 @@ def system_user_detail(request, nid):
 
 @login_required(login_url="/login.html")
 def system_user_asset(request, nid):
-    sys = system_users.objects.get(id=nid)
     obj = asset.objects.filter(system_user=nid)
-    return render(request, "asset/system-user-asset.html", {"system_users": sys, "nid": nid, "asset_list": obj,
+    return render(request, "asset/system-user-asset.html", { "nid": nid, "asset_list": obj,
                                                             "asset_active": "active",
                                                             "system_user_list_active": "active"})
 

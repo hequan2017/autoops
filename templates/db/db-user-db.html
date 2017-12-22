@@ -182,7 +182,7 @@
                         success: function (data) {
                             var obj = JSON.parse(data);
                             if (obj.status) {
-                                location.href = "{% url "db:db_user" %}"
+                                location.href = "{% url "db:db_user_list" %}"
                             } else {
                                 $('#error').text(obj.error);
                             }

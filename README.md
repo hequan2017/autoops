@@ -108,6 +108,7 @@ pip3 install git+git://github.com/sshwsfc/xadmin.git@django2
  
 ```bash
 pip2   install    supervisor   
+
 echo_supervisord_conf > /etc/supervisord.conf 
 mkdir /etc/supervisord.d/
      
@@ -121,6 +122,7 @@ files = /etc/supervisord.d/*.conf
 port=0.0.0.0:9001 
 username=user
 password=123
+
 ```  
     
  * 配置文件    ` cp   /opt/autoops/script/supervisor.conf    /etc/supervisord.d/   `
@@ -149,7 +151,8 @@ DATABASES = {
         }
 }
 ``` 
-  * 修改settings 自定义参数
+  * 修改 autoops/settings 自定义参数
+  
 ```djangotemplate
 DEBUG = True  ## 实际生产环境实用，请关闭  False
 

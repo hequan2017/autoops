@@ -313,9 +313,8 @@ class DbUserDetail(DetailView):
 
 @login_required(login_url="/login.html")
 def Db_user_db(request, nid):
-    sys = db_users.objects.get(id=nid)
     obj = db_mysql.objects.filter(db_user=nid)
-    return render(request, "db/db-user-db.html", {"dbusers": sys, "nid": nid, "db_list": obj,
+    return render(request, "db/db-user-db.html", {"nid": nid, "db_list": obj,
                                                             "db_active": "active",
-                                                            "db_user_active": "active"})
+            "db_user_active": "active",})
 
