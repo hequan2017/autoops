@@ -21,7 +21,9 @@ AutoOps 是一款基于 2.0 版本django开发的，主要面向linux运维工�
 ![DEMO](https://github.com/hequan2017/autoops/blob/master/static/demo/autoops.png)
 
 
-### 更新记录   实际生产使用推荐 v1.4-dj1.11 
+### 更新记录  
+  -  1.6.5   回滚数据库功能上线。
+  
   -  1.6    Mysql数据库操作: 自动审核 + 执行 （目前只适用于Mysql）
       -  自动审核： 利用软件去审核命令是否正确。
       -  命令执行： 去数据库执行命令，会忽略报警和警告，使用前建议 先 自动审核一下。
@@ -161,6 +163,12 @@ BROKER_URL = 'redis://127.0.0.1:6379/0'  ##Redis地址
 Webssh_ip = "42.62.6.54"    ##WebSSH 软件的 访问IP
 Inception_ip = '127.0.0.1'  ## 此为 Inception 软件地址 需要设置
 Inception_port = '6669' ## 此为 Inception 软件端口号
+
+inception_remote_system_password='123456'   ## 设置备份服务器相关参数，并同步修改一下 script/inc.cnf 里面的设置
+inception_remote_system_user='root'
+inception_remote_backup_port='3306'
+inception_remote_backup_host='192.168.10.81'
+
 ```  
   
   

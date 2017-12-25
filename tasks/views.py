@@ -431,6 +431,7 @@ a1 = str(a[0])
 b = getattr(settings, 'Inception_port')
 b1 = int(b)
 
+
 def  sql(user,password,host,port,sqls):  ## 审核
     sql = '/*--user={0};--password={1};--host={2};--enable-check;--disable-remote-backup;--port={3};*/\
     inception_magic_start;\
@@ -478,7 +479,7 @@ def  sql(user,password,host,port,sqls):  ## 审核
 
 
 def  sql_exe(user,password,host,port,sqls):  ## 执行
-    sql = '/*--user={0};--password={1};--host={2};--execute=1;--enable-execute;--enable-ignore-warnings;--disable-remote-backup;--port={3};*/\
+    sql = '/*--user={0};--password={1};--host={2};--execute=1;--enable-execute;--enable-ignore-warnings;--port={3};*/\
     inception_magic_start;\
     {4}\
     inception_magic_commit;'.format(user,password,host,port,sqls)
@@ -519,6 +520,68 @@ def  sql_exe(user,password,host,port,sqls):  ## 执行
          data = "Mysql Error %d: %s" % (e.args[0], e.args[1])
          ret = {"ip": host, "data": data}
          return ret
+
+
+
+
+inception_password=getattr(settings, 'inception_remote_system_password'),
+inception_user=getattr(settings, 'inception_remote_system_user'),
+inception_port=getattr(settings, 'inception_remote_backup_port'),
+inception_host=getattr(settings, 'inception_remote_backup_host'),
+
+inception_remote_system_password=str(inception_password[0])
+inception_remote_system_user=str(inception_user[0])
+inception_remote_backup_port=str(inception_port[0])
+inception_remote_backup_host=str(inception_host[0])
+
+def  sql_tables(user,password,host,port,sequence,backup_dbname):  ##   查询回滚语句的表格
+
+    port_a = int(port)
+    connection = pymysql.connect(host=host,port=port_a,user=user,password=password, db=backup_dbname,charset="utf8",cursorclass=pymysql.cursors.DictCursor)
+
+
+    try:
+        with connection.cursor() as cursor:
+
+            sql = " select  tablename   from  {0}.{1}  where opid_time ='{2}' ;".format(backup_dbname,'$_$inception_backup_information$_$',sequence)
+
+            cursor.execute(sql)
+            result = cursor.fetchone()
+
+            connection.commit()
+            connection.close()
+        ret = result['tablename']
+
+        return ret
+    except Exception as e:
+        data = "Mysql Error %d: %s" % (e.args[0], e.args[1])
+        ret = data
+        return ret
+
+
+
+def  sql_rb(user,password,host,port,sequence,backup_dbname,table):  ##   查询回滚语句
+    port_a = int(port)
+    connection = pymysql.connect(host=host,port=port_a,user=user,password=password, db=backup_dbname,charset="utf8",cursorclass=pymysql.cursors.DictCursor)
+
+    try:
+        with connection.cursor() as cursor:
+            sql = " select rollback_statement  from  {0}.{1}  where opid_time = '{2}' ;".format(backup_dbname,table,sequence)
+            cursor.execute(sql)
+            result = cursor.fetchone()
+
+            connection.commit()
+            connection.close()
+
+        ret =  {"data": result['rollback_statement']}
+        return ret
+    except Exception as e:
+        data = "Mysql Error %d: %s" % (e.args[0], e.args[1])
+        ret = {"data": data}
+        return ret
+
+
+
 
 
 @login_required(login_url="/login.html")
@@ -577,11 +640,6 @@ def    Inception(request):  ##Inception 审核
 @login_required(login_url="/login.html")
 def    Inception_exe(request):  ##Inception 执行
 
-    if request.method == "GET":
-        obj = get_objects_for_user(request.user, 'db.change_db_mysql')
-        return render(request, 'tasks/Inception.html', {'sql_list': obj, "tasks_active": "active", "sql_active": "active"})
-
-
     if request.method == 'POST':
         ids = request.POST.getlist('id')
         sql_db = request.POST.get('sql', None)
@@ -628,6 +686,48 @@ def    Inception_exe(request):  ##Inception 执行
         return HttpResponse(json.dumps(ret))
 
 
+
+
+
+
+@login_required(login_url="/login.html")
+def    Inception_rb(request):  ##Inception  回滚
+
+
+    if request.method == 'POST':
+        sequence = request.POST.get('sequence',None)
+        backup_dbname = request.POST.get('backup_dbname', None)
+
+        if not sequence or not backup_dbname:
+            error_2 = "请输入  sequence  or backup_dbname  "
+            ret = {"error": error_2, "status": False}
+            return HttpResponse(json.dumps(ret))
+
+
+
+
+
+        try:
+
+                table = sql_tables(user=inception_remote_system_user, password=inception_remote_system_password, host=inception_remote_backup_host, port=inception_remote_backup_port,
+                                   sequence=sequence, backup_dbname=backup_dbname)
+
+
+                s = sql_rb(user=inception_remote_system_user, password=inception_remote_system_password, host=inception_remote_backup_host, port=inception_remote_backup_port,
+                           sequence=sequence,backup_dbname=backup_dbname,table=table)
+
+
+                if s == None  or  s['data'] == '':
+                    s={}
+                    s['data']="返回值为空"
+
+                ret=s
+                print(ret)
+        except Exception as e:
+                ret = {}
+                ret['error'] =  "错误： {}".format(e)
+        finally:
+            return HttpResponse(json.dumps(ret))
 
 
 

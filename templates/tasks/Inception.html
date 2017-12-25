@@ -89,9 +89,8 @@
 
                                     <div class="form-group"><label class="col-sm-2 control-label">命令</label>
 
-                                        <div class="col-lg-6 col-sm-6"><textarea id="sql"    name="sql" rows="8"
-                                                                                 cols="60">
-</textarea>
+                                        <div class="col-lg-6 col-sm-6"><textarea id="sql" name="sql" rows="8"
+                                                                                 cols="60" required=""></textarea>
                                         </div>
                                     </div>
                                     <div class="hr-line-dashed"></div>
@@ -101,10 +100,40 @@
                                         <div class="col-sm-6 col-sm-offset-2">
 
                                             <a id="sql_check" class="btn btn-primary" type="submit">自动审核</a>
-{#                                            <button class="btn btn-white" type="button" onclick='clearBody()'>取消   </button>#}
-                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-                                             <a id="sql_exe" class="btn btn-danger" type="submit">命令执行</a>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                                            <a id="sql_exe" class="btn btn-danger" type="submit">命令执行</a>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
+                                <div class="ibox-content">
+                                    <div class="form-group"><label class="col-sm-2 control-label">sequence</label>
+
+                                        <div class="col-lg-8 col-sm-9"><input type="text" class="form-control"
+                                                                              placeholder="sequence"
+                                                                              name="sequence"><span
+                                                class="help-block m-b-none"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group"><label class="col-sm-2 control-label">backup_dbname</label>
+
+                                        <div class="col-lg-8 col-sm-9"><input type="text" class="form-control"
+                                                                              placeholder="backup_dbname"
+                                                                              name="backup_dbname"><span
+                                                class="help-block m-b-none"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-sm-6 col-sm-offset-2">
+
+                                            <a id="sql_rb" class="btn btn-danger" type="submit">查询回滚</a>
+
+                                            </button>
                                         </div>
                                     </div>
 
@@ -141,8 +170,16 @@
                     </div>
                     <div class="ibox-content  pres">
 
-                        <pre> <span id="err"> mysql命令 以 ; 分割    例如：use mysql;CREATE DATABASE `1213` CHARACTER SET utf8mb4;</span></pre>
+                        <pre> <span id="err">mysql命令 以 ; 分割    例如：   use mysql;CREATE DATABASE `1213` CHARACTER SET utf8mb4;   </span></pre>
+  </div>
 
+            <div class="ibox-content  ">
+
+                        <pre> <span id="sql_rb1">回滚命令  请输入上面想要回滚语句的 返回信息，例如：
+
+sequence : 1514198102_234_0   ###不要加标点
+backup_dbname : 192_168_10_81_3306_hequan1
+                        </span></pre>
                     </div>
                 </div>
             </div>
@@ -183,7 +220,7 @@
                     })
                 });
 
-                  $('#sql_exe').click(function () {
+                $('#sql_exe').click(function () {
                     $.ajax({
                         url: "/tasks/Inception-exe.html",
                         type: 'POST',
@@ -209,11 +246,24 @@
                 });
 
 
+                $('#sql_rb').click(function () {
+                    $.ajax({
+                        url: "/tasks/Inception-rb.html",
+                        type: 'POST',
+                        data: $('.cmd_from').serialize(),
+                        success: function (data) {
+                            var obj = JSON.parse(data);
+                            cons = "";
+                            if (obj.data) {
+                                $('#sql_rb1').text(obj.data);
+                            } else {
+                                $('#sql_rb1').text(obj.error);
+                            }
 
+                        }
 
-
-
-
+                    })
+                });
 
 
             });

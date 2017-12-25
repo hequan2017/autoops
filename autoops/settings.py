@@ -204,3 +204,9 @@ Inception_ip = '192.168.10.83'
 Inception_port = '6669'
 
 Webssh_ip = '42.62.6.54'
+
+
+inception_remote_system_password='123456'
+inception_remote_system_user='root'
+inception_remote_backup_port='3306'
+inception_remote_backup_host='192.168.10.81'

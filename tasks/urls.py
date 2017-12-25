@@ -19,6 +19,7 @@ urlpatterns = [
 
     path('Inception.html', views.Inception, name='Inception'),
     path('Inception-exe.html', views.Inception_exe, name='Inception_exe'),
+    path('Inception-rb.html', views.Inception_rb, name='Inception_rb'),
 ]
 
 app_name="tasks"
