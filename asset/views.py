@@ -17,6 +17,7 @@ from tasks.views import ssh
 from autoops  import settings
 
 
+
 from  tasks.ansible_runner.runner import AdHocRunner
 
 from django.db.models import Q
@@ -333,12 +334,20 @@ def asset_web_ssh(request):
         ip = obj.network_ip + ":" + str(obj.port)
         username = obj.system_user.username
         password = obj.system_user.password
-        ret = {"ip": ip, "username": username, 'password': password, "static": True}
+
+        password1 = AESCipher(key=key)
+        password2 = password1.decrypt(password)
+        password3 = password2.decode()
+
+
+        ret = {"ip": ip, "username": username, 'password': password3, "static": True}
 
         login_ip = request.META['REMOTE_ADDR']
 
         web_history.objects.create(user=request.user, ip=login_ip, login_user=obj.system_user.username, host=ip)
         return HttpResponse(json.dumps(ret))
+
+
 
 
 @login_required(login_url="/login.html")

@@ -2,6 +2,9 @@ from celery import Celery, platforms
 from asset.models import asset,performance
 from tasks.views import ssh
 import threading,time,datetime
+from  asset.form import key,AESCipher
+
+
 
 
 platforms.C_FORCE_ROOT = True
@@ -12,9 +15,11 @@ app= Celery('autoops',)
 def   job(id):  ##计划任务
 
     i = asset.objects.filter(id=id).first()
+    password1 = AESCipher(key=key)
+    password2 = password1.decrypt(i.system_user.password)
+    password3 = password2.decode()
 
-    print(i.network_ip, i.port, i.system_user.username, i.system_user.password)
-    cpu1 = ssh(ip=i.network_ip, port=i.port, username=i.system_user.username, password=i.system_user.password, cmd=" top -bn 1 -i -c | grep Cpu   ")
+    cpu1 = ssh(ip=i.network_ip, port=i.port, username=i.system_user.username, password=password3, cmd=" top -bn 1 -i -c | grep Cpu   ")
 
     cpu2 = cpu1['data'].split()
 
@@ -24,19 +29,19 @@ def   job(id):  ##计划任务
     cpu = str(float(str(cpu3[0])) + float(str(cpu4[0])))
 
 
-    total = ssh(ip=i.network_ip, port=i.port, username=i.system_user.username, password=i.system_user.password, cmd=" free | grep  Mem:  ")
+    total = ssh(ip=i.network_ip, port=i.port, username=i.system_user.username, password=password3, cmd=" free | grep  Mem:  ")
     list = total['data'].split(" ")
     while '' in list:
         list.remove('')
     mem = float('%.2f' % (float('%.3f' % (int(list[2]) / int(list[1]))) * 100))
 
 
-    in1 = ssh(ip=i.network_ip, port=i.port, username=i.system_user.username, password=i.system_user.password, cmd="cat /proc/net/dev  |  grep eth0  ")
+    in1 = ssh(ip=i.network_ip, port=i.port, username=i.system_user.username, password=password3, cmd="cat /proc/net/dev  |  grep eth0  ")
     in2 = in1['data'].split()
 
     time.sleep(1)
 
-    in3 = ssh(ip=i.network_ip, port=i.port, username=i.system_user.username, password=i.system_user.password,cmd="cat /proc/net/dev  |  grep eth0  ")
+    in3 = ssh(ip=i.network_ip, port=i.port, username=i.system_user.username, password=password3,cmd="cat /proc/net/dev  |  grep eth0  ")
     in4 = in3['data'].split()
 
     in_network = int((int(in4[1]) - int(in2[1]))/1024/10*8)
@@ -69,8 +74,14 @@ def monitor_job():
 @app.task
 def  cmd_job(host,cmd):
     i = asset.objects.get(network_ip=host)
+
+    password1 = AESCipher(key=key)
+    password2 = password1.decrypt(i.system_user.password)
+    password3 = password2.decode()
+
+
     cmd=cmd
-    ret = ssh(ip=i.ip, port=i.port, username=i.username, password=i.password, cmd=cmd)
+    ret = ssh(ip=i.ip, port=i.port, username=i.username, password=password3, cmd=cmd)
     return  ret['data']
 
 
