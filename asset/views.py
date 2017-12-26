@@ -17,7 +17,6 @@ from tasks.views import ssh
 from autoops  import settings
 
 
-
 from  tasks.ansible_runner.runner import AdHocRunner
 
 from django.db.models import Q
@@ -217,34 +216,44 @@ def asset_hardware_update(request):
             port = obj.port
             username = obj.system_user.username
             password = obj.system_user.password
+
+            password1 = AESCipher(key=key)
+            password2 = password1.decrypt(password)
+            password3 = password2.decode()
+
+            print(password3)
             assets = [
                 {
                     "hostname": 'host',
                     "ip": ip,
                     "port": port,
                     "username": username,
-                    "password": password,
+                    "password": password3,
                 },
             ]
-
+            print(assets)
             task_tuple = (('setup', ''),)
             runner = AdHocRunner(assets)
 
             result = runner.run(task_tuple=task_tuple, pattern='all', task_name='Ansible Ad-hoc')
+
+            print(result)
 
             data = result['contacted']['host'][0]['ansible_facts']
 
             hostname = data['ansible_nodename']
             system = data['ansible_distribution'] + " " + data['ansible_distribution_version']
 
+
+
+
             try:
                 a2 = "parted -l  | grep   \"Disk \/dev\/[a-z]d\"  | awk -F\"[ ]\"  '{print $3}' | awk  -F\"GB\"  '{print $1}'"
-                s = ssh(ip=ip, port=port, username=username, password=password, cmd=a2)
+                s = ssh(ip=ip, port=port, username=username, password=password3, cmd=a2)
                 disk1 = s['data']
                 disk2 = disk1.rstrip().split("\n")
                 disk = "+".join(map(str, disk2)) + "   共计:{} GB".format(round(sum(map(float, disk2))))
             except Exception  as  e:
-
                 disk = " 共计{}".format(str(sum([int(data["ansible_devices"][i]["sectors"]) * \
                                                int(data["ansible_devices"][i]["sectorsize"]) / 1024 / 1024 / 1024 \
                                                for i in data["ansible_devices"] if
@@ -252,7 +261,7 @@ def asset_hardware_update(request):
 
             try:
                 a1 = "dmidecode | grep -P -A5 \"Memory\ Device\"  | grep Size   | grep -v \"No Module Installed\" | grep -v \"0\"   | awk -F\":\" \'{print $2}\'  | awk -F\" \"  \'{print  $1}\'"
-                s = ssh(ip=ip, port=port, username=username, password=password, cmd=a1)
+                s = ssh(ip=ip, port=port, username=username, password=password3, cmd=a1)
                 memory1 = s['data']
 
                 if memory1 == "":
@@ -277,7 +286,7 @@ def asset_hardware_update(request):
 
             try:
                 a = "ipmitool lan print | grep -w \"IP Address \"   | awk -F\":\" \ '{print $2}\'"
-                s = ssh(ip=ip, port=port, username=username, password=password, cmd=a)
+                s = ssh(ip=ip, port=port, username=username, password=password3, cmd=a)
                 manage = s['data']
             except Exception as e:
                 manage = None
@@ -322,7 +331,7 @@ def asset_hardware_update(request):
 
         except Exception as e:
             ret['status'] = False
-            ret['error'] = '登陆账号权限不够，请在被添加的主机安装parted  ipmitool dmidecode 或更新错误{}'.format(e)
+            ret['error'] = '登陆账号权限不够| 请在被添加的主机安装  parted  ipmitool dmidecode  | 删除  主服务器/root/.ssh/known_hosts  文件'.format(e)
         return HttpResponse(json.dumps(ret))
 
 

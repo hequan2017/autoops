@@ -253,7 +253,6 @@ class DbUserUpdate(UpdateView):
     @method_decorator(login_required)
     @method_decorator(permission_required_or_403('db.change_db_users', (db_users, 'id', 'pk')))
     def dispatch(self, *args, **kwargs):
-
         return super(DbUserUpdate, self).dispatch(*args, **kwargs)
 
 
@@ -282,7 +281,8 @@ class DbUserUpdate(UpdateView):
                 db.save()
         else:
 
-            password_4 = db_users.objects.get(name=form.cleaned_data['name']).password
+            pk = self.kwargs.get(self.pk_url_kwarg, None)
+            password_4 = db_users.objects.get(id=pk).password
             self.db = db = form.save()
             db.password = password_4
             db.save()
