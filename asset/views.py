@@ -221,7 +221,7 @@ def asset_hardware_update(request):
             password2 = password1.decrypt(password)
             password3 = password2.decode()
 
-            print(password3)
+
             assets = [
                 {
                     "hostname": 'host',
@@ -231,13 +231,13 @@ def asset_hardware_update(request):
                     "password": password3,
                 },
             ]
-            print(assets)
+
             task_tuple = (('setup', ''),)
             runner = AdHocRunner(assets)
 
             result = runner.run(task_tuple=task_tuple, pattern='all', task_name='Ansible Ad-hoc')
 
-            print(result)
+
 
             data = result['contacted']['host'][0]['ansible_facts']
 

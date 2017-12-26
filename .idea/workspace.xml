@@ -29,13 +29,11 @@
       <file leaf-file-name="views.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/asset/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-907">
-              <caret line="346" column="38" lean-forward="true" selection-start-line="346" selection-start-column="38" selection-end-line="346" selection-end-column="38" />
+            <state relative-caret-position="311">
+              <caret line="116" column="53" lean-forward="true" selection-start-line="116" selection-start-column="53" selection-end-line="116" selection-end-column="53" />
               <folding>
                 <element signature="e#0#78#0" expanded="true" />
-                <element signature="e#9342#9729#0" expanded="false" />
-                <element signature="e#10187#10981#0" expanded="false" />
-                <element signature="e#11429#11634#0" expanded="false" />
+                <element signature="e#11351#11556#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -57,7 +55,7 @@
         <entry file="file://$PROJECT_DIR$/tasks/views.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="-456">
-              <caret line="82" column="46" lean-forward="true" selection-start-line="80" selection-start-column="15" selection-end-line="82" selection-end-column="46" />
+              <caret line="82" column="46" lean-forward="false" selection-start-line="80" selection-start-column="15" selection-end-line="82" selection-end-column="46" />
               <folding>
                 <element signature="e#0#78#0" expanded="true" />
                 <marker date="1514275525397" expanded="true" signature="15494:15551" ph="select table... missing_value" />
@@ -91,7 +89,6 @@
   <component name="FindInProjectRecents">
     <findStrings>
       <find>ToolsScript</find>
-      <find>print</find>
       <find>asset_del_id</find>
       <find>asset_all_del</find>
       <find>del_form_asset_all</find>
@@ -120,6 +117,7 @@
       <find>AESCipher</find>
       <find>db_users</find>
       <find>pk</find>
+      <find>print</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -676,7 +674,7 @@
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3275488" sideWeight="0.5" order="18" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.31058496" sideWeight="0.4757208" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32451254" sideWeight="0.48878205" order="14" side_tool="false" content_ui="tabs" />
-      <window_info id="运行" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1583514" sideWeight="0.48638427" order="23" side_tool="false" content_ui="tabs" />
+      <window_info id="运行" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.14533623" sideWeight="0.48638427" order="23" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.23294243" sideWeight="0.5622951" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32964224" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24867374" sideWeight="0.46135265" order="1" side_tool="false" content_ui="tabs" />
@@ -1111,7 +1109,7 @@
     <entry file="file://$PROJECT_DIR$/tasks/views.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-456">
-          <caret line="82" column="46" lean-forward="true" selection-start-line="80" selection-start-column="15" selection-end-line="82" selection-end-column="46" />
+          <caret line="82" column="46" lean-forward="false" selection-start-line="80" selection-start-column="15" selection-end-line="82" selection-end-column="46" />
           <folding>
             <element signature="e#0#78#0" expanded="true" />
             <marker date="1514275525397" expanded="true" signature="15494:15551" ph="select table... missing_value" />
@@ -1132,13 +1130,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/asset/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-907">
-          <caret line="346" column="38" lean-forward="true" selection-start-line="346" selection-start-column="38" selection-end-line="346" selection-end-column="38" />
+        <state relative-caret-position="311">
+          <caret line="116" column="53" lean-forward="true" selection-start-line="116" selection-start-column="53" selection-end-line="116" selection-end-column="53" />
           <folding>
             <element signature="e#0#78#0" expanded="true" />
-            <element signature="e#9342#9729#0" expanded="false" />
-            <element signature="e#10187#10981#0" expanded="false" />
-            <element signature="e#11429#11634#0" expanded="false" />
+            <element signature="e#11351#11556#0" expanded="false" />
           </folding>
         </state>
       </provider>
