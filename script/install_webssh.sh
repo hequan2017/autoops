@@ -2,8 +2,8 @@
 
 cd /opt
 yum  install git -y
-wget  https://storage.googleapis.com/golang/go1.8.1.linux-amd64.tar.gz
-tar zxvf go1.8.1.linux-amd64.tar.gz -C /usr/local
+wget https://golangtc.com/static/go/1.9.2/go1.9.2.linux-amd64.tar.gz
+tar zxvf go1.9.2.linux-amd64.tar.gz -C /usr/local
 echo 'export PATH="/usr/local/go/bin:$PATH"' >> /etc/profile
 source    /etc/profile
 

@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from asset.models import asset, system_users, performance, web_history, data_centers
-from .form import AssetForm, SystemUserForm
+from .form import AssetForm, SystemUserForm,key,AESCipher
 
 from django.contrib.auth.models import User, Group
 from guardian.shortcuts import assign_perm, get_perms
@@ -69,6 +69,7 @@ class AssetAdd(CreateView):
 
     def form_valid(self, form):
         self.asset_save = asset_save = form.save()
+
         myproduct = asset.objects.get(network_ip=form.cleaned_data['network_ip']).product_line
         mygroup = Group.objects.get(name=myproduct)
         GroupObjectPermission.objects.assign_perm("read_asset", mygroup, obj=asset_save)
@@ -343,20 +344,6 @@ def asset_web_ssh(request):
 @login_required(login_url="/login.html")
 def asset_performance(request, nid):
     try:
-        # i = asset.objects.get(id=nid)
-        # cpu_1 = ssh(ip=i.network_ip, port=i.port, username=i.system_user.username, password=i.system_user.password,
-        #             cmd=" top -bn 1 -i -c | grep Cpu   ")
-        # cpu_2 = cpu_1['data'].split()
-        # cpu = cpu_2[1].split('%')[0]
-        #
-        # total = ssh(ip=i.network_ip, port=i.port, username=i.system_user.username, password=i.system_user.password,
-        #             cmd=" free | grep  Mem:  ")
-        # list = total['data'].split(" ")
-        # while '' in list:
-        #     list.remove('')
-        # mem = float('%.2f' % (float('%.3f' % (int(list[2]) / int(list[1]))) * 100))
-
-
         all = performance.objects.all()
         date, cpu_use, mem_use, in_use, out_use = [], [], [], [], []
 
@@ -408,7 +395,15 @@ def system_user_add(request):
     if request.method == 'POST':
         form = SystemUserForm(request.POST)
         if form.is_valid():
+
             system_save = form.save()
+            password_1 = AESCipher(key=key)
+            password_2 = password_1.encrypt(raw=form.cleaned_data['password'])
+            password_3 = password_2.decode()
+            system_save.password = password_3
+            system_save.save()
+
+
             myproduct = system_users.objects.get(name=form.cleaned_data['name']).product_line
             mygroup = Group.objects.get(name=myproduct)
             GroupObjectPermission.objects.assign_perm("read_system_users", mygroup, obj=system_save)
@@ -439,8 +434,22 @@ def system_user_update(request, nid):
             if password:
                 if system_users.objects.get(id=nid).product_line == form.cleaned_data['product_line']:
                     system_user_pasword = form.save()
+                    password_1 = AESCipher(key=key)
+                    password_2 = password_1.encrypt(raw=form.cleaned_data['password'])
+                    password_3 = password_2.decode()
+                    system_user_pasword.password = password_3
+                    system_user_pasword.save()
+
+
                 else:
                     system_save = form.save()
+                    password_1 = AESCipher(key=key)
+                    password_2 = password_1.encrypt(raw=form.cleaned_data['password'])
+                    password_3 = password_2.decode()
+                    system_save.password = password_3
+                    system_save.save()
+
+
                     myproduct = system_users.objects.get(name=form.cleaned_data['name']).product_line
                     mygroup = Group.objects.get(name=myproduct)
                     GroupObjectPermission.objects.filter(object_pk=nid).delete()

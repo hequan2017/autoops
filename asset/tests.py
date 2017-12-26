@@ -1,14 +1,33 @@
-a = [('***************************', 1, '.row', '***************************'), '\n', ('           ID', ':', 1), '\n', ('        stage', ':', 'RERUN'), '\n', ('     errlevel', ':', 0), '\n', ('  stagestatus', ':', 'Execute Successfully'), '\n', (' errormessage', ':', 'None'), '\n', ('          SQL', ':', 'use hequan'), '\n', ('Affected_rows', ':', 0), '\n', ('     sequence', ':', "'1513842575_123_0'"), '\n', ('backup_dbname', ':', 'None'), '\n', (' execute_time', ':', '0.000'), '\n', ('      sqlsha1', ':', ''), '\n', ('***************************', 2, '.row', '***************************'), '\n', ('           ID', ':', 2), '\n', ('        stage', ':', 'NONE'), '\n', ('     errlevel', ':', 2), '\n', ('  stagestatus', ':', 'None'), '\n', (' errormessage', ':', "Access denied for user '123456'@'192.168.10.83' (using password: YES)"), '\n', ('          SQL', ':', 'Global environment'), '\n', ('Affected_rows', ':', 0), '\n', ('     sequence', ':', 'None'), '\n', ('backup_dbname', ':', 'None'), '\n', (' execute_time', ':', '0'), '\n', ('      sqlsha1', ':', 'None'), '\n']
+import base64
+from Crypto.Cipher import AES
+from Crypto import Random
 
-b =('***************************', 1, '.row', '***************************')
+BS = 16
+key = "1234567890123456"
+pad = lambda s: s + (BS - len(s) % BS) * chr(BS - len(s) % BS)
+unpad = lambda s : s[:-ord(s[len(s)-1:])]
 
 
-print(type(b))
-print(b)
+class AESCipher:
+    def __init__(self, key):
+        self.key = key
 
-c = []
+    def encrypt(self, raw):
+        raw = pad(raw)
+        iv = Random.new().read(AES.block_size)
+        cipher = AES.new(self.key, AES.MODE_CBC, iv)
+        return base64.urlsafe_b64encode(iv + cipher.encrypt(raw))
 
-for i in b:
-    c.append(i)
+    def decrypt(self, enc):
+        enc = base64.urlsafe_b64decode(enc.encode('utf-8'))
+        iv = enc[:BS]
+        cipher = AES.new(self.key, AES.MODE_CBC, iv)
+        return unpad(cipher.decrypt(enc[BS:]))
 
+a = AESCipher(key=key)
+b = a.encrypt(raw='123456')
+b1 = b.decode()
+print(b1,type(b),type(b1))
+
+c = a.decrypt(enc='N4wGyzPTnggQtUr_gyGcsxMzU136thzPIc8y3mJ2uxg=')
 print(c)

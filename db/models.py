@@ -45,13 +45,20 @@ class db_mysql(models.Model):
 
 
 class  db_users(models.Model):
+
+
     name = models.CharField(max_length=128, unique=True,verbose_name='名称')
     username = models.CharField(max_length=64,null=True,blank=True, verbose_name=('登陆用户'))
-    password = models.CharField(max_length=256, blank=True,null=True,verbose_name=('登陆密码'))
+    password =  models.CharField(max_length=256, blank=True,null=True,verbose_name=('登陆密码'))
     product_line = models.ForeignKey(to=Group, to_field='id', on_delete=models.SET_NULL, verbose_name='产品线',null=True)
     ps = models.CharField(max_length=1024,verbose_name="备注",null=True,blank=True)
     ctime= models.DateTimeField(auto_now_add=True,null=True,verbose_name='创建时间',blank=True)
     utime = models.DateTimeField(auto_now=True, null=True,verbose_name='更新时间',blank=True)
+
+
+
+
+
 
     def __str__(self):
         return self.name

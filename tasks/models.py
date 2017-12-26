@@ -1,5 +1,11 @@
 from django.db import models
 
+
+
+
+
+
+
 class history(models.Model):
     root = models.CharField(max_length=32, verbose_name='用户', null=True)
     ip = models.GenericIPAddressField(verbose_name='IP',null=True)

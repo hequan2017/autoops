@@ -5,9 +5,6 @@ from  .import views
 urlpatterns = [
     path('cmd.html', views.cmd, name='cmd'),
 
-    path('sftp.html', views.sftp_file, name='sftp'),
-    path('sftp_down.html', views.sftp_down, name='sftp_down'),
-
     path('tools.html', views.tools, name='tools'),
     path('tools-add.html', views.tools_add, name='tools_add'),
     path('tools-del.html', views.tools_delete, name='tools_delete'),

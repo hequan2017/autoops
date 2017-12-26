@@ -22,25 +22,24 @@ AutoOps 是一款基于 2.0 版本django开发的，主要面向linux运维工�
 
 
 ### 更新记录  
-  -  1.6.5   回滚数据库功能上线。
+  -  1.6.6   BUG 修复。  密码加密功能上线。
+  -  1.6.5   回滚数据库  功能上线。
   
   -  1.6    Mysql数据库操作: 自动审核 + 执行 （目前只适用于Mysql）
       -  自动审核： 利用软件去审核命令是否正确。
       -  命令执行： 去数据库执行命令，会忽略报警和警告，使用前建议 先 自动审核一下。
-![数据库操作](https://github.com/hequan2017/autoops/blob/master/static/demo/10.png)    
-![数据库操作](https://github.com/hequan2017/autoops/blob/master/static/demo/11.png)   
+
       
-  -  1.5.1  Mysql数据库操作自动审核（预览版）， 需要按照script/install_Inception.sh的步骤，先安装Inception。
   -  1.5    后台更新为xadmin,   原有系统自带的admin保留，更名为oldadmin.
         -  目前 xadmin兼容有问题。  看不见task里面的任务名字。  想要添加，格式为tasks.task.XXX。
-        具体名字可去  tasks/task.py 里面查找 或自定义。例如： tasks.task.clean_history_host_monitor.
+        具体名字可去  tasks/task.py 里面查找 或自定义。例如： tasks.task.clean_history_host_monitor
+       
         -  xadmin 不兼容 面对对象权限 插件guardian。 如果想设置 面向 对象的权限，请登陆 /oldadmin 进行设置。
+        -  xadmin 不兼容 python3.6  如果想使用xadmin，请安装python3.5
   
   
   
-  
-  -  1.4.1  更新django 为2.0。 如果想用django1.11版本，请看git 标记 v1.4-dj1.11
-  -  1.4    增加上传下载功能
+  -  1.4    更新django 为2.0
   -  1.3    新增 技术文档 板块。
   -  1.2    权限管理完善。 增加附件上传下载功能。
   -  1.1.5  新增 权限管理。 根据后台用户组，区分不同权限。如：在后台先建一个 测试机 组，把普通用户加入到此组。在前端添加资产时，在产品线中会出现测试机 。 测试机组下的用户 只管管理测试机产品线的资产。             
@@ -67,11 +66,13 @@ AutoOps 是一款基于 2.0 版本django开发的，主要面向linux运维工�
   - 数据库自动审核-- 命令执行
     - Inception 
   - 后台管理
+    - admin     （xadmin兼容性不好）
+    - oldadmin   (系统自带)
 
 
 ### 环境
 
-   * Python 3.6.2 
+   * Python 3.5.2
    * Django 2.0
    * Python 2.7  (用来启动 supervisor)
  
@@ -225,7 +226,6 @@ nginx 配置文件修改如下
 
 ```html
 root         /opt/autoops;
-   
    
    
     location / {

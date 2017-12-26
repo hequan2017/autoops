@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from db.models import db_users,db_mysql
 from .form import DbMysqlForm,DbUsersForm
+from  asset.form import AESCipher,key
 
 from django.contrib.auth.models import User, Group
 from guardian.shortcuts import assign_perm, get_perms
@@ -17,6 +18,8 @@ from django.urls import reverse_lazy
 
 from django.db.models import Q
 import xlwt, time, json
+
+
 
 
 class DbListAll(TemplateView):
@@ -81,7 +84,7 @@ class DbAdd(CreateView):
         return super(DbAdd, self).dispatch(*args, **kwargs)
 
     def form_valid(self, form):
-        self.db_save = form.save()
+        self.db = db =  form.save()
         return super(DbAdd, self).form_valid(form)
 
     def get_success_url(self):
@@ -221,7 +224,12 @@ class DbUserAdd(CreateView):
         return super(DbUserAdd, self).dispatch(*args, **kwargs)
 
     def form_valid(self, form):
-        self.db_save = form.save()
+        self.db = db = form.save()
+        password_1 = AESCipher(key=key)
+        password_2 = password_1.encrypt(raw=form.cleaned_data['password'])
+        password_3 =password_2.decode()
+        db.password = password_3
+        db.save()
         return super(DbUserAdd, self).form_valid(form)
 
     def get_success_url(self):
@@ -245,6 +253,7 @@ class DbUserUpdate(UpdateView):
     @method_decorator(login_required)
     @method_decorator(permission_required_or_403('db.change_db_users', (db_users, 'id', 'pk')))
     def dispatch(self, *args, **kwargs):
+
         return super(DbUserUpdate, self).dispatch(*args, **kwargs)
 
 
@@ -263,7 +272,20 @@ class DbUserUpdate(UpdateView):
         return super(DbUserUpdate, self).form_invalid(form)
 
     def form_valid(self, form):
-        self.object = form.save()
+        password = form.cleaned_data['password']
+        if password:
+                self.db = db = form.save()
+                password_1 = AESCipher(key=key)
+                password_2 = password_1.encrypt(raw=form.cleaned_data['password'])
+                password_3 =password_2.decode()
+                db.password = password_3
+                db.save()
+        else:
+
+            password_4 = db_users.objects.get(name=form.cleaned_data['name']).password
+            self.db = db = form.save()
+            db.password = password_4
+            db.save()
         return super(DbUserUpdate, self).form_valid(form)
 
     def get_success_url(self):

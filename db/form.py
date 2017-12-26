@@ -45,3 +45,6 @@ class DbUsersForm(forms.ModelForm):
             'password': '在更新页面,如果不想修改当前用户的密码,保持为空即可',
             'product_line': '必填项目,此产品线对应的为后台用户组,请先建立后台用户权限组',
         }
+
+
+
