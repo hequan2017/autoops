@@ -33,7 +33,7 @@ chkconfig   --add  webconsole  &&  chkconfig    webconsole   on
 
 #  "addr": ":9000",  ##修改端口为9000  可以自定义。 我设置的为9000，如果修改成别的端口，需要修改网页。 templates/asset/asset.html
 # "enable_jsonp": true,    开启jsonp，启用跨域访问
-# "cors_white_list": "42.62.6.54,42.62.6.54:9000,"  这里输入的地址为需要跨域访问的，添加webssh服务器端的地址。
+# "cors_white_list": "42.62.6.54,42.62.6.54:9000,"       这里输入的地址为需要跨域访问的，添加webssh服务器端的地址。
 
 
 

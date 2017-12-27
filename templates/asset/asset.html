@@ -244,7 +244,7 @@
                         var password = obj.password;
 
                         $.ajax({
-                            url: "http://{{  Webssh  }}:9000/console/login?rnd=" + Math.random(),
+                            url: "http://{{  Webssh  }}:{{ Webssh_port  }}/console/login?rnd=" + Math.random(),
                             method: "POST",
                             data: {
                                 "vm_addr": ip,
@@ -260,7 +260,7 @@
                         }).done(function (data) {
                             var json = (data);
                             if (json.ok) {
-                                window.open("http://{{ Webssh }}:9000" + json.data);
+                                window.open("http://{{ Webssh }}:{{ Webssh_port  }}" + json.data);
                             } else {
                                 alert("登陆失败，请确认您的登陆信息。");
                             }

@@ -153,6 +153,10 @@ DEBUG = True  ## 实际生产环境实用，请关闭  False
 BROKER_URL = 'redis://127.0.0.1:6379/0'  ##Redis地址
 
 Webssh_ip = "42.62.6.54"    ##WebSSH 软件的 访问IP
+Webssh_port='9000'
+
+
+
 Inception_ip = '127.0.0.1'  ## 此为 Inception 软件地址 需要设置
 Inception_port = '6669' ## 此为 Inception 软件端口号
 

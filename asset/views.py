@@ -36,6 +36,7 @@ class AssetListAll(TemplateView):
             "asset_active": "active",
             "asset_list_active": "active",
             "Webssh":getattr(settings, 'Webssh_ip'),
+            "Webssh_port": getattr(settings, 'Webssh_port'),
             'asset_list': get_objects_for_user(self.request.user, 'asset.read_asset')
         }
         kwargs.update(context)
