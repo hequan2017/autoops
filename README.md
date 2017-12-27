@@ -184,7 +184,7 @@ inception_remote_backup_host='192.168.10.81'
 ```bash
 python manage.py makemigrations
 python manage.py  migrate
-python manage.py  createsuperuser      创建管理员
+python manage.py  createsuperuser             ##创建管理员
 ``` 
              
       

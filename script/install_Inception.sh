@@ -1,4 +1,5 @@
 #!/bin/bash
+
 ##http://mysql-inception.github.io/inception-document/install/
 ##https://github.com/mysql-inception/inception
 
