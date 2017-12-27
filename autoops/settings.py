@@ -49,8 +49,6 @@ INSTALLED_APPS = [
     'djcelery',
     'guardian',
     'DjangoUeditor',
-    'xadmin',
-    'crispy_forms',
 ]
 
 MIDDLEWARE = [
