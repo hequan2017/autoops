@@ -12,8 +12,9 @@ cd  /opt && git clone --recurse-submodules https://github.com/shibingli/webconso
 # 如果报错  可以把上面的 --recurse-submodules   删除掉
 cd /opt/webconsole/src/apibox.club/apibox
 GOPATH=/opt/webconsole go install
-cp   /opt/webconsole/conf/webconsole  /etc/init.d/   && chmod   755 /etc/init.d/webconsole
+cp /opt/webconsole/bin/webconsole  /etc/init.d/    && chmod   755 /etc/init.d/webconsole
 chkconfig   --add  webconsole  &&  chkconfig    webconsole   on
+
 
 ##service webconsole   start    不用此命令启动， 统一用supervisor 管理 进程启动
 
