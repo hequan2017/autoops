@@ -13,7 +13,7 @@ from   tasks.ansible_runner.runner import AdHocRunner, PlayBookRunner
 from   tasks.ansible_runner.callback import CommandResultCallback
 
 from  autoops import settings
-from  asset.form import key,AESCipher
+from names.password_crypt import encrypt_p,decrypt_p
 
 
 
@@ -78,12 +78,12 @@ def cmd(request):  ##命令行
         for i in obj:
             try:
 
-                password1 = AESCipher(key=key)
-                password2 = password1.decrypt(i.system_user.password)
-                password3 = password2.decode()
+
+                password = decrypt_p(i.system_user.password)
 
 
-                s = ssh(ip=i.network_ip, port=i.port, username=i.system_user.username, password=password3,
+
+                s = ssh(ip=i.network_ip, port=i.port, username=i.system_user.username, password=password,
                         cmd=cmd)
                 historys = history.objects.create(ip=i.network_ip, root=i.system_user, port=i.port, cmd=cmd, user=user)
                 if s == None or s['data'] == '':
@@ -215,10 +215,7 @@ def tools_script_post(request):
                 for h in host:
                     try:
                         data2 = {}
-
-                        password1 = AESCipher(key=key)
-                        password2 = password1.decrypt(h.system_user.password)
-                        password3 = password2.decode()
+                        password = decrypt_p(h.system_user.password)
 
                         assets = [
                             {
@@ -226,7 +223,7 @@ def tools_script_post(request):
                                 "ip": h.network_ip,
                                 "port": h.port,
                                 "username": h.system_user.username,
-                                "password": password3,
+                                "password": password,
                             },
                         ]
 
@@ -467,12 +464,9 @@ def Inception(request):  ##Inception 审核
                 historys = history.objects.create(ip=i.ip, root=i.db_user.username, port=i.port,
                                                   cmd="审核:{0}".format(sql_db), user=user)
 
+                password = decrypt_p(i.db_user.password)
 
-                password1 = AESCipher(key=key)
-                password2 = password1.decrypt(i.db_user.password)
-                password3 = password2.decode()
-
-                s = sql(user=i.db_user.username, password=password3, host=i.ip, port=i.port, sqls=sql_db)
+                s = sql(user=i.db_user.username, password=password, host=i.ip, port=i.port, sqls=sql_db)
 
                 if s == None or s['data'] == '':
                     s = {}
@@ -519,12 +513,10 @@ def Inception_exe(request):  ##Inception 执行
                 historys = history.objects.create(ip=i.ip, root=i.db_user.username, port=i.port,
                                                   cmd="执行:{}".format(sql_db), user=user)
 
-                password1 = AESCipher(key=key)
-                password2 = password1.decrypt(i.db_user.password)
-                password3 = password2.decode()
+                password = decrypt_p(i.db_user.password)
 
 
-                s = sql_exe(user=i.db_user.username, password=password3, host=i.ip, port=i.port, sqls=sql_db)
+                s = sql_exe(user=i.db_user.username, password=password, host=i.ip, port=i.port, sqls=sql_db)
 
                 if s == None or s['data'] == '':
                     s = {}

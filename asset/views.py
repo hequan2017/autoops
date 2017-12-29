@@ -2,7 +2,8 @@ from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from asset.models import asset, system_users, performance, web_history, data_centers
-from .form import AssetForm, SystemUserForm,key,AESCipher
+from .form import AssetForm, SystemUserForm
+from names.password_crypt import encrypt_p,decrypt_p
 from django.contrib.auth.models import User, Group
 from guardian.shortcuts import assign_perm, get_perms
 from guardian.core import ObjectPermissionChecker
@@ -13,6 +14,7 @@ from django.views.generic import TemplateView, ListView, View, CreateView, Updat
 from django.urls import reverse_lazy
 from tasks.views import ssh
 from autoops  import settings
+
 
 from  tasks.ansible_runner.runner import AdHocRunner
 
@@ -214,12 +216,9 @@ def asset_hardware_update(request):
             ip = obj.network_ip
             port = obj.port
             username = obj.system_user.username
-            password = obj.system_user.password
+            password1 = obj.system_user.password
 
-            password1 = AESCipher(key=key)
-            password2 = password1.decrypt(password)
-            password3 = password2.decode()
-
+            password = decrypt_p(password1)
 
             assets = [
                 {
@@ -227,7 +226,7 @@ def asset_hardware_update(request):
                     "ip": ip,
                     "port": port,
                     "username": username,
-                    "password": password3,
+                    "password": password,
                 },
             ]
 
@@ -248,7 +247,7 @@ def asset_hardware_update(request):
 
             try:
                 a2 = "parted -l  | grep   \"Disk \/dev\/[a-z]d\"  | awk -F\"[ ]\"  '{print $3}' | awk  -F\"GB\"  '{print $1}'"
-                s = ssh(ip=ip, port=port, username=username, password=password3, cmd=a2)
+                s = ssh(ip=ip, port=port, username=username, password=password, cmd=a2)
                 disk1 = s['data']
                 disk2 = disk1.rstrip().split("\n")
                 disk = "+".join(map(str, disk2)) + "   共计:{} GB".format(round(sum(map(float, disk2))))
@@ -260,7 +259,7 @@ def asset_hardware_update(request):
 
             try:
                 a1 = "dmidecode | grep -P -A5 \"Memory\ Device\"  | grep Size   | grep -v \"No Module Installed\" | grep -v \"0\"   | awk -F\":\" \'{print $2}\'  | awk -F\" \"  \'{print  $1}\'"
-                s = ssh(ip=ip, port=port, username=username, password=password3, cmd=a1)
+                s = ssh(ip=ip, port=port, username=username, password=password, cmd=a1)
                 memory1 = s['data']
 
                 if memory1 == "":
@@ -341,14 +340,13 @@ def asset_web_ssh(request):
         obj = asset.objects.get(id=id)
         ip = obj.network_ip + ":" + str(obj.port)
         username = obj.system_user.username
-        password = obj.system_user.password
+        password1 = obj.system_user.password
 
-        password1 = AESCipher(key=key)
-        password2 = password1.decrypt(password)
-        password3 = password2.decode()
+        password = decrypt_p(password1)
 
 
-        ret = {"ip": ip, "username": username, 'password': password3, "static": True}
+
+        ret = {"ip": ip, "username": username, 'password': password, "static": True}
 
         login_ip = request.META['REMOTE_ADDR']
 
@@ -414,10 +412,9 @@ def system_user_add(request):
         if form.is_valid():
 
             system_save = form.save()
-            password_1 = AESCipher(key=key)
-            password_2 = password_1.encrypt(raw=form.cleaned_data['password'])
-            password_3 = password_2.decode()
-            system_save.password = password_3
+
+            password1 = encrypt_p(form.cleaned_data['password'])
+            system_save.password = password1
             system_save.save()
 
 
@@ -451,19 +448,15 @@ def system_user_update(request, nid):
             if password:
                 if system_users.objects.get(id=nid).product_line == form.cleaned_data['product_line']:
                     system_user_pasword = form.save()
-                    password_1 = AESCipher(key=key)
-                    password_2 = password_1.encrypt(raw=form.cleaned_data['password'])
-                    password_3 = password_2.decode()
-                    system_user_pasword.password = password_3
+                    password1 = encrypt_p(form.cleaned_data['password'])
+                    system_user_pasword.password = password1
                     system_user_pasword.save()
 
 
                 else:
                     system_save = form.save()
-                    password_1 = AESCipher(key=key)
-                    password_2 = password_1.encrypt(raw=form.cleaned_data['password'])
-                    password_3 = password_2.decode()
-                    system_save.password = password_3
+                    password1 = encrypt_p(form.cleaned_data['password'])
+                    system_save.password = password1
                     system_save.save()
 
 

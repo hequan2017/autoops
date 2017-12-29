@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from db.models import db_users,db_mysql
 from .form import DbMysqlForm,DbUsersForm
-from  asset.form import AESCipher,key
+from names.password_crypt import encrypt_p,decrypt_p
 
 from django.contrib.auth.models import User, Group
 from guardian.shortcuts import assign_perm, get_perms
@@ -225,10 +225,9 @@ class DbUserAdd(CreateView):
 
     def form_valid(self, form):
         self.db = db = form.save()
-        password_1 = AESCipher(key=key)
-        password_2 = password_1.encrypt(raw=form.cleaned_data['password'])
-        password_3 =password_2.decode()
-        db.password = password_3
+
+        password1 = encrypt_p(form.cleaned_data['password'])
+        db.password = password1
         db.save()
         return super(DbUserAdd, self).form_valid(form)
 
@@ -274,17 +273,14 @@ class DbUserUpdate(UpdateView):
         password = form.cleaned_data['password']
         if password:
                 self.db = db = form.save()
-                password_1 = AESCipher(key=key)
-                password_2 = password_1.encrypt(raw=form.cleaned_data['password'])
-                password_3 =password_2.decode()
-                db.password = password_3
+                password1 = encrypt_p(raw=form.cleaned_data['password'])
+                db.password = password1
                 db.save()
         else:
-
             pk = self.kwargs.get(self.pk_url_kwarg, None)
-            password_4 = db_users.objects.get(id=pk).password
+            password_old = db_users.objects.get(id=pk).password
             self.db = db = form.save()
-            db.password = password_4
+            db.password = password_old
             db.save()
         return super(DbUserUpdate, self).form_valid(form)
 

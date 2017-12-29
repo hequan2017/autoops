@@ -12,5 +12,4 @@ django-guardian
 pymysql
 xlwt
 uwsgi
-pycryptodome
-Crypto
+cryptography
