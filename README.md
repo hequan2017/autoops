@@ -9,7 +9,6 @@ AutoOps 是一款基于 2.0 版本django开发的，主要面向linux运维工�
 
   -  地址:  `http://42.62.55.58:8003/`        账号`admin`      密码`1qaz.2wsx`
   -  交流群号： `620176501`   欢迎交流！   <a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=bbe5716e8bd2075cb27029bd5dd97e22fc4d83c0f61291f47ed3ed6a4195b024"><img border="0" src="https://github.com/hequan2017/cmdb/blob/master/static/img/group.png"  alt="autoops开发讨论群" title="autoops开发讨论群"></a>
- 
   -  后台地址 `http://42.62.55.58:8003/admin`     账号`admin`   密码`1qaz.2wsx`
   -  博客:    `http://hequan.blog.51cto.com/`
   -  github:  `https://github.com/hequan2017/autoops/`
@@ -53,9 +52,11 @@ AutoOps 是一款基于 2.0 版本django开发的，主要面向linux运维工�
         - yml
         
   - webssh  登陆 （用复制粘贴的时候，会显示二份，但实际只有一个，不影响使用，请忽略。）
+  
   - library 技术文档 (真正运维人员的管理平台，自带技术文档，有问题不用再去别的地方找)
     - DjangoUeditor 富文本编辑器
-  - 数据库自动审核-- 命令执行
+    
+  - 数据库自动审核-- 命令执行   回滚
     - Inception 
   - 后台管理
     - admin     
@@ -156,21 +157,18 @@ Webssh_ip = "42.62.6.54"    ##WebSSH 软件的 访问IP
 Webssh_port='9000'
 
 
+Inception_ip = '127.0.0.1'      ## 此为 Inception 软件地址 需要设置
+Inception_port = '6669'         ## 此为 Inception 软件端口号
 
-Inception_ip = '127.0.0.1'  ## 此为 Inception 软件地址 需要设置
-Inception_port = '6669' ## 此为 Inception 软件端口号
-
-inception_remote_system_password='123456'   ## 设置备份服务器相关参数，并同步修改一下 script/inc.cnf 里面的设置
+inception_remote_system_password='123456'             ## 设置回滚备份服务器相关参数，并同步修改一下 script/inc.cnf 里面的设置
 inception_remote_system_user='root'
 inception_remote_backup_port='3306'
 inception_remote_backup_host='192.168.10.81'
 
 ```  
   
-
-
     
-  * 初始化数据库（可删除文件夹的 db.sqlite3, 如不想删除，请忽略下面3个命令）
+  * 初始化数据库（可删除文件夹的 db.sqlite3）
   
 ```bash
 python manage.py makemigrations
@@ -189,15 +187,25 @@ python manage.py  createsuperuser             ##创建管理员
  
   * 登陆后台，设置定时获取主机图，设置数据中心、组。
   
-  
+  * 设置定时获取主机信息任务。 先创建执行的时间频率，再创建任务，创建后，观察队列任务是否执行成功，如不成功，重启所有celery任务。
  ![图片](https://github.com/hequan2017/autoops/blob/master/static/demo/9.png)
 
 
 
 ###  开发设置
 
-  * 如果想在windows 下的 pycharm打开，请注释  `asset/views.py`  第20行,     `tasks/views.py`   12  13 行。（因为ansible不好安装在windows 下环境）
- 
+  * 如果想在windows 下的 pycharm打开，请注释  
+  ```djangotemplate
+asset/views.py
+from  tasks.ansible_runner.runner import AdHocRunner
+
+
+tasks/views.py   
+from   tasks.ansible_runner.runner import AdHocRunner, PlayBookRunner
+from   tasks.ansible_runner.callback import CommandResultCallback
+```
+    
+    
     
    
 ###  生产环境   
@@ -212,7 +220,7 @@ uwsgi  --stop   /opt/autoops/script/uwsgi.pid # 关闭uwsgi
 uwsgi  --reload  /opt/autoops/script/uwsgi.pid  #重新加载
 ```
  
- 
+*  或者用nginx 
 nginx 配置文件修改如下
 
 ```html

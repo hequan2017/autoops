@@ -2,6 +2,8 @@ import base64
 from Crypto.Cipher import AES
 from Crypto import Random
 
+
+
 BS = 16
 key = "1234567890123456"
 pad = lambda s: s + (BS - len(s) % BS) * chr(BS - len(s) % BS)

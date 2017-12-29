@@ -5,8 +5,6 @@ import threading,time,datetime
 from  asset.form import key,AESCipher
 
 
-
-
 platforms.C_FORCE_ROOT = True
 
 app= Celery('autoops',)
@@ -67,8 +65,6 @@ def monitor_job():
         t_list.append(t)
     for i in t_list:
         i.join()
-        
-    print("-------------end----------------")
 
 
 @app.task
@@ -78,7 +74,6 @@ def  cmd_job(host,cmd):
     password1 = AESCipher(key=key)
     password2 = password1.decrypt(i.system_user.password)
     password3 = password2.decode()
-
 
     cmd=cmd
     ret = ssh(ip=i.ip, port=i.port, username=i.username, password=password3, cmd=cmd)
@@ -90,6 +85,7 @@ def  clean_history_host_monitor():
     now = datetime.datetime.now()
     last_time = now + datetime.timedelta(days=-7)
     a = performance.objects.filter(cdate__lt=last_time).delete()
+
 
 
 

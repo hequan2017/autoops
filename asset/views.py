@@ -3,12 +3,10 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from asset.models import asset, system_users, performance, web_history, data_centers
 from .form import AssetForm, SystemUserForm,key,AESCipher
-
 from django.contrib.auth.models import User, Group
 from guardian.shortcuts import assign_perm, get_perms
 from guardian.core import ObjectPermissionChecker
 from guardian.decorators import permission_required_or_403
-
 from guardian.shortcuts import get_objects_for_user, get_objects_for_group
 from guardian.models import UserObjectPermission, GroupObjectPermission
 from django.views.generic import TemplateView, ListView, View, CreateView, UpdateView, DeleteView, DetailView
@@ -16,8 +14,8 @@ from django.urls import reverse_lazy
 from tasks.views import ssh
 from autoops  import settings
 
-
 from  tasks.ansible_runner.runner import AdHocRunner
+
 
 from django.db.models import Q
 import xlwt, time, json
