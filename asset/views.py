@@ -601,24 +601,3 @@ def export(request):
         return response
 
 
-@login_required(login_url="/login.html")
-def AssetShow(request):  ## 展示
-
-    asse = Group.objects.all()
-    product = []
-    products = []
-    for i in asse:
-        x = asset.objects.filter(product_line=i).count()
-        product.append(i.name)
-        products.append(x)
-
-    da = data_centers.objects.all()
-    data = []
-    datas = []
-    for i in da:
-        x = asset.objects.filter(data_center=i).count()
-        data.append(i.data_center_list)
-        datas.append(x)
-
-    ret = {'product': product, "products": products, "data": data, "datas": datas}
-    return HttpResponse(json.dumps(ret))

@@ -25,7 +25,6 @@ urlpatterns = [
     path('api/asset-detail-<int:pk>.html', api.AssetDetail.as_view(), name='asset_api_detail'),
 
     path('asset-export.html',views.export,name='asset_export'),
-    path('asset-show.html',views.AssetShow,name='asset_show'),
 ]
 
 

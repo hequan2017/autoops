@@ -11,11 +11,27 @@ from  tasks.models import history
 from django.contrib.auth.models import User, Group
 from asset.models import asset,data_centers
 
+from django.template import loader
+from pyecharts import Bar
+
+
+def Bard(product,products):
+    attr = product
+    v1 = products
+    bar = Bar("", width=700, height=300)
+    bar.add("产品线", attr, v1)
+    return bar
+
+def Bard2(data,datas):
+    attr = data
+    v1 = datas
+    bar = Bar("", width=700, height=300)
+    bar.add("数据中心", attr, v1)
+    return bar
 
 
 @login_required(login_url="/login.html")
 def index(request):
-
     asse = Group.objects.all()
     product = []
     products = []
@@ -33,7 +49,21 @@ def index(request):
         datas.append(x)
 
 
-    return render(request, 'index.html',{'product': product, 'products': products,'data':data,"datas":datas},)
+    template = loader.get_template('index.html')
+    pro = Bard(product=product,products=products)
+    pro2 = Bard2(data=data,datas=datas)
+    context = dict(
+        myechart=pro.render_embed(),
+        script_list=pro.get_js_dependencies(),
+        myechart1=pro2.render_embed(),
+        product=product,
+        products= products,
+        data=data,
+        datas=datas
+    )
+    return HttpResponse(template.render(context, request))
+
+
 
 
 def login_view(request):
