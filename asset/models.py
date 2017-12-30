@@ -2,7 +2,10 @@ from django.db import models
 from django.contrib.auth.models import Group
 import random
 
+
+
 class asset(models.Model):
+    id = models.AutoField(primary_key=True,default='10000')
     hostname = models.CharField(max_length=64, verbose_name='主机名', null=True,blank=True)
     network_ip = models.GenericIPAddressField(verbose_name='外网IP',unique=True)
     manage_ip = models.GenericIPAddressField(verbose_name='管理IP', null=True,blank=True)
@@ -33,6 +36,8 @@ class asset(models.Model):
     end_time = models.DateField(verbose_name="到保时间",default="1970-01-01")
 
     product_line =  models.ForeignKey(to=Group,to_field='id',on_delete=models.SET_NULL,verbose_name='产品线',null=True)
+
+
     is_active = models.BooleanField(default=True, verbose_name=('是否启用'))
     ps = models.CharField(max_length=1024,verbose_name="备注",null=True,blank=True)
     file = models.FileField(upload_to = '%Y%m%d{}'.format(random.randint(0,99999)),verbose_name="文件",null=True,blank=True,default=None)
@@ -47,6 +52,7 @@ class asset(models.Model):
         verbose_name_plural = '资产管理'
         permissions = {
             ('read_asset',u"只读资产管理"),
+            ('task_asset', u"执行资产"),
         }
 
 
@@ -56,7 +62,6 @@ class asset(models.Model):
 
 class   data_centers(models.Model):
     data_center_list = models.CharField(max_length=128, verbose_name='数据中心', null=True)
-
 
 
     class Meta:
@@ -69,7 +74,8 @@ class   data_centers(models.Model):
 
 
 class  system_users(models.Model):
-    name = models.CharField(max_length=128, unique=True,verbose_name='名称')
+    id = models.AutoField(primary_key=True, default='20000')
+    name = models.CharField(max_length=256, unique=True,verbose_name='名称')
     username = models.CharField(max_length=64,null=True,blank=True, verbose_name=('登陆用户'))
     password = models.CharField(max_length=256, blank=True,null=True,verbose_name=('登陆密码'))
     product_line = models.ForeignKey(to=Group, to_field='id', on_delete=models.SET_NULL, verbose_name='产品线',null=True)
@@ -102,6 +108,8 @@ class performance(models.Model):
 
     cdate = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
     udate = models.DateTimeField(auto_now=True, verbose_name='更新时间')
+
+
     class Meta:
         db_table = 'performance'
         verbose_name = '监控状态'

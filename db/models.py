@@ -4,13 +4,14 @@ from django.contrib.auth.models import Group
 
 
 class db_mysql(models.Model):
+    id = models.AutoField(primary_key=True, default='30000')
     hostname = models.CharField(max_length=64, verbose_name='数据库名字',unique=True)
     ip = models.GenericIPAddressField(verbose_name='IP', null=True,blank=True)
     port = models.IntegerField(verbose_name='端口', null=True,blank=True,default="3306")
     model = models.CharField(max_length=128, verbose_name='数据库型号', null=True,blank=True)
 
 
-    db_user = models.ForeignKey(to="db_users", to_field='id', on_delete=models.SET_NULL, null=True,
+    db_user = models.ForeignKey(to="db_user", to_field='id', on_delete=models.SET_NULL, null=True,
                                     verbose_name='数据库登陆用户', blank=True)
 
 
@@ -35,7 +36,8 @@ class db_mysql(models.Model):
         verbose_name="数据库管理"
         verbose_name_plural = '数据库管理'
         permissions = {
-            ('read_asset',u"只读资产管理"),
+            ('read_db_mysql',u"只读数据库资产"),
+            ('task_db_mysql', u"执行数据库资产"),
         }
 
 
@@ -44,9 +46,8 @@ class db_mysql(models.Model):
 
 
 
-class  db_users(models.Model):
-
-
+class  db_user(models.Model):
+    id = models.AutoField(primary_key=True, default='40000')
     name = models.CharField(max_length=128, unique=True,verbose_name='名称')
     username = models.CharField(max_length=64,null=True,blank=True, verbose_name=('登陆用户'))
     password =  models.CharField(max_length=256, blank=True,null=True,verbose_name=('登陆密码'))
@@ -57,17 +58,14 @@ class  db_users(models.Model):
 
 
 
-
-
-
     def __str__(self):
         return self.name
 
     class  Meta:
-        db_table ="db_users"
+        db_table ="db_user"
         verbose_name="数据库登陆用户"
         verbose_name_plural = '数据库登陆用户'
         permissions = {
-            ('read_db_users',u"只读系统登陆用户"),
+            ('read_db_user',u"只读系统登陆用户"),
         }
 

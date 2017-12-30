@@ -1,5 +1,5 @@
 from    django import forms
-from .models import db_mysql,db_users
+from .models import db_mysql,db_user
 from	django.forms	import		ValidationError
 
 # from django.utils.translation import gettext_lazy as _
@@ -32,7 +32,7 @@ class DbMysqlForm(forms.ModelForm):
 
 class DbUsersForm(forms.ModelForm):
     class Meta:
-        model = db_users
+        model = db_user
         fields = '__all__'
         widgets = {
             'password': forms.PasswordInput(

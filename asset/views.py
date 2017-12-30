@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from asset.models import asset, system_users, performance, web_history, data_centers
 from .form import AssetForm, SystemUserForm
-from names.password_crypt import encrypt_p,decrypt_p
+from names.password_crypt import encrypt_p, decrypt_p
 from django.contrib.auth.models import User, Group
 from guardian.shortcuts import assign_perm, get_perms
 from guardian.core import ObjectPermissionChecker
@@ -13,14 +13,18 @@ from guardian.models import UserObjectPermission, GroupObjectPermission
 from django.views.generic import TemplateView, ListView, View, CreateView, UpdateView, DeleteView, DetailView
 from django.urls import reverse_lazy
 from tasks.views import ssh
-from autoops  import settings
+from autoops import settings
+from django.db.models import Q
+import xlwt, time, json
+from django.template import loader
+from pyecharts import Gauge, Line
+import threading, time, datetime
+
+
+
 
 
 from  tasks.ansible_runner.runner import AdHocRunner
-
-
-from django.db.models import Q
-import xlwt, time, json
 
 
 class AssetListAll(TemplateView):
@@ -31,30 +35,33 @@ class AssetListAll(TemplateView):
         return super(AssetListAll, self).dispatch(*args, **kwargs)
 
     def get_context_data(self, **kwargs):
-
         context = {
             "asset_active": "active",
             "asset_list_active": "active",
-            "Webssh":getattr(settings, 'Webssh_ip'),
+            "Webssh": getattr(settings, 'Webssh_ip'),
             "Webssh_port": getattr(settings, 'Webssh_port'),
             'asset_list': get_objects_for_user(self.request.user, 'asset.read_asset')
         }
         kwargs.update(context)
         return super(AssetListAll, self).get_context_data(**kwargs)
 
-    def post(self, request):
-        query = request.POST.get("name")
-        a = asset.objects.filter(
-            Q(network_ip=query) | Q(manage_ip=query) | Q(hostname=query) | Q(inner_ip=query) | Q(model=query) | Q(
-                eth0=query) | Q(eth1=query) | Q(eth2=query) | Q(eth3=query) |
-            Q(system=query) | Q(system_user__username=query) | Q(data_center__data_center_list=query) | Q(
-                cabinet=query) |
-            Q(position=query) | Q(sn=query)
-            | Q(uplink_port=query) |
-            Q(product_line__name=query))
-
-        return render(request, 'asset/asset.html',
-                      {"Webssh":getattr(settings, 'Webssh_ip'),"asset_active": "active", "asset_list_active": "active", "asset_list": a})
+        # def post(self, request):
+        #     query = request.POST.get("name")
+        #
+        #     ret = asset.objects.filter(
+        #         Q(network_ip=query) | Q(manage_ip=query) | Q(hostname=query) | Q(inner_ip=query) | Q(model=query) | Q(
+        #             eth0=query) | Q(eth1=query) | Q(eth2=query) | Q(eth3=query) |
+        #         Q(system=query) | Q(system_user__username=query) | Q(data_center__data_center_list=query) | Q(
+        #             cabinet=query) |
+        #         Q(position=query) | Q(sn=query)
+        #         | Q(uplink_port=query) |
+        #         Q(product_line__name=query))
+        #
+        #     return render(request, 'asset/asset.html',
+        #                   {"Webssh": getattr(settings, 'Webssh_ip'),
+        #                    "Webssh_port": getattr(settings, 'Webssh_port'),
+        #                    "asset_active": "active",
+        #                    "asset_list_active": "active", "asset_list": ret})
 
 
 class AssetAdd(CreateView):
@@ -71,12 +78,13 @@ class AssetAdd(CreateView):
     def form_valid(self, form):
         self.asset_save = asset_save = form.save()
 
-        myproduct = asset.objects.get(network_ip=form.cleaned_data['network_ip']).product_line
+        myproduct = form.cleaned_data['product_line']
         mygroup = Group.objects.get(name=myproduct)
         GroupObjectPermission.objects.assign_perm("read_asset", mygroup, obj=asset_save)
         GroupObjectPermission.objects.assign_perm("add_asset", mygroup, obj=asset_save)
         GroupObjectPermission.objects.assign_perm("change_asset", mygroup, obj=asset_save)
         GroupObjectPermission.objects.assign_perm("delete_asset", mygroup, obj=asset_save)
+        GroupObjectPermission.objects.assign_perm("task_asset", mygroup, obj=asset_save)
         return super(AssetAdd, self).form_valid(form)
 
     def get_success_url(self):
@@ -116,18 +124,18 @@ class AssetUpdate(UpdateView):
 
     def form_valid(self, form):
         pk = self.kwargs.get(self.pk_url_kwarg, None)
-        oldmyproduct = asset.objects.get(id=pk).product_line
-        oldmygroup = Group.objects.get(name=oldmyproduct)
-        self.object = form.save()
-        myproduct = asset.objects.get(id=pk).product_line
-        mygroup = Group.objects.get(name=myproduct)
+        old_myproduct = asset.objects.get(id=pk).product_line
+        old_mygroup = Group.objects.get(name=old_myproduct)
+        new_mygroup = Group.objects.get(name=form.cleaned_data['product_line'])
 
-        if oldmygroup != mygroup:
+        self.object = form.save()
+        if old_mygroup != new_mygroup:
             GroupObjectPermission.objects.filter(object_pk=pk).delete()
-            GroupObjectPermission.objects.assign_perm("read_asset", mygroup, obj=self.object)
-            GroupObjectPermission.objects.assign_perm("add_asset", mygroup, obj=self.object)
-            GroupObjectPermission.objects.assign_perm("change_asset", mygroup, obj=self.object)
-            GroupObjectPermission.objects.assign_perm("delete_asset", mygroup, obj=self.object)
+            GroupObjectPermission.objects.assign_perm("read_asset", new_mygroup, obj=self.object)
+            GroupObjectPermission.objects.assign_perm("add_asset", new_mygroup, obj=self.object)
+            GroupObjectPermission.objects.assign_perm("change_asset", new_mygroup, obj=self.object)
+            GroupObjectPermission.objects.assign_perm("delete_asset", new_mygroup, obj=self.object)
+            GroupObjectPermission.objects.assign_perm("task_asset", new_mygroup, obj=self.object)
         return super(AssetUpdate, self).form_valid(form)
 
     def get_success_url(self):
@@ -139,7 +147,7 @@ class AssetDetail(DetailView):
     template_name = 'asset/asset-detail.html'
 
     @method_decorator(login_required)
-    @method_decorator(permission_required_or_403('asset.change_asset', (asset, 'id', 'pk')))
+    @method_decorator(permission_required_or_403('asset.read_asset', (asset, 'id', 'pk')))
     def dispatch(self, *args, **kwargs):
         return super(AssetDetail, self).dispatch(*args, **kwargs)
 
@@ -177,15 +185,21 @@ class AssetDel(View):
         except Exception as e:
             ret = {
                 "static": False,
-                "error": '删除请求错误,{}'.format(e)
+                "error": '删除请求错误,没有权限{}'.format(e)
             }
-        return HttpResponse(json.dumps(ret))
+        finally:
+            return HttpResponse(json.dumps(ret))
 
 
-@login_required(login_url="/login.html")
-def asset_all_del(request):
-    ret = {'status': True, 'error': None, }
-    if request.method == "POST":
+class AssetAllDel(View):
+    model = asset
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(AssetAllDel, self).dispatch(*args, **kwargs)
+
+    def post(self, request):
+        ret = {'status': True, 'error': None, }
         try:
             ids = request.POST.getlist('id', None)
             ids1 = []
@@ -201,8 +215,9 @@ def asset_all_del(request):
             GroupObjectPermission.objects.extra(where=['object_pk IN (' + idstring + ')']).delete()
         except Exception as e:
             ret['status'] = False
-            ret['error'] = '删除请求错误,{}'.format(e)
-        return HttpResponse(json.dumps(ret))
+            ret['error'] = '删除请求错误,没有权限{}'.format(e)
+        finally:
+            return HttpResponse(json.dumps(ret))
 
 
 @login_required(login_url="/login.html")
@@ -219,7 +234,6 @@ def asset_hardware_update(request):
             password1 = obj.system_user.password
 
             password = decrypt_p(password1)
-
             assets = [
                 {
                     "hostname": 'host',
@@ -234,16 +248,10 @@ def asset_hardware_update(request):
             runner = AdHocRunner(assets)
 
             result = runner.run(task_tuple=task_tuple, pattern='all', task_name='Ansible Ad-hoc')
-
-
-
             data = result['contacted']['host'][0]['ansible_facts']
 
             hostname = data['ansible_nodename']
             system = data['ansible_distribution'] + " " + data['ansible_distribution_version']
-
-
-
 
             try:
                 a2 = "parted -l  | grep   \"Disk \/dev\/[a-z]d\"  | awk -F\"[ ]\"  '{print $3}' | awk  -F\"GB\"  '{print $1}'"
@@ -284,7 +292,7 @@ def asset_hardware_update(request):
 
             try:
                 a = "ipmitool lan print | grep -w \"IP Address \"   | awk -F\":\" \ '{print $2}\'"
-                s = ssh(ip=ip, port=port, username=username, password=password3, cmd=a)
+                s = ssh(ip=ip, port=port, username=username, password=password, cmd=a)
                 manage = s['data']
             except Exception as e:
                 manage = None
@@ -313,23 +321,25 @@ def asset_hardware_update(request):
                 eth3 = None
 
             ass = asset.objects.filter(id=id).first()
-            ass.hostname=hostname
-            ass.manage_ip=manage
-            ass.system=system
-            ass.memory=memory
-            ass.disk=disk
-            ass.sn=sn
-            ass.model=model
-            ass.cpu=cpu
-            ass.eth0=eth0
-            ass.eth1=eth1
-            ass.eth2=eth2
-            ass.eth3=eth3
+            ass.hostname = hostname
+            ass.manage_ip = manage
+            ass.system = system
+            ass.memory = memory
+            ass.disk = disk
+            ass.sn = sn
+            ass.model = model
+            ass.cpu = cpu
+            ass.eth0 = eth0
+            ass.eth1 = eth1
+            ass.eth2 = eth2
+            ass.eth3 = eth3
             ass.save()
 
         except Exception as e:
             ret['status'] = False
-            ret['error'] = '登陆账号权限不够| 请在被添加的主机安装  parted  ipmitool dmidecode  | 删除  主服务器/root/.ssh/known_hosts  文件'.format(e)
+            ret[
+                'error'] = '登陆账号权限不够| 请在被添加的主机安装  parted  ipmitool dmidecode  | 删除  主服务器/root/.ssh/known_hosts  文件'.format(
+                e)
         return HttpResponse(json.dumps(ret))
 
 
@@ -338,85 +348,117 @@ def asset_web_ssh(request):
     if request.method == 'POST':
         id = request.POST.get('id', None)
         obj = asset.objects.get(id=id)
-        ip = obj.network_ip + ":" + str(obj.port)
-        username = obj.system_user.username
-        password1 = obj.system_user.password
 
-        password = decrypt_p(password1)
+        a = asset.objects.get(id=id)
+        user = User.objects.get(username=request.user)
+        checker = ObjectPermissionChecker(user)
+
+        try:
+            if checker.has_perm('task_asset', a) == True:
+                ip = obj.network_ip + ":" + str(obj.port)
+
+                username = obj.system_user.username
+                password1 = obj.system_user.password
+                password = decrypt_p(password1)
+
+                ret = {"ip": ip, "username": username, 'password': password, "static": True}
+
+                login_ip = request.META['REMOTE_ADDR']
+
+                web_history.objects.create(user=request.user, ip=login_ip, login_user=obj.system_user.username, host=ip)
+        except Exception as e:
+            ret['status'] = False
+            ret['error'] = '请求错误,{}'.format(e)
+        finally:
+            return HttpResponse(json.dumps(ret))
 
 
-
-        ret = {"ip": ip, "username": username, 'password': password, "static": True}
-
-        login_ip = request.META['REMOTE_ADDR']
-
-        web_history.objects.create(user=request.user, ip=login_ip, login_user=obj.system_user.username, host=ip)
-        return HttpResponse(json.dumps(ret))
+def Gauge_cpumem(attr, data):
+    bar = Gauge("", width=600, height=300)
+    bar.add("", attr, data)
+    return bar
 
 
+def Line_network(d, title, title1, date, network_in, network_put):
+    bar = Line(d, width=1600, height=500)
+    bar.add(title, date, network_in)
+    bar.add(title1, date, network_put)
+    return bar
 
 
 @login_required(login_url="/login.html")
+@permission_required_or_403('asset.read_asset', (asset, 'id', 'nid'))
 def asset_performance(request, nid):
-    try:
-        all = performance.objects.all()
-        date, cpu_use, mem_use, in_use, out_use = [], [], [], [], []
+    template = loader.get_template('asset/asset-performance.html')
 
-        for i in all:
-            if i.server_id == int(nid):
-                date.append(i.cdate.strftime("%m-%d %H:%M"))
-                cpu_use.append(i.cpu_use)
-                mem_use.append(i.mem_use)
-                in_use.append(i.in_use)
-                out_use.append(i.out_use)
-        if cpu_use:
-            cpu = cpu_use[-1]
-            mem = mem_use[-1]
-        else:
-            cpu = 0
-            mem = 0
+    now = datetime.datetime.now()
+    last_time = now + datetime.timedelta(days=-7)
 
-        return render(request, 'asset/asset-performance.html', {'cpu': cpu, 'mem': mem, "asset_id": id,
-                                                                'date': date, 'cpu_use': cpu_use, 'mem_use': mem_use,
-                                                                'in_use': in_use, 'out_use': out_use,
-                                                                "asset_active": "active",
-                                                                "asset_list_active": "active"})
+    all = performance.objects.filter(cdate__gt=last_time)
 
-    except Exception as e:
-        obj = asset.objects.all()
-        error = "  错误, {}".format(e)
-        return render(request, 'asset/asset.html',
-                      {'asset_list': obj, "asset_active": "active", "asset_list_active": "active",
-                       "error_performance": error})
+    date, cpu_use, mem_use, in_use, out_use = [], [], [], [], []
+
+    for i in all:
+        if i.server_id == int(nid):
+            date.append(i.cdate.strftime("%m-%d %H:%M"))
+            cpu_use.append(i.cpu_use)
+            mem_use.append(i.mem_use)
+            in_use.append(i.in_use)
+            out_use.append(i.out_use)
+
+    if cpu_use:
+        cpu_data = cpu_use[-1]
+        mem_data = mem_use[-1]
+    else:
+        cpu_data = 0
+        mem_data = 0
+
+    cpu = Gauge_cpumem(attr="CPU", data=cpu_data)
+    mem = Gauge_cpumem(attr="内存", data=mem_data)
+    network = Line_network(d="kb/s", title="进流量", title1="出流量", date=date, network_in=in_use, network_put=mem_use)
+    history_cpumem = Line_network(d="%", title="CPU", title1="内存", date=date, network_in=cpu_use, network_put=mem_use)
+    context = dict(
+        cpu=cpu.render_embed(),
+        mem=mem.render_embed(),
+        network=network.render_embed(),
+        history_cpumem=history_cpumem.render_embed(),
+        script_list=cpu.get_js_dependencies(),
+        asset_active="active",
+        asset_list_active="active"
+
+    )
+
+    return HttpResponse(template.render(context, request))
+
+
+class SystemUserListAll(TemplateView):
+    template_name = 'asset/system-user.html'
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(SystemUserListAll, self).dispatch(*args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = {
+            "asset_active": "active",
+            "system_user_list_active": "active",
+            'user_list': get_objects_for_user(self.request.user, 'asset.read_system_users')
+        }
+        kwargs.update(context)
+        return super(SystemUserListAll, self).get_context_data(**kwargs)
 
 
 @login_required(login_url="/login.html")
-def system_user_list(request):
-    obj = system_users.objects.all()
-    user = User.objects.get(username=request.user)
-    checker = ObjectPermissionChecker(user)
-    l = []
-
-    for i in obj:
-        system_u = system_users.objects.get(id=i.id)
-        if checker.has_perm('read_system_users', system_u) == True:
-            l.append(i)
-    return render(request, 'asset/system-user.html',
-                  {'asset_list': l, "asset_active": "active", "system_user_list_active": "active"})
-
-
-@login_required(login_url="/login.html")
+@permission_required_or_403('add_system_users')
 def system_user_add(request):
     if request.method == 'POST':
         form = SystemUserForm(request.POST)
         if form.is_valid():
-
             system_save = form.save()
 
             password1 = encrypt_p(form.cleaned_data['password'])
             system_save.password = password1
             system_save.save()
-
 
             myproduct = system_users.objects.get(name=form.cleaned_data['name']).product_line
             mygroup = Group.objects.get(name=myproduct)
@@ -426,10 +468,11 @@ def system_user_add(request):
             GroupObjectPermission.objects.assign_perm("delete_system_users", mygroup, obj=system_save)
 
             form = SystemUserForm()
+
+
             return render(request, 'asset/system-user-add.html',
                           {'form': form, "asset_active": "active",
-                           "system_user_list_active": "active",
-                           "msg": "添加成功"})
+                           "system_user_list_active": "active", 'msg':'添加成功' })
     else:
         form = SystemUserForm()
     return render(request, 'asset/system-user-add.html',
@@ -437,6 +480,7 @@ def system_user_add(request):
 
 
 @login_required(login_url="/login.html")
+@permission_required_or_403('change_system_users', (system_users, 'id', 'nid'))
 def system_user_update(request, nid):
     system_user = get_object_or_404(system_users, id=nid)
 
@@ -445,49 +489,44 @@ def system_user_update(request, nid):
         old_password = system_users.objects.get(id=nid).password
         if form.is_valid():
             password = form.cleaned_data['password']
+            print(password)
             if password:
-                if system_users.objects.get(id=nid).product_line == form.cleaned_data['product_line']:
-                    system_user_pasword = form.save()
-                    password1 = encrypt_p(form.cleaned_data['password'])
-                    system_user_pasword.password = password1
-                    system_user_pasword.save()
+                old_product_line = system_users.objects.get(id=nid).product_line
+                system_save = form.save()
+                password1 = encrypt_p(form.cleaned_data['password'])
+                system_save.password = password1
+                system_save.save()
 
+                if old_product_line != form.cleaned_data['product_line']:
 
-                else:
-                    system_save = form.save()
-                    password1 = encrypt_p(form.cleaned_data['password'])
-                    system_save.password = password1
-                    system_save.save()
-
-
-                    myproduct = system_users.objects.get(name=form.cleaned_data['name']).product_line
+                    myproduct = form.cleaned_data['product_line']
                     mygroup = Group.objects.get(name=myproduct)
-                    GroupObjectPermission.objects.filter(object_pk=nid).delete()
 
+                    GroupObjectPermission.objects.filter(object_pk=nid).delete()
                     GroupObjectPermission.objects.assign_perm("read_system_users", mygroup, obj=system_save)
                     GroupObjectPermission.objects.assign_perm("add_system_users", mygroup, obj=system_save)
                     GroupObjectPermission.objects.assign_perm("change_system_users", mygroup, obj=system_save)
                     GroupObjectPermission.objects.assign_perm("delete_system_users", mygroup, obj=system_save)
+
                     form = AssetForm()
             else:
                 s = system_users.objects.get(id=nid)
-                s.name = form.cleaned_data['name']
-                s.username = form.cleaned_data['username']
-                s.password = old_password
-                s.product_line = form.cleaned_data['product_line']
-                s.ps = form.cleaned_data['ps']
-                if system_users.objects.get(id=nid).product_line == form.cleaned_data['product_line']:
-                    s.save()
-                else:
-                    s.save()
-                    myproduct = system_users.objects.get(name=form.cleaned_data['name']).product_line
-                    mygroup = Group.objects.get(name=myproduct)
-                    GroupObjectPermission.objects.filter(object_pk=nid).delete()
+                password_old = system_users.objects.get(id=nid).password
+                old_product_line = system_users.objects.get(id=nid).product_line
+                s = form.save()
+                s.password = password_old
+                s.save()
 
+                if old_product_line   != form.cleaned_data['product_line']:
+                    myproduct = form.cleaned_data['product_line']
+                    mygroup = Group.objects.get(name=myproduct)
+
+                    GroupObjectPermission.objects.filter(object_pk=nid).delete()
                     GroupObjectPermission.objects.assign_perm("read_system_users", mygroup, obj=s)
                     GroupObjectPermission.objects.assign_perm("add_system_users", mygroup, obj=s)
                     GroupObjectPermission.objects.assign_perm("change_system_users", mygroup, obj=s)
                     GroupObjectPermission.objects.assign_perm("delete_system_users", mygroup, obj=s)
+
                     form = AssetForm()
 
             return redirect('system-user.html')
@@ -498,39 +537,47 @@ def system_user_update(request, nid):
                                                              })
 
 
-@login_required(login_url="/login.html")
-def system_user_del(request):
-    ret = {'status': True, 'error': None, }
-    if request.method == "POST":
+class SystemUserDelete(View):
+    model = system_users
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(SystemUserDelete, self).dispatch(*args, **kwargs)
+
+    def post(self, request):
+        ret = {'status': True, 'error': None, }
         try:
             id = request.POST.get("nid", None)
             user = User.objects.get(username=request.user)
             checker = ObjectPermissionChecker(user)
             system_u = system_users.objects.get(id=id)
-            if checker.has_perm('delete_system_users', system_u, ) == True:
+
+            if checker.has_perm('delete_system_users', system_u) == True:
                 system_u.delete()
                 GroupObjectPermission.objects.filter(object_pk=id).delete()
 
         except Exception as e:
             ret['status'] = False
-            ret['error'] = '删除请求错误,{}'.format(e)
-        return HttpResponse(json.dumps(ret))
+            ret['error'] = '删除请求错误,没有权限{}'.format(e)
+        finally:
+            return HttpResponse(json.dumps(ret))
 
 
 @login_required(login_url="/login.html")
-@permission_required_or_403('change_system_users', (system_users, 'id', 'nid'))
+@permission_required_or_403('read_system_users', (system_users, 'id', 'nid'))
 def system_user_detail(request, nid):
-    system_user = get_object_or_404(system_users, id=nid)
     detail = system_users.objects.get(id=nid)
+
     return render(request, "asset/system-user-detail.html",
                   {"system_users": detail, "nid": nid, "asset_active": "active",
                    "system_user_list_active": "active"})
 
 
 @login_required(login_url="/login.html")
+@permission_required_or_403('read_system_users', (system_users, 'id', 'nid'))
 def system_user_asset(request, nid):
     obj = asset.objects.filter(system_user=nid)
-    return render(request, "asset/system-user-asset.html", { "nid": nid, "asset_list": obj,
+    return render(request, "asset/system-user-asset.html", {"nid": nid, "asset_list": obj,
                                                             "asset_active": "active",
                                                             "system_user_list_active": "active"})
 
@@ -550,6 +597,7 @@ class AssetUpload(View):
 
 
 @login_required(login_url="/login.html")
+@permission_required_or_403('asset.read_asset')
 def export(request):
     if request.method == "GET":
         a = asset.objects.all()
@@ -599,5 +647,3 @@ def export(request):
             time.time())) + '.xls'
         wb.save(response)
         return response
-
-

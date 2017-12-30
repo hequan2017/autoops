@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
-from  django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 from asset.models import asset
 from .models import history, toolsscript
 import paramiko, json, os, pymysql
@@ -7,7 +8,10 @@ from .form import ToolForm
 from guardian.shortcuts import get_objects_for_user, get_objects_for_group
 from django.contrib.auth.models import User
 from guardian.core import ObjectPermissionChecker
-from  db.models import db_mysql, db_users
+from  db.models import db_mysql, db_user
+from guardian.decorators import permission_required_or_403
+from django.views.generic import TemplateView, ListView, View, CreateView, UpdateView, DeleteView, DetailView
+
 
 from   tasks.ansible_runner.runner import AdHocRunner, PlayBookRunner
 from   tasks.ansible_runner.callback import CommandResultCallback
@@ -54,10 +58,16 @@ def cmd(request):  ##命令行
         user = User.objects.get(username=request.user)
         checker = ObjectPermissionChecker(user)
         ids1 = []
+
         for i in ids:
             assets = asset.objects.get(id=i)
-            if checker.has_perm('delete_asset', assets, ) == True:
+            if checker.has_perm('task_asset', assets, ) == True:
                 ids1.append(i)
+            else:
+                error_3 = "主机没有权限"
+                ret = {"error": error_3, "status": False}
+                return HttpResponse(json.dumps(ret))
+
 
         user = request.user
         idstring = ','.join(ids1)
@@ -77,14 +87,9 @@ def cmd(request):  ##命令行
         ret['data'] = []
         for i in obj:
             try:
-
-
                 password = decrypt_p(i.system_user.password)
 
-
-
-                s = ssh(ip=i.network_ip, port=i.port, username=i.system_user.username, password=password,
-                        cmd=cmd)
+                s = ssh(ip=i.network_ip, port=i.port, username=i.system_user.username, password=password,cmd=cmd)
                 historys = history.objects.create(ip=i.network_ip, root=i.system_user, port=i.port, cmd=cmd, user=user)
                 if s == None or s['data'] == '':
                     s = {}
@@ -96,32 +101,47 @@ def cmd(request):  ##命令行
         return HttpResponse(json.dumps(ret))
 
 
-@login_required(login_url="/login.html")
-def tools(request):
-    obj = toolsscript.objects.all()
-    return render(request, "tasks/tools.html",
-                  {"tools": obj, "tasks_active": "active", "tools_active": "active"})
+
+
+class ToolsListAll(TemplateView):
+    template_name = 'tasks/tools.html'
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(ToolsListAll, self).dispatch(*args, **kwargs)
+
+
+    def get_context_data(self, **kwargs):
+        obj = toolsscript.objects.all()
+        context = {
+            "tasks_active": "active",
+            "tools_active": "active",
+            'tools': obj
+        }
+        kwargs.update(context)
+        return super(ToolsListAll, self).get_context_data(**kwargs)
+
+
 
 
 @login_required(login_url="/login.html")
+@permission_required_or_403('tasks.add_toolsscript')
 def tools_add(request):
     if request.method == 'POST':
         form = ToolForm(request.POST)
         if form.is_valid():
             tools_save = form.save()
             form = ToolForm()
-            return render(request, 'tasks/tools-add.html',
-                          {'form': form, "tasks_active": "active", "tools_active": "active",
-                           "msg": "添加成功"})
+            return render(request, 'tasks/tools.html',
+                          {'form': form, "tasks_active": "active", "tools_active": "active", })
     else:
         form = ToolForm()
-    return render(request, 'tasks/tools-add.html',
-                  {'form': form, "tasks_active": "active", "tools_active": "active", })
+    return render(request, 'tasks/tools-add.html',{'form': form, "tasks_active": "active", "tools_active": "active", })
 
 
 @login_required(login_url="/login.html")
 def tools_update(request, nid):
-    tool_id = get_object_or_404(toolsscript, id=nid)
+    tool_id = toolsscript.objects.get(id=nid)
 
     if request.method == 'POST':
         form = ToolForm(request.POST, instance=tool_id)
@@ -130,8 +150,7 @@ def tools_update(request, nid):
             return redirect('tools.html')
 
     form = ToolForm(instance=tool_id)
-    return render(request, 'tasks/tools-update.html',
-                  {'form': form, 'nid': nid, "tasks_active": "active", "tools_active": "active", })
+    return render(request, 'tasks/tools-update.html',{'form': form, 'nid': nid, "tasks_active": "active", "tools_active": "active", })
 
 
 @login_required(login_url="/login.html")
@@ -172,6 +191,11 @@ def tools_script_post(request):
 
             user = request.user
 
+
+
+
+
+
             if not host_ids:
                 error1 = "请选择主机"
                 ret = {"error": error1, "status": False}
@@ -182,8 +206,14 @@ def tools_script_post(request):
             ids1 = []
             for i in host_ids:
                 assets = asset.objects.get(id=i)
-                if checker.has_perm('delete_asset', assets, ) == True:
+                if checker.has_perm('task_asset', assets, ) == True:
                     ids1.append(i)
+                else:
+                    error2 = "主机没有权限"
+                    ret = {"error": error2, "status": False}
+                    return HttpResponse(json.dumps(ret))
+
+
             idstring = ','.join(ids1)
 
             host = asset.objects.extra(where=['id IN (' + idstring + ')'])
@@ -272,7 +302,7 @@ def tools_script_post(request):
 @login_required(login_url="/login.html")
 def tools_script_get(request, nid):
     if request.method == "GET":
-        obj = get_objects_for_user(request.user, 'asset.change_asset')
+        obj = get_objects_for_user(request.user, 'asset.task_asset')
         sh = toolsscript.objects.filter(id=nid)
         return render(request, 'tasks/tools-script.html', {"asset_list": obj, "sh": sh, "tools_active": "active"})
 
@@ -441,8 +471,14 @@ def Inception(request):  ##Inception 审核
         ids1 = []
         for i in ids:
             assets = db_mysql.objects.get(id=i)
-            if checker.has_perm('delete_db_mysql', db_mysql, ) == True:
+            if checker.has_perm('task_db_mysql', db_mysql, ) == True:
                 ids1.append(i)
+            else:
+                error_3 = "数据库没有权限"
+                ret = {"error": error_3, "status": False}
+                return HttpResponse(json.dumps(ret))
+
+
 
         user = request.user
         idstring = ','.join(ids1)
@@ -490,8 +526,15 @@ def Inception_exe(request):  ##Inception 执行
         ids1 = []
         for i in ids:
             assets = db_mysql.objects.get(id=i)
-            if checker.has_perm('delete_db_mysql', db_mysql, ) == True:
+            if checker.has_perm('task_db_mysql', db_mysql, ) == True:
                 ids1.append(i)
+
+            else:
+                error_3 = "数据库没有权限"
+                ret = {"error": error_3, "status": False}
+                return HttpResponse(json.dumps(ret))
+
+
 
         user = request.user
         idstring = ','.join(ids1)

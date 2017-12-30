@@ -15,6 +15,8 @@
     <orderEntry type="jdk" jdkName="Python 3.6.2 (E:\Program Files (x86)\python362\python.exe)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="cmdb" />
+    <orderEntry type="module" module-name="apps" />
+    <orderEntry type="module" module-name="web" />
   </component>
   <component name="TemplatesService">
     <option name="TEMPLATE_CONFIGURATION" value="Django" />

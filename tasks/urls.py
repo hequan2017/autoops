@@ -5,7 +5,7 @@ from  .import views
 urlpatterns = [
     path('cmd.html', views.cmd, name='cmd'),
 
-    path('tools.html', views.tools, name='tools'),
+    path('tools.html', views.ToolsListAll.as_view(), name='tools'),
     path('tools-add.html', views.tools_add, name='tools_add'),
     path('tools-del.html', views.tools_delete, name='tools_delete'),
     path('tools-bulk-del.html', views.tools_bulk_delte, name='tools_bulk_delte'),

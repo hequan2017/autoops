@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
-from db.models import db_users,db_mysql
+from db.models import db_user,db_mysql
 from .form import DbMysqlForm,DbUsersForm
 from names.password_crypt import encrypt_p,decrypt_p
 
@@ -33,7 +33,7 @@ class DbListAll(TemplateView):
         context = {
             "db_active": "active",
             "db_list_active": "active",
-            'db_list': get_objects_for_user(self.request.user, 'db.add_db_mysql')
+            'db_list': get_objects_for_user(self.request.user, 'db.read_db_mysql')
         }
         kwargs.update(context)
         return super(DbListAll, self).get_context_data(**kwargs)
@@ -45,7 +45,7 @@ class DbDetail(DetailView):
     template_name = 'db/db-detail.html'
 
     @method_decorator(login_required)
-    @method_decorator(permission_required_or_403('db.change_db_mysql', (db_mysql, 'id', 'pk')))
+    @method_decorator(permission_required_or_403('db.read_db_mysql', (db_mysql, 'id', 'pk')))
     def dispatch(self, *args, **kwargs):
         return super(DbDetail, self).dispatch(*args, **kwargs)
 
@@ -64,14 +64,6 @@ class DbDetail(DetailView):
 
 
 
-
-
-
-
-
-
-
-
 class DbAdd(CreateView):
     model = db_mysql
     form_class =  DbMysqlForm
@@ -85,6 +77,14 @@ class DbAdd(CreateView):
 
     def form_valid(self, form):
         self.db = db =  form.save()
+
+        myproduct = form.cleaned_data['product_line']
+        mygroup = Group.objects.get(name=myproduct)
+        GroupObjectPermission.objects.assign_perm("read_db_mysql", mygroup, obj=db)
+        GroupObjectPermission.objects.assign_perm("add_db_mysql", mygroup, obj=db)
+        GroupObjectPermission.objects.assign_perm("change_db_mysql", mygroup, obj=db)
+        GroupObjectPermission.objects.assign_perm("delete_db_mysql", mygroup, obj=db)
+        GroupObjectPermission.objects.assign_perm("task_db_mysql", mygroup, obj=db)
         return super(DbAdd, self).form_valid(form)
 
     def get_success_url(self):
@@ -129,7 +129,21 @@ class DbUpdate(UpdateView):
 
 
     def form_valid(self, form):
+
+        pk = self.kwargs.get(self.pk_url_kwarg, None)
+        old_myproduct = db_mysql.objects.get(id=pk).product_line
+        old_mygroup = Group.objects.get(name=old_myproduct)
+        new_mygroup = Group.objects.get(name=form.cleaned_data['product_line'])
+
         self.object = form.save()
+        if old_mygroup != new_mygroup:
+            GroupObjectPermission.objects.filter(object_pk=pk).delete()
+            GroupObjectPermission.objects.assign_perm("read_db_mysql", new_mygroup, obj=self.object)
+            GroupObjectPermission.objects.assign_perm("add_db_mysql", new_mygroup, obj=self.object)
+            GroupObjectPermission.objects.assign_perm("change_db_mysql", new_mygroup, obj=self.object)
+            GroupObjectPermission.objects.assign_perm("delete_db_mysql", new_mygroup, obj=self.object)
+            GroupObjectPermission.objects.assign_perm("task_db_mysql",new_mygroup, obj=self.object)
+
         return super(DbUpdate, self).form_valid(form)
 
     def get_success_url(self):
@@ -149,13 +163,21 @@ class DbDel(View):
         ret = {'status': True, 'error': None, }
         try:
             id = request.POST.get('nid', None)
-            dbs = db_mysql.objects.get(id=id).delete()
+            dbs = db_mysql.objects.get(id=id)
+            user = User.objects.get(username=request.user)
+
+            checker = ObjectPermissionChecker(user)
+
+            if checker.has_perm('delete_asset', dbs) == True:
+                dbs.delete()
+                GroupObjectPermission.objects.filter(object_pk=id).delete()
         except Exception as e:
             ret = {
                 "static": False,
                 "error": '删除请求错误,{}'.format(e)
             }
-        return HttpResponse(json.dumps(ret))
+        finally:
+             return HttpResponse(json.dumps(ret))
 
 
 
@@ -179,7 +201,8 @@ def db_all_del(request):
         except Exception as e:
             ret['status'] = False
             ret['error'] = '删除请求错误,{}'.format(e)
-        return HttpResponse(json.dumps(ret))
+        finally:
+              return HttpResponse(json.dumps(ret))
 
 class DbUserListAll(TemplateView):
     template_name = 'db/db-user.html'
@@ -192,34 +215,21 @@ class DbUserListAll(TemplateView):
         context = {
             "db_active": "active",
             "db_user_active": "active",
-            'db_user_list': get_objects_for_user(self.request.user, 'db.read_db_users')
+            'db_user_list': get_objects_for_user(self.request.user, 'db.read_db_user')
         }
         kwargs.update(context)
         return super(DbUserListAll, self).get_context_data(**kwargs)
 
 
 
-    def post(self, request):
-        query = request.POST.get("name")
-        a = db_mysql.objects.filter(
-            Q(ip=query)  | Q(hostname=query) |
-            Q(system=query) | Q(system_user__username=query) |
-            Q(position=query) )
-
-        return render(request, 'db/db-user.html',
-                      {"db_active": "active", "db_user_active": "active", "db_user_list": a})
-
-
-
-
 class DbUserAdd(CreateView):
-    model = db_users
+    model = db_user
     form_class =  DbUsersForm
     template_name = 'db/db-user-add.html'
     success_url = reverse_lazy('db:db_user_list')
 
     @method_decorator(login_required)
-    @method_decorator(permission_required_or_403('db.add_db_users'))
+    @method_decorator(permission_required_or_403('db.add_db_user'))
     def dispatch(self, *args, **kwargs):
         return super(DbUserAdd, self).dispatch(*args, **kwargs)
 
@@ -229,6 +239,14 @@ class DbUserAdd(CreateView):
         password1 = encrypt_p(form.cleaned_data['password'])
         db.password = password1
         db.save()
+
+        myproduct =form.cleaned_data['product_line']
+        mygroup = Group.objects.get(name=myproduct)
+        GroupObjectPermission.objects.assign_perm("read_db_user", mygroup, obj=db)
+        GroupObjectPermission.objects.assign_perm("add_db_user", mygroup, obj=db)
+        GroupObjectPermission.objects.assign_perm("change_db_user", mygroup, obj=db)
+        GroupObjectPermission.objects.assign_perm("delete_db_user", mygroup, obj=db)
+
         return super(DbUserAdd, self).form_valid(form)
 
     def get_success_url(self):
@@ -244,13 +262,13 @@ class DbUserAdd(CreateView):
 
 
 class DbUserUpdate(UpdateView):
-    model = db_users
+    model = db_user
     form_class = DbUsersForm
     template_name = 'db/db-user-update.html'
     success_url = reverse_lazy('db:db_user_list')
 
     @method_decorator(login_required)
-    @method_decorator(permission_required_or_403('db.change_db_users', (db_users, 'id', 'pk')))
+    @method_decorator(permission_required_or_403('db.change_db_user', (db_user, 'id', 'pk')))
     def dispatch(self, *args, **kwargs):
         return super(DbUserUpdate, self).dispatch(*args, **kwargs)
 
@@ -270,18 +288,41 @@ class DbUserUpdate(UpdateView):
         return super(DbUserUpdate, self).form_invalid(form)
 
     def form_valid(self, form):
+        pk = self.kwargs.get(self.pk_url_kwarg, None)
         password = form.cleaned_data['password']
         if password:
-                self.db = db = form.save()
-                password1 = encrypt_p(raw=form.cleaned_data['password'])
-                db.password = password1
-                db.save()
+            if db_user.objects.get(id=pk).product_line != form.cleaned_data['product_line']:
+                password1 = encrypt_p(form.cleaned_data['password'])
+                self.db = db_save = form.save()
+                db_save.password = password1
+                db_save.save()
+
+
+                myproduct = form.cleaned_data['product_line']
+                mygroup = Group.objects.get(name=myproduct)
+                GroupObjectPermission.objects.filter(object_pk=pk).delete()
+
+                GroupObjectPermission.objects.assign_perm("read_system_users", mygroup, obj=db_save)
+                GroupObjectPermission.objects.assign_perm("add_system_users", mygroup, obj=db_save)
+                GroupObjectPermission.objects.assign_perm("change_system_users", mygroup, obj=db_save)
+                GroupObjectPermission.objects.assign_perm("delete_system_users", mygroup, obj=db_save)
         else:
-            pk = self.kwargs.get(self.pk_url_kwarg, None)
-            password_old = db_users.objects.get(id=pk).password
+            password_old = db_user.objects.get(id=pk).password
             self.db = db = form.save()
             db.password = password_old
             db.save()
+
+            if db_user.objects.get(id=pk).product_line != form.cleaned_data['product_line']:
+
+                myproduct = form.cleaned_data['product_line']
+                mygroup = Group.objects.get(name=myproduct)
+
+                GroupObjectPermission.objects.filter(object_pk=pk).delete()
+                GroupObjectPermission.objects.assign_perm("read_system_users", mygroup, obj=db)
+                GroupObjectPermission.objects.assign_perm("add_system_users", mygroup, obj=db)
+                GroupObjectPermission.objects.assign_perm("change_system_users", mygroup, obj=db)
+                GroupObjectPermission.objects.assign_perm("delete_system_users", mygroup, obj=db)
+
         return super(DbUserUpdate, self).form_valid(form)
 
     def get_success_url(self):
@@ -299,26 +340,38 @@ class DbUserDel(View):
         ret = {'status': True, 'error': None, }
         try:
             id = request.POST.get('nid', None)
-            dbs = db_users.objects.get(id=id).delete()
+            db = db_user.objects.get(id=id)
+            user = User.objects.get(username=request.user)
+            checker = ObjectPermissionChecker(user)
+
+
+            if checker.has_perm('delete_system_users', db) == True:
+                db.delete()
+                GroupObjectPermission.objects.filter(object_pk=id).delete()
+
         except Exception as e:
             ret = {
                 "static": False,
                 "error": '删除请求错误,{}'.format(e)
             }
-        return HttpResponse(json.dumps(ret))
+        finally:
+            return HttpResponse(json.dumps(ret))
+
+
+
 
 class DbUserDetail(DetailView):
-    model = db_users
+    model = db_user
     template_name = 'db/db-user-detail.html'
 
     @method_decorator(login_required)
-    @method_decorator(permission_required_or_403('db.change_db_users', (db_users, 'id', 'pk')))
+    @method_decorator(permission_required_or_403('db.read_db_user', (db_user, 'id', 'pk')))
     def dispatch(self, *args, **kwargs):
         return super(DbUserDetail, self).dispatch(*args, **kwargs)
 
     def get_context_data(self, **kwargs):
         pk = self.kwargs.get(self.pk_url_kwarg, None)
-        detail = db_users.objects.get(id=pk)
+        detail = db_user.objects.get(id=pk)
         context = {
             "db_active": "active",
             "db_user_active": "active",
@@ -330,9 +383,9 @@ class DbUserDetail(DetailView):
 
 
 @login_required(login_url="/login.html")
+@permission_required_or_403('db.read_db_user',(db_user, 'id', 'nid'))
 def Db_user_db(request, nid):
     obj = db_mysql.objects.filter(db_user=nid)
     return render(request, "db/db-user-db.html", {"nid": nid, "db_list": obj,
-                                                            "db_active": "active",
-            "db_user_active": "active",})
+                                                            "db_active": "active","db_user_active": "active",})
 

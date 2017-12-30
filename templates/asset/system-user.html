@@ -68,7 +68,7 @@
                                 </thead>
                                 <tbody>
 
-                                {% for   row   in   asset_list %}
+                                {% for   row   in   user_list %}
                                     <tr class="gradeA" id="{{ row.id }}">
                                         <td class="center"><a
                                                 href="{% url  "asset:system_user_detail"   row.id %}" >{{ row.name }}</a>

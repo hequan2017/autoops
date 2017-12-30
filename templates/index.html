@@ -5,9 +5,9 @@
 
 {% block header-css %}
 
-    {% for jsfile_name in script_list %}
+{% for jsfile_name in script_list %}
         <script src="/static/echarts/{{ jsfile_name }}.js"></script>
-    {% endfor %}
+{% endfor %}
 {% endblock %}
 
 

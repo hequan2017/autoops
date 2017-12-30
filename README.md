@@ -22,7 +22,14 @@ AutoOps 是一款基于 2.0 版本django开发的，主要面向linux运维工�
 
 ### 更新记录  
 
+  -  1.6.7   权限梳理，若干代码优化。
+    - 根据后台用户组进行区分。admin有最高权限。
+    - 例如：新建  运维组、开发组 ， 新建 运维组 里面的 hequan 账号
+    - 那么  hequan 只能看见 运维组下面的服务器、数据库，执行工具也只能选择 运维组的。 hequan 无法添加服务器、数据库。
+     
+  
   -  1.6.6   密码加密功能上线。
+   -  具体调用在 names/password_crypt.py 里面
   
   -  1.6.5   回滚数据库  功能上线。
   
@@ -44,6 +51,7 @@ AutoOps 是一款基于 2.0 版本django开发的，主要面向linux运维工�
     - 全部导出
     - CPU 内存 流量图
   - names 用户（预留模块）
+      -  加密解密   password_crypt.py 
   - tasks任务 
      - 命令行
      - 工具  
@@ -195,6 +203,7 @@ python manage.py  createsuperuser             ##创建管理员
 ###  开发设置
 
   * 如果想在windows 下的 pycharm打开，请注释  
+  
   ```djangotemplate
 asset/views.py
 from  tasks.ansible_runner.runner import AdHocRunner

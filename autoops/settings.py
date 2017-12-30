@@ -198,13 +198,18 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'upload/')
 MEDIA_URL = '/upload/'  # 这个是在浏览器上访问该上传文件的url的前缀
 
 
-Inception_ip = '192.168.10.83'
-Inception_port = '6669'
 
-Webssh_ip = '42.62.6.54'
+
+
+
+Inception_ip = '192.168.10.83'  ## 此为 Inception 软件地址 需要设置
+Inception_port = '6669'       ## 此为 Inception 软件端口号
+
+
+Webssh_ip = '42.62.6.54'   ##WebSSH 软件的 访问IP
 Webssh_port='9000'
 
-inception_remote_system_password='123456'
+inception_remote_system_password='123456'    ## 设置回滚备份服务器相关参数，并同步修改一下 script/inc.cnf 里面的设置
 inception_remote_system_user='root'
 inception_remote_backup_port='3306'
 inception_remote_backup_host='192.168.10.81'
