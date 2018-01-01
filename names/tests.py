@@ -1,3 +1,6 @@
-from django.test import TestCase
 
-# Create your tests here.
+
+def  a(b):
+    return 1,2
+b = a(1)
+print(b[0])

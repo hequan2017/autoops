@@ -13,6 +13,10 @@ from asset.models import asset,data_centers
 
 from django.template import loader
 from pyecharts import Bar
+from .password_crypt import pyecharts_add
+
+
+
 
 
 def Bard(product,products):
@@ -52,15 +56,20 @@ def index(request):
     template = loader.get_template('index.html')
     pro = Bard(product=product,products=products)
     pro2 = Bard2(data=data,datas=datas)
+
     context = dict(
-        myechart=pro.render_embed(),
+        myechart=pyecharts_add(pro.render_embed())[0],
         script_list=pro.get_js_dependencies(),
-        myechart1=pro2.render_embed(),
+        myechart1=pyecharts_add(pro2.render_embed())[0],
         product=product,
         products= products,
         data=data,
-        datas=datas
+        datas=datas,
+        onresize = " <script>  window.onresize = function () {  %s %s   };  </script>" % (pyecharts_add(pro.render_embed())[1],pyecharts_add(pro2.render_embed())[1])
     )
+
+
+
     return HttpResponse(template.render(context, request))
 
 

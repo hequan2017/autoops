@@ -17,6 +17,7 @@
     <orderEntry type="module" module-name="cmdb" />
     <orderEntry type="module" module-name="apps" />
     <orderEntry type="module" module-name="web" />
+    <orderEntry type="module" module-name="python-lianxi" />
   </component>
   <component name="TemplatesService">
     <option name="TEMPLATE_CONFIGURATION" value="Django" />

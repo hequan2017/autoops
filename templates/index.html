@@ -48,7 +48,7 @@
             </div>
 
             <div class="ibox-content">
-                <div style="height:300px;" >   {{ myechart|safe }} </div>
+                {{ myechart|safe }}
             </div>
 
 
@@ -81,7 +81,7 @@
             </div>
 
             <div class="ibox-content">
-                <div style="height:300px;" >   {{ myechart1|safe }} </div>
+                {{ myechart1|safe }}
             </div>
 
 
@@ -97,5 +97,17 @@
 {% endblock %}
 
 {% block footer-js %}
+
+
+
+
+    {{ onresize  | safe }}
+
+
+
+
+
+
+
 
 {% endblock %}

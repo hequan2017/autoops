@@ -121,7 +121,7 @@
 
                     <div class="ibox-content" >
 
-                   <div   style="height:500px;">{{ network | safe }}</div>
+               {{ network | safe }}
                     </div>
                 </div>
 
@@ -153,7 +153,7 @@
                         </div>
 
                     <div class="ibox-content" >
-                        <div   style="height:500px;" >{{  history_cpumem |  safe  }}  </div>
+                       {{  history_cpumem |  safe  }}
                     </div>
                 </div>
 
@@ -166,12 +166,7 @@
 {% block footer-js %}
 
 
-
-
-
-<script>
-
-</script>
+    {{ onresize  | safe }}
 
 {% endblock %}
 

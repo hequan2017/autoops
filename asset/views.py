@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from asset.models import asset, system_users, performance, web_history, data_centers
 from .form import AssetForm, SystemUserForm
-from names.password_crypt import encrypt_p, decrypt_p
+from names.password_crypt import encrypt_p, decrypt_p,pyecharts_add
 from django.contrib.auth.models import User, Group
 from guardian.shortcuts import assign_perm, get_perms
 from guardian.core import ObjectPermissionChecker
@@ -418,15 +418,16 @@ def asset_performance(request, nid):
     network = Line_network(d="kb/s", title="进流量", title1="出流量", date=date, network_in=in_use, network_put=mem_use)
     history_cpumem = Line_network(d="%", title="CPU", title1="内存", date=date, network_in=cpu_use, network_put=mem_use)
     context = dict(
-        cpu=cpu.render_embed(),
-        mem=mem.render_embed(),
-        network=network.render_embed(),
-        history_cpumem=history_cpumem.render_embed(),
+        cpu=pyecharts_add(cpu.render_embed())[0],
+        mem=pyecharts_add(mem.render_embed())[0],
+        network=pyecharts_add(network.render_embed())[0],
+        history_cpumem=pyecharts_add(history_cpumem.render_embed())[0],
         script_list=cpu.get_js_dependencies(),
         asset_active="active",
-        asset_list_active="active"
-
+        asset_list_active="active",
+        onresize=" <script>  window.onresize = function () {  %s %s  %s  %s };  </script>" % (pyecharts_add(cpu.render_embed())[1],pyecharts_add(mem.render_embed())[1],pyecharts_add(network.render_embed())[1],pyecharts_add(history_cpumem.render_embed())[1],)
     )
+
 
     return HttpResponse(template.render(context, request))
 

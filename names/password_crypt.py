@@ -21,6 +21,26 @@ def  decrypt_p(password):  ## 解密
         return p2
 
 
+def pyecharts_add(echa):
+        """
+         echarts 添加 自适应 宽度
+        :param echa:
+        :return:
+        """
+        a = echa.split('</div>')
+        a1 = a[0].split('"')
+        b = a1[3].split(';')
+        a1[3] = b[1]
+        div = '"'.join(a1)
+
+        onresize = "    myChart_%s.resize(); " % (a1[1])
+        ret = div + "</div>" + a[1]
+        return ret,onresize
+
+
+
+
+
 if  __name__=='__main__':
         a = encrypt_p('123')
         print(a)
