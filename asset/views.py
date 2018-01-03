@@ -9,6 +9,7 @@ from guardian.shortcuts import assign_perm, get_perms
 from guardian.core import ObjectPermissionChecker
 from guardian.decorators import permission_required_or_403
 from guardian.shortcuts import get_objects_for_user, get_objects_for_group
+from django.contrib.auth.models import Permission
 from guardian.models import UserObjectPermission, GroupObjectPermission
 from django.views.generic import TemplateView, ListView, View, CreateView, UpdateView, DeleteView, DetailView
 from django.urls import reverse_lazy
@@ -80,8 +81,9 @@ class AssetAdd(CreateView):
 
         myproduct = form.cleaned_data['product_line']
         mygroup = Group.objects.get(name=myproduct)
+
         GroupObjectPermission.objects.assign_perm("read_asset", mygroup, obj=asset_save)
-        GroupObjectPermission.objects.assign_perm("add_asset", mygroup, obj=asset_save)
+        GroupObjectPermission.objects.assign_perm("add_asset", mygroup, obj=asset_save,)
         GroupObjectPermission.objects.assign_perm("change_asset", mygroup, obj=asset_save)
         GroupObjectPermission.objects.assign_perm("delete_asset", mygroup, obj=asset_save)
         GroupObjectPermission.objects.assign_perm("task_asset", mygroup, obj=asset_save)
@@ -130,7 +132,12 @@ class AssetUpdate(UpdateView):
 
         self.object = form.save()
         if old_mygroup != new_mygroup:
-            GroupObjectPermission.objects.filter(object_pk=pk).delete()
+            GroupObjectPermission.objects.remove_perm("read_asset",old_mygroup, obj=self.object)
+            GroupObjectPermission.objects.remove_perm("add_asset", old_mygroup, obj=self.object)
+            GroupObjectPermission.objects.remove_perm("change_asset", old_mygroup, obj=self.object)
+            GroupObjectPermission.objects.remove_perm("delete_asset", old_mygroup, obj=self.object)
+            GroupObjectPermission.objects.remove_perm("task_asset", old_mygroup, obj=self.object)
+
             GroupObjectPermission.objects.assign_perm("read_asset", new_mygroup, obj=self.object)
             GroupObjectPermission.objects.assign_perm("add_asset", new_mygroup, obj=self.object)
             GroupObjectPermission.objects.assign_perm("change_asset", new_mygroup, obj=self.object)
@@ -181,7 +188,6 @@ class AssetDel(View):
             assets = asset.objects.get(id=id)
             if checker.has_perm('delete_asset', assets, ) == True:
                 assets.delete()
-                GroupObjectPermission.objects.filter(object_pk=id).delete()
         except Exception as e:
             ret = {
                 "static": False,
@@ -212,7 +218,7 @@ class AssetAllDel(View):
 
             idstring = ','.join(ids1)
             asset.objects.extra(where=['id IN (' + idstring + ')']).delete()
-            GroupObjectPermission.objects.extra(where=['object_pk IN (' + idstring + ')']).delete()
+
         except Exception as e:
             ret['status'] = False
             ret['error'] = '删除请求错误,没有权限{}'.format(e)
@@ -487,23 +493,30 @@ def system_user_update(request, nid):
 
     if request.method == 'POST':
         form = SystemUserForm(request.POST, instance=system_user)
-        old_password = system_users.objects.get(id=nid).password
+        old_product_line = system_users.objects.get(id=nid).product_line
+        old_mygroup = Group.objects.get(name=old_product_line)
+
+
         if form.is_valid():
             password = form.cleaned_data['password']
-            print(password)
             if password:
-                old_product_line = system_users.objects.get(id=nid).product_line
                 system_save = form.save()
                 password1 = encrypt_p(form.cleaned_data['password'])
                 system_save.password = password1
                 system_save.save()
+
 
                 if old_product_line != form.cleaned_data['product_line']:
 
                     myproduct = form.cleaned_data['product_line']
                     mygroup = Group.objects.get(name=myproduct)
 
-                    GroupObjectPermission.objects.filter(object_pk=nid).delete()
+                    GroupObjectPermission.objects.remove_perm("read_system_users", old_mygroup, obj=system_save)
+                    GroupObjectPermission.objects.assign_perm("add_system_users", old_mygroup, obj=system_save)
+                    GroupObjectPermission.objects.assign_perm("change_system_users", old_mygroup, obj=system_save)
+                    GroupObjectPermission.objects.assign_perm("delete_system_users", old_mygroup, obj=system_save)
+
+
                     GroupObjectPermission.objects.assign_perm("read_system_users", mygroup, obj=system_save)
                     GroupObjectPermission.objects.assign_perm("add_system_users", mygroup, obj=system_save)
                     GroupObjectPermission.objects.assign_perm("change_system_users", mygroup, obj=system_save)
@@ -518,11 +531,16 @@ def system_user_update(request, nid):
                 s.password = password_old
                 s.save()
 
+
                 if old_product_line   != form.cleaned_data['product_line']:
                     myproduct = form.cleaned_data['product_line']
                     mygroup = Group.objects.get(name=myproduct)
 
-                    GroupObjectPermission.objects.filter(object_pk=nid).delete()
+                    GroupObjectPermission.objects.remove_perm("read_system_users", old_mygroup, obj=s)
+                    GroupObjectPermission.objects.assign_perm("add_system_users", old_mygroup, obj=s)
+                    GroupObjectPermission.objects.assign_perm("change_system_users", old_mygroup, obj=s)
+                    GroupObjectPermission.objects.assign_perm("delete_system_users", old_mygroup, obj=s)
+
                     GroupObjectPermission.objects.assign_perm("read_system_users", mygroup, obj=s)
                     GroupObjectPermission.objects.assign_perm("add_system_users", mygroup, obj=s)
                     GroupObjectPermission.objects.assign_perm("change_system_users", mygroup, obj=s)
@@ -553,9 +571,11 @@ class SystemUserDelete(View):
             checker = ObjectPermissionChecker(user)
             system_u = system_users.objects.get(id=id)
 
+
+
             if checker.has_perm('delete_system_users', system_u) == True:
                 system_u.delete()
-                GroupObjectPermission.objects.filter(object_pk=id).delete()
+
 
         except Exception as e:
             ret['status'] = False

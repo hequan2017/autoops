@@ -5,7 +5,6 @@ import random
 
 
 class asset(models.Model):
-    id = models.AutoField(primary_key=True,default='10000')
     hostname = models.CharField(max_length=64, verbose_name='主机名', null=True,blank=True)
     network_ip = models.GenericIPAddressField(verbose_name='外网IP',unique=True)
     manage_ip = models.GenericIPAddressField(verbose_name='管理IP', null=True,blank=True)
@@ -74,10 +73,10 @@ class   data_centers(models.Model):
 
 
 class  system_users(models.Model):
-    id = models.AutoField(primary_key=True, default='20000')
-    name = models.CharField(max_length=256, unique=True,verbose_name='名称')
+
+    name = models.CharField(max_length=255, unique=True,verbose_name='名称')
     username = models.CharField(max_length=64,null=True,blank=True, verbose_name=('登陆用户'))
-    password = models.CharField(max_length=256, blank=True,null=True,verbose_name=('登陆密码'))
+    password = models.CharField(max_length=255, blank=True,null=True,verbose_name=('登陆密码'))
     product_line = models.ForeignKey(to=Group, to_field='id', on_delete=models.SET_NULL, verbose_name='产品线',null=True)
     ps = models.CharField(max_length=1024,verbose_name="备注",null=True,blank=True)
     ctime= models.DateTimeField(auto_now_add=True,null=True,verbose_name='创建时间',blank=True)

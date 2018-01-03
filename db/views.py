@@ -137,7 +137,13 @@ class DbUpdate(UpdateView):
 
         self.object = form.save()
         if old_mygroup != new_mygroup:
-            GroupObjectPermission.objects.filter(object_pk=pk).delete()
+            GroupObjectPermission.objects.remove_perm("read_db_mysql", old_mygroup, obj=self.object)
+            GroupObjectPermission.objects.remove_perm("add_db_mysql", old_mygroup, obj=self.object)
+            GroupObjectPermission.objects.remove_perm("change_db_mysql", old_mygroup, obj=self.object)
+            GroupObjectPermission.objects.remove_perm("delete_db_mysql", old_mygroup, obj=self.object)
+            GroupObjectPermission.objects.remove_perm("task_db_mysql",old_mygroup, obj=self.object)
+
+
             GroupObjectPermission.objects.assign_perm("read_db_mysql", new_mygroup, obj=self.object)
             GroupObjectPermission.objects.assign_perm("add_db_mysql", new_mygroup, obj=self.object)
             GroupObjectPermission.objects.assign_perm("change_db_mysql", new_mygroup, obj=self.object)
@@ -167,10 +173,9 @@ class DbDel(View):
             user = User.objects.get(username=request.user)
 
             checker = ObjectPermissionChecker(user)
-
             if checker.has_perm('delete_asset', dbs) == True:
                 dbs.delete()
-                GroupObjectPermission.objects.filter(object_pk=id).delete()
+
         except Exception as e:
             ret = {
                 "static": False,
@@ -197,7 +202,8 @@ def db_all_del(request):
 
             idstring = ','.join(ids1)
             db_mysql.objects.extra(where=['id IN (' + idstring + ')']).delete()
-            GroupObjectPermission.objects.extra(where=['object_pk IN (' + idstring + ')']).delete()
+
+
         except Exception as e:
             ret['status'] = False
             ret['error'] = '删除请求错误,{}'.format(e)
@@ -290,8 +296,11 @@ class DbUserUpdate(UpdateView):
     def form_valid(self, form):
         pk = self.kwargs.get(self.pk_url_kwarg, None)
         password = form.cleaned_data['password']
+        old_pro=db_user.objects.get(id=pk).product_line
+        old_mygroup = Group.objects.get(name=old_pro)
+
         if password:
-            if db_user.objects.get(id=pk).product_line != form.cleaned_data['product_line']:
+            if    old_pro != form.cleaned_data['product_line']:
                 password1 = encrypt_p(form.cleaned_data['password'])
                 self.db = db_save = form.save()
                 db_save.password = password1
@@ -300,12 +309,17 @@ class DbUserUpdate(UpdateView):
 
                 myproduct = form.cleaned_data['product_line']
                 mygroup = Group.objects.get(name=myproduct)
-                GroupObjectPermission.objects.filter(object_pk=pk).delete()
 
-                GroupObjectPermission.objects.assign_perm("read_system_users", mygroup, obj=db_save)
-                GroupObjectPermission.objects.assign_perm("add_system_users", mygroup, obj=db_save)
-                GroupObjectPermission.objects.assign_perm("change_system_users", mygroup, obj=db_save)
-                GroupObjectPermission.objects.assign_perm("delete_system_users", mygroup, obj=db_save)
+                GroupObjectPermission.objects.assign_perm("read_db_user", mygroup, obj=db_save)
+                GroupObjectPermission.objects.assign_perm("add_db_user", mygroup, obj=db_save)
+                GroupObjectPermission.objects.assign_perm("change_db_user", mygroup, obj=db_save)
+                GroupObjectPermission.objects.assign_perm("delete_db_user", mygroup, obj=db_save)
+
+
+                GroupObjectPermission.objects.assign_perm("read_db_user", mygroup, obj=db_save)
+                GroupObjectPermission.objects.assign_perm("add_db_user", mygroup, obj=db_save)
+                GroupObjectPermission.objects.assign_perm("change_db_user", mygroup, obj=db_save)
+                GroupObjectPermission.objects.assign_perm("delete_db_user", mygroup, obj=db_save)
         else:
             password_old = db_user.objects.get(id=pk).password
             self.db = db = form.save()
@@ -317,7 +331,12 @@ class DbUserUpdate(UpdateView):
                 myproduct = form.cleaned_data['product_line']
                 mygroup = Group.objects.get(name=myproduct)
 
-                GroupObjectPermission.objects.filter(object_pk=pk).delete()
+                GroupObjectPermission.objects.assign_perm("read_system_users", mygroup, obj=db)
+                GroupObjectPermission.objects.assign_perm("add_system_users", mygroup, obj=db)
+                GroupObjectPermission.objects.assign_perm("change_system_users", mygroup, obj=db)
+                GroupObjectPermission.objects.assign_perm("delete_system_users", mygroup, obj=db)
+
+
                 GroupObjectPermission.objects.assign_perm("read_system_users", mygroup, obj=db)
                 GroupObjectPermission.objects.assign_perm("add_system_users", mygroup, obj=db)
                 GroupObjectPermission.objects.assign_perm("change_system_users", mygroup, obj=db)
@@ -347,7 +366,7 @@ class DbUserDel(View):
 
             if checker.has_perm('delete_system_users', db) == True:
                 db.delete()
-                GroupObjectPermission.objects.filter(object_pk=id).delete()
+
 
         except Exception as e:
             ret = {

@@ -3,8 +3,8 @@ from __future__ import unicode_literals
 
 import os
 from collections import namedtuple,defaultdict
-import sys
-sys.path.append('hostinfo/ansible_runner/')
+
+
 
 from ansible.executor.task_queue_manager import TaskQueueManager
 from ansible.vars import VariableManager
