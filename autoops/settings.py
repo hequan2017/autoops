@@ -206,7 +206,7 @@ Inception_ip = '192.168.10.99'  ## 此为 Inception 软件地址 需要设置
 Inception_port = '6669'       ## 此为 Inception 软件端口号
 
 
-Webssh_ip = '42.62.6.54'   ##WebSSH 软件的 访问IP
+Webssh_ip = '42.62.55.58'   ##WebSSH 软件的 访问IP
 Webssh_port='9000'
 
 inception_remote_system_password='654321'    ## 设置回滚备份服务器相关参数，并同步修改一下 script/inc.cnf 里面的设置

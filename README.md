@@ -7,9 +7,9 @@ AutoOps 是一款基于 2.0 版本django开发的，主要面向linux运维工�
 
 ###  Demo
 
-  -  地址:  `http://42.62.6.5:8003/`        账号`admin`      密码`1qaz.2wsx`
+  -  地址:  `http://42.62.55.58:8003/`        账号`admin`      密码`1qaz.2wsx`
   -  交流群号： `620176501`   欢迎交流！   <a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=bbe5716e8bd2075cb27029bd5dd97e22fc4d83c0f61291f47ed3ed6a4195b024"><img border="0" src="https://github.com/hequan2017/cmdb/blob/master/static/img/group.png"  alt="autoops开发讨论群" title="autoops开发讨论群"></a>
-  -  后台地址 `http://42.62.6.5:8003/admin`     账号`admin`   密码`1qaz.2wsx`
+  -  后台地址 `http://42.62.55.58:8003/admin`     账号`admin`   密码`1qaz.2wsx`
   -  博客:    `http://hequan.blog.51cto.com/`
   -  github:  `https://github.com/hequan2017/autoops/`
   -  码云:    `https://gitee.com/hequan2020/autoops`
