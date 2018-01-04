@@ -358,7 +358,7 @@ def asset_web_ssh(request):
         a = asset.objects.get(id=id)
         user = User.objects.get(username=request.user)
         checker = ObjectPermissionChecker(user)
-
+        ret={}
         try:
             if checker.has_perm('task_asset', a) == True:
                 ip = obj.network_ip + ":" + str(obj.port)
@@ -499,16 +499,18 @@ def system_user_update(request, nid):
 
         if form.is_valid():
             password = form.cleaned_data['password']
-            if password:
+            myproduct = form.cleaned_data['product_line']
+            if password  != None:
+                print("密码变了")
                 system_save = form.save()
                 password1 = encrypt_p(form.cleaned_data['password'])
                 system_save.password = password1
                 system_save.save()
 
 
-                if old_product_line != form.cleaned_data['product_line']:
+                if old_product_line != myproduct :
+                    print('产品线变了')
 
-                    myproduct = form.cleaned_data['product_line']
                     mygroup = Group.objects.get(name=myproduct)
 
                     GroupObjectPermission.objects.remove_perm("read_system_users", old_mygroup, obj=system_save)
@@ -524,6 +526,7 @@ def system_user_update(request, nid):
 
                     form = AssetForm()
             else:
+                print("密码没变")
                 s = system_users.objects.get(id=nid)
                 password_old = system_users.objects.get(id=nid).password
                 old_product_line = system_users.objects.get(id=nid).product_line
@@ -532,8 +535,9 @@ def system_user_update(request, nid):
                 s.save()
 
 
-                if old_product_line   != form.cleaned_data['product_line']:
-                    myproduct = form.cleaned_data['product_line']
+                if old_product_line   != myproduct:
+                    print('密码没变,但是产品线变了')
+
                     mygroup = Group.objects.get(name=myproduct)
 
                     GroupObjectPermission.objects.remove_perm("read_system_users", old_mygroup, obj=s)

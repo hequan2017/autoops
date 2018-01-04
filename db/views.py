@@ -295,52 +295,56 @@ class DbUserUpdate(UpdateView):
 
     def form_valid(self, form):
         pk = self.kwargs.get(self.pk_url_kwarg, None)
-        password = form.cleaned_data['password']
-        old_pro=db_user.objects.get(id=pk).product_line
-        old_mygroup = Group.objects.get(name=old_pro)
+        new_password = form.cleaned_data['password']
 
-        if password:
-            if    old_pro != form.cleaned_data['product_line']:
-                password1 = encrypt_p(form.cleaned_data['password'])
+        old_pro=db_user.objects.get(id=pk).product_line
+        myproduct = form.cleaned_data['product_line']
+
+
+        if new_password != None:
                 self.db = db_save = form.save()
-                db_save.password = password1
+                print('密码变了')
+                db_save.password = encrypt_p(new_password)
                 db_save.save()
 
+                if old_pro != myproduct:
+                    print('产品线变了')
+                    old_mygroup = Group.objects.get(name=old_pro)
+                    mygroup = Group.objects.get(name=myproduct)
+                    GroupObjectPermission.objects.remove_perm("read_db_user", old_mygroup, obj=db_save)
+                    GroupObjectPermission.objects.remove_perm("add_db_user", old_mygroup, obj=db_save)
+                    GroupObjectPermission.objects.remove_perm("change_db_user", old_mygroup, obj=db_save)
+                    GroupObjectPermission.objects.remove_perm("delete_db_user", old_mygroup, obj=db_save)
 
-                myproduct = form.cleaned_data['product_line']
-                mygroup = Group.objects.get(name=myproduct)
-
-                GroupObjectPermission.objects.assign_perm("read_db_user", mygroup, obj=db_save)
-                GroupObjectPermission.objects.assign_perm("add_db_user", mygroup, obj=db_save)
-                GroupObjectPermission.objects.assign_perm("change_db_user", mygroup, obj=db_save)
-                GroupObjectPermission.objects.assign_perm("delete_db_user", mygroup, obj=db_save)
+                    GroupObjectPermission.objects.assign_perm("read_db_user", mygroup, obj=db_save)
+                    GroupObjectPermission.objects.assign_perm("add_db_user", mygroup, obj=db_save)
+                    GroupObjectPermission.objects.assign_perm("change_db_user", mygroup, obj=db_save)
+                    GroupObjectPermission.objects.assign_perm("delete_db_user", mygroup, obj=db_save)
 
 
-                GroupObjectPermission.objects.assign_perm("read_db_user", mygroup, obj=db_save)
-                GroupObjectPermission.objects.assign_perm("add_db_user", mygroup, obj=db_save)
-                GroupObjectPermission.objects.assign_perm("change_db_user", mygroup, obj=db_save)
-                GroupObjectPermission.objects.assign_perm("delete_db_user", mygroup, obj=db_save)
         else:
-            password_old = db_user.objects.get(id=pk).password
-            self.db = db = form.save()
-            db.password = password_old
-            db.save()
+                print('密码没变')
+                password_old = db_user.objects.get(id=pk).password
+                self.db = db = form.save()
+                db.password = password_old
+                db.save()
 
-            if db_user.objects.get(id=pk).product_line != form.cleaned_data['product_line']:
+                if old_pro != myproduct:
+                    print('密码没变，但是产品线变了')
+                    old_mygroup = Group.objects.get(name=old_pro)
+                    mygroup = Group.objects.get(name=myproduct)
+                    GroupObjectPermission.objects.remove_perm("read_db_user", old_mygroup, obj=db)
+                    GroupObjectPermission.objects.remove_perm("add_db_user", old_mygroup, obj=db)
+                    GroupObjectPermission.objects.remove_perm("change_db_user", old_mygroup, obj=db)
+                    GroupObjectPermission.objects.remove_perm("delete_db_user", old_mygroup, obj=db)
 
-                myproduct = form.cleaned_data['product_line']
-                mygroup = Group.objects.get(name=myproduct)
-
-                GroupObjectPermission.objects.assign_perm("read_system_users", mygroup, obj=db)
-                GroupObjectPermission.objects.assign_perm("add_system_users", mygroup, obj=db)
-                GroupObjectPermission.objects.assign_perm("change_system_users", mygroup, obj=db)
-                GroupObjectPermission.objects.assign_perm("delete_system_users", mygroup, obj=db)
+                    GroupObjectPermission.objects.assign_perm("read_db_user", mygroup, obj=db)
+                    GroupObjectPermission.objects.assign_perm("add_db_user", mygroup, obj=db)
+                    GroupObjectPermission.objects.assign_perm("change_db_user", mygroup, obj=db)
+                    GroupObjectPermission.objects.assign_perm("delete_db_user", mygroup, obj=db)
 
 
-                GroupObjectPermission.objects.assign_perm("read_system_users", mygroup, obj=db)
-                GroupObjectPermission.objects.assign_perm("add_system_users", mygroup, obj=db)
-                GroupObjectPermission.objects.assign_perm("change_system_users", mygroup, obj=db)
-                GroupObjectPermission.objects.assign_perm("delete_system_users", mygroup, obj=db)
+
 
         return super(DbUserUpdate, self).form_valid(form)
 

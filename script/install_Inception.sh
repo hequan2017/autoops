@@ -40,18 +40,28 @@ mv inception.zip   /usr/local/src/
 sh inception_build.sh  builddir
 
 ##------------------------------------------------------------------
+
+find / -name connections.py
+
 #由于python3使用的pymysql模块里并未兼容inception返回的server信息，因此需要编辑
-#vim   /usr/local/python3/lib/python3.6/site-packages/pymysql/connections.py
+#vim   /usr/local/lib/python3.6/site-packages/pymysql/connections.py
 
 #在1109行         if int(self.server_version.split('.', 1)[0]) >= 5: 这一行之前加上以下这一句并保存，记得别用tab键用4个空格缩进：
 
-#self.server_version = '5.6.24-72.2-log'
+self.server_version = '5.7.20-log'
 
+#例如：
     def _request_authentication(self):
         # https://dev.mysql.com/doc/internals/en/connection-phase-packets.html#packet-Protocol::HandshakeResponse
         self.server_version = "5.7.20-log"
         if int(self.server_version.split('.', 1)[0]) >= 5:
             self.client_flag |= CLIENT.MULTI_RESULTS
+
+
+
+
+find / -name cursors.py
+
 
 ##修改下面  注释掉
 vim  /usr/local/python3/lib/python3.5/site-packages/pymysql/cursors.py
