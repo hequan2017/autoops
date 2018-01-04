@@ -72,6 +72,7 @@ AutoOps 是一款基于 2.0 版本django开发的，主要面向linux运维工�
    * Python 3.6.4
    * Django 2.0
    * Python 2.7  (用来启动 supervisor)
+   * Centos 7.4
  
  
    

@@ -77,9 +77,9 @@
                                         <td class="center">{{ row.ps }}</td>
                                         <td><a class="btn btn-primary  btn-xs"
                                                href="{% url  "db:db_user_update"   row.id %}" >编辑</a>
-                                            <button class="btn btn-danger  btn-xs  db_user_del_id"
-                                                    data-toggle="modal"
-                                                    data-target="#myModal1">删除
+                                            <button class="btn btn-danger  btn-xs  db_user_del"
+
+                                                    >删除
                                             </button>
                                         </td>
                                     </tr>
@@ -134,27 +134,39 @@
         <script>
             $(function () {
 
-                $('.db_user_del_id').click(function () {
-                    var id = $(this).parent().parent().attr('id');
-                    $('#db_user_del_form').find('input[name="nid"]').val(id);
-
-                });
                 $('.db_user_del').click(function () {
+                    var id = $(this).parent().parent().attr('id');
+
+                        swal({
+
+                        title: "你确定删除",
+                        text: "你将无法恢复",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: "确定",
+                        cancelButtonText: "取消",
+                        closeOnConfirm: false
+                    }, function (isConfirm) {
+
+
                     $.ajax({
                         url: "/db/db-user-del.html",
                         type: 'POST',
-                        data: $('#db_user_del_form').serialize(),
-                        success: function (data) {
-                            var obj = JSON.parse(data);
-                            if (obj.status) {
-                                location.reload()
-                            } else {
-                                $('#error').text(obj.error);
-                            }
+                       data: {'nid': id},
+                            success: function (data) {
+                                var obj = JSON.parse(data);
+                                if (obj.status) {
+                                    swal({title: "删除", text: "已成功删除", type: "success"}, function () {
+                                        window.location.reload();
+                                    })
+                                } else {
+                                    swal("错误", "删除" + "[ " + obj.error + " ]" + "遇到错误", "error");
+                                }
                         }
                     })
                 });
-
+ });
 
             });
         </script>

@@ -46,7 +46,7 @@
                                         class="fa fa-edit"></i>编辑</a>
                             </li>
                             <li class="pull-right">
-                                <a class="btn btn-outline btn-danger" data-toggle="modal" data-target="#myModal1">
+                                <a class="btn btn-outline btn-danger  db_user_del">
                                     <i class="fa fa-edit"></i>删除
                                 </a>
                             </li>
@@ -114,54 +114,51 @@
         </div>
     </div>
 
-    <div class="modal inmodal" id="myModal1" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content animated fadeIn">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span
-                            aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <i class="fa fa-clock-o modal-icon"></i>
-                    <h4 class="modal-title">删除</h4>
-                    <span id="error" style="color:red;"></span>
-                    <small></small>
-                </div>
-                <form id="db_del_form">
-                    <div class="modal-body">
 
-                        <div class="form-group"><input type="text" name="nid" style="display:none" value="{{ nid }}"/>
-                        </div>
-                        <p><strong>确定删除？</strong></p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
-                        <a class="btn btn-danger m-r-sm db_user_del">删除</a>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
 
 
     {% block footer-js %}
         <script>
-            $(function () {
+
+         $(function () {
+
                 $('.db_user_del').click(function () {
+
+
+                        swal({
+
+                        title: "你确定删除",
+                        text: "你将无法恢复",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: "确定",
+                        cancelButtonText: "取消",
+                        closeOnConfirm: false
+                    }, function (isConfirm) {
+
+
                     $.ajax({
-                       url: "/db/db-user-del.html",
+                        url: "/db/db-user-del.html",
                         type: 'POST',
-                        data: $('#db_del_form').serialize(),
-                        success: function (data) {
-                            var obj = JSON.parse(data);
-                            if (obj.status) {
-                                location.href = "{% url "db:db_user_list" %}"
-                            } else {
-                                $('#error').text(obj.error);
-                            }
+                       data: {'nid': {{nid}} },
+                            success: function (data) {
+                                var obj = JSON.parse(data);
+                                if (obj.status) {
+                                    swal({title: "删除", text: "已成功删除", type: "success"}, function () {
+                                        location.href = "{% url "db:db_user_list" %}"
+                                    })
+                                } else {
+                                    swal("错误", "删除" + "[ " + obj.error + " ]" + "遇到错误", "error");
+                                }
                         }
                     })
                 });
+ });
 
             });
+
+
         </script>
 
 

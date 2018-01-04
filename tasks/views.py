@@ -127,13 +127,14 @@ class ToolsListAll(TemplateView):
 @login_required(login_url="/login.html")
 @permission_required_or_403('tasks.add_toolsscript')
 def tools_add(request):
+    obj = toolsscript.objects.all()
     if request.method == 'POST':
         form = ToolForm(request.POST)
         if form.is_valid():
             tools_save = form.save()
             form = ToolForm()
             return render(request, 'tasks/tools.html',
-                          {'form': form, "tasks_active": "active", "tools_active": "active", })
+                          {'form': form, "tasks_active": "active", "tools_active": "active",'tools': obj })
     else:
         form = ToolForm()
     return render(request, 'tasks/tools-add.html',{'form': form, "tasks_active": "active", "tools_active": "active", })

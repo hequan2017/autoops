@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" serverName="autoops">
+  <component name="PublishConfigData" autoUpload="Always" serverName="autoops1">
     <serverData>
-      <paths name="autoops">
+      <paths name="autoops1">
         <serverdata>
           <mappings>
-            <mapping deploy="/" local="$PROJECT_DIR$/" web="/" />
+            <mapping deploy="/" local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>
     </serverData>
+    <option name="myAutoUpload" value="ALWAYS" />
   </component>
 </project>

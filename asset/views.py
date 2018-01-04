@@ -22,9 +22,6 @@ from pyecharts import Gauge, Line
 import threading, time, datetime
 
 
-
-
-
 from  tasks.ansible_runner.runner import AdHocRunner
 
 
@@ -458,6 +455,7 @@ class SystemUserListAll(TemplateView):
 @login_required(login_url="/login.html")
 @permission_required_or_403('add_system_users')
 def system_user_add(request):
+
     if request.method == 'POST':
         form = SystemUserForm(request.POST)
         if form.is_valid():
@@ -475,11 +473,10 @@ def system_user_add(request):
             GroupObjectPermission.objects.assign_perm("delete_system_users", mygroup, obj=system_save)
 
             form = SystemUserForm()
-
-
-            return render(request, 'asset/system-user-add.html',
-                          {'form': form, "asset_active": "active",
-                           "system_user_list_active": "active", 'msg':'添加成功' })
+            return render(request, 'asset/system-user.html',
+                          { "asset_active": "active",
+            "system_user_list_active": "active",
+            'user_list': get_objects_for_user(request.user, 'asset.read_system_users') })
     else:
         form = SystemUserForm()
     return render(request, 'asset/system-user-add.html',
