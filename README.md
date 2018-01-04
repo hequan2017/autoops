@@ -7,9 +7,9 @@ AutoOps 是一款基于 2.0 版本django开发的，主要面向linux运维工�
 
 ###  Demo
 
-  -  地址:  `http://42.62.55.58:8003/`        账号`admin`      密码`1qaz.2wsx`
+  -  地址:  `http://42.62.6.5:8003/`        账号`admin`      密码`1qaz.2wsx`
   -  交流群号： `620176501`   欢迎交流！   <a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=bbe5716e8bd2075cb27029bd5dd97e22fc4d83c0f61291f47ed3ed6a4195b024"><img border="0" src="https://github.com/hequan2017/cmdb/blob/master/static/img/group.png"  alt="autoops开发讨论群" title="autoops开发讨论群"></a>
-  -  后台地址 `http://42.62.55.58:8003/admin`     账号`admin`   密码`1qaz.2wsx`
+  -  后台地址 `http://42.62.6.5:8003/admin`     账号`admin`   密码`1qaz.2wsx`
   -  博客:    `http://hequan.blog.51cto.com/`
   -  github:  `https://github.com/hequan2017/autoops/`
   -  码云:    `https://gitee.com/hequan2020/autoops`
@@ -43,7 +43,7 @@ AutoOps 是一款基于 2.0 版本django开发的，主要面向linux运维工�
 
 ###  功能
   - asset资产
-    - api     `http://42.62.55.58:8003/asset/api/asset.html`
+    - api     `http://42.62.6.5:8003/asset/api/asset.html`
     - 自动获取服务器信息
     - 全部导出
     - CPU 内存 流量图
@@ -69,9 +69,9 @@ AutoOps 是一款基于 2.0 版本django开发的，主要面向linux运维工�
 
 ### 环境
 
-   * Python 3.6.4
+   * Python 3.6.4         #可以参考 `script/install_python3.6.4.py`
    * Django 2.0
-   * Python 2.7  (用来启动 supervisor)
+   * Python 2.7            (用来启动 supervisor)
    * Centos 7.4
  
  
@@ -85,13 +85,17 @@ AutoOps 是一款基于 2.0 版本django开发的，主要面向linux运维工�
  
 ```bash
 cd /opt
-yum install git   sshpass -y 
-git  clone  git@github.com:hequan2017/autoops.git
+yum install git   sshpass    redis  -y 
+systemctl enable redis.service 
+systemctl start  redis.service 
+
+
+
+git  clone  https://github.com/hequan2017/autoops.git
     
 cd autoops/
 pip3 install -r requirements.txt     
     
-pip3 install git+git://github.com/sshwsfc/xadmin.git@django2
 ```
     
   
@@ -101,38 +105,38 @@ pip3 install git+git://github.com/sshwsfc/xadmin.git@django2
     2. 安装其他组件
     
  
- * 执行 `srcipt/install_redis.sh`   
  * 安装 `script/install_webssh.sh` ,  需要修改的内容见脚本内，如果不需要webssh，可暂时不用安装。
  * 安装 `script/install_inception.sh` ,  需要修改的内容见脚本内，如果不需要 数据库自动审核，可暂时不用安装。
+ 
  
  * 安装   `supervisor  `
  
 ```bash
-pip2   install    supervisor   
+pip2   install    supervisor     ## 没有pip2 版本的 ，可以参考 script/install_pip2.sh
 
 echo_supervisord_conf > /etc/supervisord.conf 
 mkdir /etc/supervisord.d/
      
 
-vim /etc/supervisord.conf
-     
-[include]
-files = /etc/supervisord.d/*.conf
-    
+vim /etc/supervisord.conf      ##进行相关设置
+         
 [inet_http_server] 
 port=0.0.0.0:9001 
 username=user
-password=123
+password=321
 
+[include]
+files = /etc/supervisord.d/*.conf
+
+cp   /opt/autoops/script/supervisor.conf    /etc/supervisord.d/      ## 复制配置文件
 ```  
     
- * 配置文件    ` cp   /opt/autoops/script/supervisor.conf    /etc/supervisord.d/   `
  
 
 ###  环境设置
 
-  * 关于数据库 请修改 `autops/settings`文件, 如果没有mysql，请选择上面那种，注释下面的。如果有，则可以启用mysql，设置相关连接地址。
-    关于mysql安装方法，可参考我的博客 `http://hequan.blog.51cto.com/5701886/1982428`
+  * 数据库: 请修改 `autops/settings`文件, 如果没有mysql，请选择上面那种。如果有，则可以启用mysql，设置相关连接地址。
+     关于mysql安装方法，可参考我的博客 `http://hequan.blog.51cto.com/5701886/1982428`
 
 ```djangotemplate
 DATABASES = {
@@ -159,14 +163,13 @@ DEBUG = True  ## 实际生产环境实用，请关闭  False
 
 BROKER_URL = 'redis://127.0.0.1:6379/0'  ##Redis地址
 
-Webssh_ip = "42.62.6.54"    ##WebSSH 软件的 访问IP
+Webssh_ip = "42.62.6.54"    ##WebSSH 软件的 访问IP   
 Webssh_port='9000'
 
+Inception_ip = '127.0.0.1'        ## 此为 Inception 软件地址 需要设置
+Inception_port = '6669'           ## 此为 Inception 软件端口号
 
-Inception_ip = '127.0.0.1'      ## 此为 Inception 软件地址 需要设置
-Inception_port = '6669'         ## 此为 Inception 软件端口号
-
-inception_remote_system_password='123456'             ## 设置回滚备份服务器相关参数，并同步修改一下 script/inc.cnf 里面的设置
+inception_remote_system_password='123456'         ## 设置回滚备份（mysql）服务器相关参数，并同步修改一下 script/inc.cnf 里面的设置
 inception_remote_system_user='root'
 inception_remote_backup_port='3306'
 inception_remote_backup_host='192.168.10.81'
@@ -190,11 +193,18 @@ python manage.py  createsuperuser             ##创建管理员
   * 启动: 统一用supervisor 管理进程,  打开   0.0.0.0:9001  账号user  密码123    进入进程管理界面，管理uwsgi,redis,webssh,celery,Inception 等启动关闭。
 此方法不涉及到nginx。
 
+  * 登陆的端口号 在 supervisor.conf  里面 第15行  。
+ 
  
   * 登陆后台，设置定时获取主机图，设置数据中心、组。
   
   * 设置定时获取主机信息任务。 先创建执行的时间频率，再创建任务，创建后，观察队列任务是否执行成功，如不成功，重启所有celery任务。
  ![图片](https://github.com/hequan2017/autoops/blob/master/static/demo/9.png)
+
+
+
+
+
 
 
 
@@ -222,9 +232,9 @@ from   tasks.ansible_runner.callback import CommandResultCallback
 
 
 ```bash
-uwsgi  --ini    /opt/autoops/script/uwsgi.ini   # 启动uwsgi配置  也可以把这个命令写到开机的文件里面
-uwsgi  --stop   /opt/autoops/script/uwsgi.pid # 关闭uwsgi
-uwsgi  --reload  /opt/autoops/script/uwsgi.pid  #重新加载
+uwsgi  --ini    /opt/autoops/script/uwsgi.ini     # 启动uwsgi配置  也可以把这个命令写到开机的文件里面
+uwsgi  --stop   /opt/autoops/script/uwsgi.pid    # 关闭uwsgi
+uwsgi  --reload  /opt/autoops/script/uwsgi.pid   #重新加载
 ```
  
 *  或者用nginx 

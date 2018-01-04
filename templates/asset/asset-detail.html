@@ -323,7 +323,7 @@
                     $.ajax({
                         url: "/asset/asset-hardware-update.html",
                         type: 'POST',
-                        data: $('#asset_del_form').serialize(),
+                        data: {'nid': {{  nid }}},
                         success: function (data) {
                             var obj = JSON.parse(data);
                             if (obj.status) {
@@ -336,6 +336,10 @@
                 });
 
             });
+
+
+
+
         </script>
 
 

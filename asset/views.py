@@ -226,13 +226,16 @@ class AssetAllDel(View):
 @login_required(login_url="/login.html")
 def asset_hardware_update(request):
     ret = {'status': True, 'error': None, 'data': None}
-
     if request.method == 'POST':
+
         try:
+
             id = request.POST.get('nid', None)
             obj = asset.objects.get(id=id)
             ip = obj.network_ip
             port = obj.port
+
+
             username = obj.system_user.username
             password1 = obj.system_user.password
 

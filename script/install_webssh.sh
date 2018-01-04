@@ -4,10 +4,10 @@ cd /opt
 yum  install git   go  -y
 #wget https://golangtc.com/static/go/1.9.2/go1.9.2.linux-amd64.tar.gz
 #tar zxvf go1.9.2.linux-amd64.tar.gz -C /usr/local
+#echo 'export PATH="/usr/local/go/bin:$PATH"' >> /etc/profile
+#source    /etc/profile
 
 
-echo 'export PATH="/usr/local/go/bin:$PATH"' >> /etc/profile
-source    /etc/profile
 
 cd  /opt && git clone --recurse-submodules https://github.com/shibingli/webconsole.git && cd webconsole && git submodule update --init --recursive
 
