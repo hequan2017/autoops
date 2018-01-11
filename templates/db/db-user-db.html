@@ -117,8 +117,8 @@
 
                                             <td><a class="btn btn-primary  btn-xs "
                                                    href="{% url  "db:db_update"  pk=row.id %}">编辑</a>
-                                                <a class="btn btn-danger  btn-xs  db_del_id" data-toggle="modal"
-                                                   data-target="#myModal1">删除
+                                                <a class="btn btn-danger  btn-xs  db_user_del"
+                                                   >删除
                                                 </a>
 
                                             </td>
@@ -143,52 +143,45 @@
         </div>
     </div>
 
-    <div class="modal inmodal" id="myModal1" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content animated fadeIn">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span
-                            aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <i class="fa fa-clock-o modal-icon"></i>
-                    <h4 class="modal-title">删除</h4>
-                    <span id="error" style="color:red;"></span>
-                    <small></small>
-                </div>
-                <form id="db_del_form">
-                    <div class="modal-body">
 
-                        <div class="form-group"><input type="text" name="nid" style="display:none" value="{{ nid }}"/>
-                        </div>
-                        <p><strong>确定删除？</strong></p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
-                        <a class="btn btn-danger m-r-sm db_user_del">删除</a>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
 
 
     {% block footer-js %}
         <script>
             $(function () {
-                $('.db_user_del').click(function () {
+               $('.db_user_del').click(function () {
+
+
+                        swal({
+
+                        title: "你确定删除",
+                        text: "你将无法恢复",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: "确定",
+                        closeOnConfirm: false
+                    }, function () {
+
+
                     $.ajax({
-                       url: "/db/db-user-del.html",
+                        url: "/db/db-user-del.html",
                         type: 'POST',
-                        data: $('#db_del_form').serialize(),
-                        success: function (data) {
-                            var obj = JSON.parse(data);
-                            if (obj.status) {
-                                location.href = "{% url "db:db_user_list" %}"
-                            } else {
-                                $('#error').text(obj.error);
-                            }
+                       data: {'nid': {{nid}} },
+                            success: function (data) {
+                                var obj = JSON.parse(data);
+                                if (obj.status) {
+                                    swal({title: "删除", text: "已成功删除", type: "success"}, function () {
+                                        location.href = "{% url "db:db_user_list" %}"
+                                    })
+                                } else {
+                                    swal("错误", "删除" + "[ " + obj.error + " ]" + "遇到错误", "error");
+                                }
                         }
                     })
                 });
+ });
+
 
             });
         </script>
