@@ -91,23 +91,23 @@ WSGI_APPLICATION = 'autoops.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
-
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'autoops',
-#         'USER': 'root',
-#         'PASSWORD': '123456',
-#         'HOST': '192.168.10.29',
-#         'PORT': '3306',
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
 #     }
 # }
+
+DATABASES = {
+     'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'autoops',
+        'USER': 'root',
+        'PASSWORD': '123456',
+        'HOST': '192.168.10.125',
+        'PORT': '6446',
+     }
+}
 
 
 
@@ -202,11 +202,11 @@ MEDIA_URL = '/upload/'  # 这个是在浏览器上访问该上传文件的url的
 
 
 
-Inception_ip = '192.168.10.99'  ## 此为 Inception 软件地址 需要设置
+Inception_ip = '127.0.0.1'  ## 此为 Inception 软件地址 需要设置
 Inception_port = '6669'       ## 此为 Inception 软件端口号
 
 
-Webssh_ip = '42.62.55.58'   ##WebSSH 软件的 访问IP
+Webssh_ip = '42.62.6.5'   ##WebSSH 软件的 访问IP
 Webssh_port='9000'
 
 inception_remote_system_password='654321'    ## 设置回滚备份服务器相关参数，并同步修改一下 script/inc.cnf 里面的设置
