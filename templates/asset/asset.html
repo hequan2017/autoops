@@ -56,10 +56,10 @@
 
                             <form id="cha" class="form-horizontal" action="{% url 'asset:asset_list' %}" method="post">
                                 {% csrf_token %}
-                                {#                                <div class="col-md-2"><input type="text" class="form-control" name="name" required>#}
-                                {#                                </div>#}
-                                {##}
-                                {#                                <button class="btn btn-primary" type="submit">查询</button>#}
+                                                                <div class="col-md-2"><input type="text" class="form-control" name="name" required>
+                                                                </div>
+
+                                                                <button class="btn btn-primary" type="submit">查询</button>
 
 
                                 <a href="{% url    'asset:asset_add' %}" class="btn btn-primary  ">

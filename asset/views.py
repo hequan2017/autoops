@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from asset.models import asset, system_users, performance, web_history, data_centers
 from .form import AssetForm, SystemUserForm
-from names.password_crypt import encrypt_p, decrypt_p,pyecharts_add
+from names.password_crypt import encrypt_p, decrypt_p, pyecharts_add
 from django.contrib.auth.models import User, Group
 from guardian.shortcuts import assign_perm, get_perms
 from guardian.core import ObjectPermissionChecker
@@ -43,23 +43,32 @@ class AssetListAll(TemplateView):
         kwargs.update(context)
         return super(AssetListAll, self).get_context_data(**kwargs)
 
-        # def post(self, request):
-        #     query = request.POST.get("name")
-        #
-        #     ret = asset.objects.filter(
-        #         Q(network_ip=query) | Q(manage_ip=query) | Q(hostname=query) | Q(inner_ip=query) | Q(model=query) | Q(
-        #             eth0=query) | Q(eth1=query) | Q(eth2=query) | Q(eth3=query) |
-        #         Q(system=query) | Q(system_user__username=query) | Q(data_center__data_center_list=query) | Q(
-        #             cabinet=query) |
-        #         Q(position=query) | Q(sn=query)
-        #         | Q(uplink_port=query) |
-        #         Q(product_line__name=query))
-        #
-        #     return render(request, 'asset/asset.html',
-        #                   {"Webssh": getattr(settings, 'Webssh_ip'),
-        #                    "Webssh_port": getattr(settings, 'Webssh_port'),
-        #                    "asset_active": "active",
-        #                    "asset_list_active": "active", "asset_list": ret})
+    def post(self, request):
+        query = request.POST.get("name")
+
+        user = User.objects.get(username=request.user)
+        if user.is_superuser == 1:
+            ret = asset.objects.filter(Q(network_ip=query) | Q(manage_ip=query) | Q(hostname=query) | Q(
+                inner_ip=query) | Q(model=query) | Q(
+                eth0=query) | Q(eth1=query) | Q(eth2=query) | Q(eth3=query) |
+                                       Q(system=query) | Q(system_user__username=query) | Q(
+                data_center__data_center_list=query) | Q(
+                cabinet=query) |
+                                       Q(position=query) | Q(sn=query)
+                                       | Q(uplink_port=query) | Q(product_line__name=query)
+                                       )
+        else:
+            product1 = Group.objects.get(user=user)
+
+            ret = asset.objects.filter(Q(product_line__name=product1) &  Q(network_ip=query) | Q(manage_ip=query) | Q(hostname=query) | Q( inner_ip=query) | Q(model=query) | Q(eth0=query) | Q(eth1=query) | Q(eth2=query) | Q(eth3=query) |
+                                       Q(system=query) | Q(system_user__username=query)
+                                       | Q(data_center__data_center_list=query) | Q(cabinet=query) | Q(position=query) | Q(sn=query)| Q(uplink_port=query))
+
+        return render(request, 'asset/asset.html',
+                      {"Webssh": getattr(settings, 'Webssh_ip'),
+                       "Webssh_port": getattr(settings, 'Webssh_port'),
+                       "asset_active": "active",
+                       "asset_list_active": "active", "asset_list": ret})
 
 
 class AssetAdd(CreateView):
@@ -80,7 +89,7 @@ class AssetAdd(CreateView):
         mygroup = Group.objects.get(name=myproduct)
 
         GroupObjectPermission.objects.assign_perm("read_asset", mygroup, obj=asset_save)
-        GroupObjectPermission.objects.assign_perm("add_asset", mygroup, obj=asset_save,)
+        GroupObjectPermission.objects.assign_perm("add_asset", mygroup, obj=asset_save, )
         GroupObjectPermission.objects.assign_perm("change_asset", mygroup, obj=asset_save)
         GroupObjectPermission.objects.assign_perm("delete_asset", mygroup, obj=asset_save)
         GroupObjectPermission.objects.assign_perm("task_asset", mygroup, obj=asset_save)
@@ -129,7 +138,7 @@ class AssetUpdate(UpdateView):
 
         self.object = form.save()
         if old_mygroup != new_mygroup:
-            GroupObjectPermission.objects.remove_perm("read_asset",old_mygroup, obj=self.object)
+            GroupObjectPermission.objects.remove_perm("read_asset", old_mygroup, obj=self.object)
             GroupObjectPermission.objects.remove_perm("add_asset", old_mygroup, obj=self.object)
             GroupObjectPermission.objects.remove_perm("change_asset", old_mygroup, obj=self.object)
             GroupObjectPermission.objects.remove_perm("delete_asset", old_mygroup, obj=self.object)
@@ -234,7 +243,6 @@ def asset_hardware_update(request):
             obj = asset.objects.get(id=id)
             ip = obj.network_ip
             port = obj.port
-
 
             username = obj.system_user.username
             password1 = obj.system_user.password
@@ -358,7 +366,7 @@ def asset_web_ssh(request):
         a = asset.objects.get(id=id)
         user = User.objects.get(username=request.user)
         checker = ObjectPermissionChecker(user)
-        ret={}
+        ret = {}
         try:
             if checker.has_perm('task_asset', a) == True:
                 ip = obj.network_ip + ":" + str(obj.port)
@@ -431,9 +439,10 @@ def asset_performance(request, nid):
         script_list=cpu.get_js_dependencies(),
         asset_active="active",
         asset_list_active="active",
-        onresize=" <script>  window.onresize = function () {  %s %s  %s  %s };  </script>" % (pyecharts_add(cpu.render_embed())[1],pyecharts_add(mem.render_embed())[1],pyecharts_add(network.render_embed())[1],pyecharts_add(history_cpumem.render_embed())[1],)
+        onresize=" <script>  window.onresize = function () {  %s %s  %s  %s };  </script>" % (
+        pyecharts_add(cpu.render_embed())[1], pyecharts_add(mem.render_embed())[1],
+        pyecharts_add(network.render_embed())[1], pyecharts_add(history_cpumem.render_embed())[1],)
     )
-
 
     return HttpResponse(template.render(context, request))
 
@@ -458,7 +467,6 @@ class SystemUserListAll(TemplateView):
 @login_required(login_url="/login.html")
 @permission_required_or_403('add_system_users')
 def system_user_add(request):
-
     if request.method == 'POST':
         form = SystemUserForm(request.POST)
         if form.is_valid():
@@ -477,9 +485,9 @@ def system_user_add(request):
 
             form = SystemUserForm()
             return render(request, 'asset/system-user.html',
-                          { "asset_active": "active",
-            "system_user_list_active": "active",
-            'user_list': get_objects_for_user(request.user, 'asset.read_system_users') })
+                          {"asset_active": "active",
+                           "system_user_list_active": "active",
+                           'user_list': get_objects_for_user(request.user, 'asset.read_system_users')})
     else:
         form = SystemUserForm()
     return render(request, 'asset/system-user-add.html',
@@ -496,20 +504,18 @@ def system_user_update(request, nid):
         old_product_line = system_users.objects.get(id=nid).product_line
         old_mygroup = Group.objects.get(name=old_product_line)
 
-
         if form.is_valid():
             password = form.cleaned_data['password']
             myproduct = form.cleaned_data['product_line']
-            if password  != None:
-                print("密码变了")
+            if password != None:
+
                 system_save = form.save()
                 password1 = encrypt_p(form.cleaned_data['password'])
                 system_save.password = password1
                 system_save.save()
 
+                if old_product_line != myproduct:
 
-                if old_product_line != myproduct :
-                    print('产品线变了')
 
                     mygroup = Group.objects.get(name=myproduct)
 
@@ -518,7 +524,6 @@ def system_user_update(request, nid):
                     GroupObjectPermission.objects.assign_perm("change_system_users", old_mygroup, obj=system_save)
                     GroupObjectPermission.objects.assign_perm("delete_system_users", old_mygroup, obj=system_save)
 
-
                     GroupObjectPermission.objects.assign_perm("read_system_users", mygroup, obj=system_save)
                     GroupObjectPermission.objects.assign_perm("add_system_users", mygroup, obj=system_save)
                     GroupObjectPermission.objects.assign_perm("change_system_users", mygroup, obj=system_save)
@@ -526,7 +531,7 @@ def system_user_update(request, nid):
 
                     form = AssetForm()
             else:
-                print("密码没变")
+
                 s = system_users.objects.get(id=nid)
                 password_old = system_users.objects.get(id=nid).password
                 old_product_line = system_users.objects.get(id=nid).product_line
@@ -534,9 +539,8 @@ def system_user_update(request, nid):
                 s.password = password_old
                 s.save()
 
+                if old_product_line != myproduct:
 
-                if old_product_line   != myproduct:
-                    print('密码没变,但是产品线变了')
 
                     mygroup = Group.objects.get(name=myproduct)
 
@@ -574,8 +578,6 @@ class SystemUserDelete(View):
             user = User.objects.get(username=request.user)
             checker = ObjectPermissionChecker(user)
             system_u = system_users.objects.get(id=id)
-
-
 
             if checker.has_perm('delete_system_users', system_u) == True:
                 system_u.delete()
@@ -626,9 +628,11 @@ class AssetUpload(View):
 def export(request):
     if request.method == "GET":
         a = asset.objects.all()
+
         bt = ['主机名', '外网IP', '管理IP', '内网IP', 'ssh端口', '型号', '系统版本', "网卡1mac地址", "网卡2mac地址", "网卡3mac地址", "网卡4mac地址",
               '登陆用户', '数据中心', '机柜', '位置', '序列号', 'CPU', '内存', "硬盘", "上联端口", "出厂时间", "到保时间", '产品线', '是否启用', "备注"
             , '创建时间', '更新时间', ]
+
         wb = xlwt.Workbook(encoding='utf-8')
         sh = wb.add_sheet("详情")
 
@@ -671,4 +675,5 @@ def export(request):
         response['Content-Disposition'] = 'attachment; filename=asset' + time.strftime('%Y%m%d', time.localtime(
             time.time())) + '.xls'
         wb.save(response)
+
         return response
