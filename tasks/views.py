@@ -13,8 +13,10 @@ from guardian.decorators import permission_required_or_403
 from django.views.generic import TemplateView, ListView, View, CreateView, UpdateView, DeleteView, DetailView
 
 
-from   tasks.ansible_runner.runner import AdHocRunner, PlayBookRunner
-from   tasks.ansible_runner.callback import CommandResultCallback
+
+from   tasks.ansible_2420.runner import AdHocRunner, CommandRunner
+from  tasks.ansible_2420.inventory import BaseInventory
+
 
 from  autoops import settings
 from names.password_crypt import encrypt_p,decrypt_p
@@ -53,7 +55,8 @@ def cmd(request):  ##命令行
 
     if request.method == 'POST':
         ids = request.POST.getlist('id')
-        cmd = request.POST.get('cmd', None)
+        args = request.POST.getlist('args', None)
+        module =request.POST.getlist('module', None)
 
         user = User.objects.get(username=request.user)
         checker = ObjectPermissionChecker(user)
@@ -68,39 +71,59 @@ def cmd(request):  ##命令行
                 ret = {"error": error_3, "status": False}
                 return HttpResponse(json.dumps(ret))
 
-
-        user = request.user
         idstring = ','.join(ids1)
         if not ids:
             error_1 = "请选择主机"
             ret = {"error": error_1, "status": False}
             return HttpResponse(json.dumps(ret))
-        elif not cmd:
+        elif   args == ['']   :
             error_2 = "请输入命令"
             ret = {"error": error_2, "status": False}
             return HttpResponse(json.dumps(ret))
-
         obj = asset.objects.extra(where=['id IN (' + idstring + ')'])
+        ret = {'data':[]}
+        tasks=[]
 
-        ret = {}
+        for   x  in range(len(module)):
+           tasks.append({"action": {"module": module[x], "args": args[x]}, "name": 'task{}'.format(x)},)
 
-        ret['data'] = []
+
         for i in obj:
             try:
-                password = decrypt_p(i.system_user.password)
+                assets = [
+                    {
+                        "hostname": 'host',
+                        "ip": i.network_ip,
+                        "port": i.port,
+                        "username": i.system_user.username,
+                        "password": decrypt_p(i.system_user.password),
+                    },
+                ]
+                inventory = BaseInventory(assets)
+                runner = AdHocRunner(inventory)
+                retsult = runner.run(tasks, "all")
 
-                s = ssh(ip=i.network_ip, port=i.port, username=i.system_user.username, password=password,cmd=cmd)
-                historys = history.objects.create(ip=i.network_ip, root=i.system_user, port=i.port, cmd=cmd, user=user)
-                if s == None or s['data'] == '':
-                    s = {}
-                    s['ip'] = i.network_ip
-                    s['data'] = "返回值为空,可能是权限不够。"
-                ret['data'].append(s)
+                ret1=[]
+
+                for c  in range(len(module)):
+
+                    try:
+                        ret1.append(retsult.results_raw['ok']['host']['task{}'.format(c)]['stdout'])
+                    except Exception as e:
+                        if retsult.results_summary['dark'] == [''] :
+                            ret1.append("执行成功")
+                        else:
+                            ret1.append("命令有问题,{}".format(retsult.results_summary['dark']))
+
+                history.objects.create(ip=i.network_ip, root=i.system_user, port=i.port, cmd=args, user=user)
+
+                ret2={'ip':i.network_ip,'data':'\n'.join(ret1)}
+                ret['data'].append(ret2)
+
             except Exception as e:
                 ret['data'].append({"ip": i.network_ip, "data": "账号密码不对,{}".format(e)})
+
         return HttpResponse(json.dumps(ret))
-
-
 
 
 class ToolsListAll(TemplateView):
@@ -189,13 +212,7 @@ def tools_script_post(request):
         try:
             host_ids = request.POST.getlist('id', None)
             sh_id = request.POST.get('shid', None)
-
             user = request.user
-
-
-
-
-
 
             if not host_ids:
                 error1 = "请选择主机"
@@ -225,32 +242,29 @@ def tools_script_post(request):
                     with  open('tasks/script/test.sh', 'w+') as f:
                         f.write(s.tool_script)
                         a = 'tasks/script/{}.sh'.format(s.id)
-                    os.system("sed 's/\r//'  tasks/script/test.sh >  {}".format(a))
-
+                    os.system("sed  's/\r//'  tasks/script/test.sh >  {}".format(a))
                 elif s.tool_run_type == 1:
                     with  open('tasks/script/test.py', 'w+') as f:
                         f.write(s.tool_script)
                         p = 'tasks/script/{}.py'.format(s.id)
-                    os.system("sed 's/\r//'  tasks/script/test.py >  {}".format(p))
-                elif s.tool_run_type == 2:
-                    with  open('tasks/script/test.yml', 'w+') as f:
-                        f.write(s.tool_script)
-                        y = 'tasks/script/{}.yml'.format(s.id)
-                    os.system("sed 's/\r//'  tasks/script/test.yml >  {}".format(y))
+                        os.system("sed 's/\r//'  tasks/script/test.py >  {}".format(p))
+                # elif s.tool_run_type == 2:
+                #     with  open('tasks/script/test.yml', 'w+') as f:
+                #         f.write(s.tool_script)
+                #         y = 'tasks/script/{}.yml'.format(s.id)
+                #     os.system("sed 's/\r//'  tasks/script/test.yml >  {}".format(y))
                 else:
                     ret['status'] = False
-                    ret['error'] = '脚本类型错误,只能是shell、yml、python'
+                    ret['error'] = '脚本类型错误,只能是shell、python'
                     return HttpResponse(json.dumps(ret))
 
                 data1 = []
                 for h in host:
                     try:
-                        data2 = {}
                         password = decrypt_p(h.system_user.password)
-
                         assets = [
                             {
-                                "hostname": h.hostname,
+                                "hostname": 'host',
                                 "ip": h.network_ip,
                                 "port": h.port,
                                 "username": h.system_user.username,
@@ -260,41 +274,37 @@ def tools_script_post(request):
 
                         history.objects.create(ip=h.network_ip, root=h.system_user.username, port=h.port, cmd=s.name,
                                                user=user)
+
                         if s.tool_run_type == 0:
-                            task_tuple = (('script', a),)
-                            hoc = AdHocRunner(hosts=assets)
-                            hoc.results_callback = CommandResultCallback()
-                            r = hoc.run(task_tuple)
-                            data2['ip'] = h.network_ip
-                            data2['data'] = r['contacted'][h.hostname]['stdout']
-                            data1.append(data2)
-
-
+                            tasks1 = [{"action": {"module": "script", "args": "{}".format(a)}, "name": "1"},]
                         elif s.tool_run_type == 1:
-                            task_tuple = (('script', p),)
-                            hoc = AdHocRunner(hosts=assets)
-                            hoc.results_callback = CommandResultCallback()
-                            r = hoc.run(task_tuple)
-                            data2['ip'] = h.network_ip
-                            data2['data'] = r['contacted'][h.hostname]['stdout']
-                            data1.append(data2)
-                        elif s.tool_run_type == 2:
-                            play = PlayBookRunner(assets, playbook_path=y)
-                            b = play.run()
-                            data2['ip'] = h.network_ip
-                            data2['data'] = b['plays'][0]['tasks'][1]['hosts'][h.hostname]['stdout'] + \
-                                            b['plays'][0]['tasks'][1]['hosts'][h.hostname]['stderr']
-                            data1.append(data2)
-                        else:
-                            data2['ip'] = "脚本类型错误"
-                            data2['data'] = "脚本类型错误"
+                            tasks1 = [{"action": {"module": "script", "args": "{}".format(p)}, "name": "1"}, ]
+
+
+
+                        inventory = BaseInventory(assets)
+                        runner = AdHocRunner(inventory)
+
+                        retsu = runner.run(tasks1, "all")
+
+
+
+                        try:
+                            data2 = {'ip': h.network_ip, 'data': retsu.results_raw['ok']['host']['1']['stdout']}
+                        except Exception as e:
+                            if retsu.results_summary['dark'] == ['']:
+                                data2 = {'ip': h.network_ip, 'data': "执行成功"}
+                            else:
+                                data2 = {'ip': h.network_ip, 'data':"命令有问题,{}".format(retsu.results_summary['dark'])}
+
+                        data1.append(data2)
                     except  Exception as  e:
                         data2['ip'] = h.network_ip
-                        data2['data'] = "账号密码不对,或没有权限,请修改{},  请查看主机资产中的 主机名 ,此值不能为空,可随便填写一个。 ".format(e)
+                        data2['data'] = "账号密码不对,或没有权限,请修改  {},  ".format(e)
                         data1.append(data2)
-
                 ret['data'] = data1
                 return HttpResponse(json.dumps(ret))
+
         except Exception as e:
             ret['error'] = '未知错误 {}'.format(e)
             return HttpResponse(json.dumps(ret))

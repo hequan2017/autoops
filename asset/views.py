@@ -22,7 +22,9 @@ from pyecharts import Gauge, Line
 import threading, time, datetime
 
 
-from  tasks.ansible_runner.runner import AdHocRunner
+from   tasks.ansible_2420.runner import AdHocRunner, CommandRunner
+from  tasks.ansible_2420.inventory import BaseInventory
+
 
 
 class AssetListAll(TemplateView):
@@ -258,11 +260,20 @@ def asset_hardware_update(request):
                 },
             ]
 
-            task_tuple = (('setup', ''),)
-            runner = AdHocRunner(assets)
 
-            result = runner.run(task_tuple=task_tuple, pattern='all', task_name='Ansible Ad-hoc')
-            data = result['contacted']['host'][0]['ansible_facts']
+
+            inventory = BaseInventory(assets)
+            runner = AdHocRunner(inventory)
+
+            tasks = [
+                {"action": {"module": "setup", "args": ""}, "name": "setup"},
+            ]
+            result = runner.run(tasks, "all")
+
+            data = result.results_raw['ok']['host']['setup']['ansible_facts']
+
+
+
 
             hostname = data['ansible_nodename']
             system = data['ansible_distribution'] + " " + data['ansible_distribution_version']
@@ -351,9 +362,7 @@ def asset_hardware_update(request):
 
         except Exception as e:
             ret['status'] = False
-            ret[
-                'error'] = '登陆账号权限不够| 请在被添加的主机安装  parted  ipmitool dmidecode  | 删除  主服务器/root/.ssh/known_hosts  文件'.format(
-                e)
+            ret['error'] = '登陆账号权限不够| 请在被添加的主机安装  parted  ipmitool dmidecode  |    或者 删除  主服务器/root/.ssh/known_hosts  文件'.format(e)
         return HttpResponse(json.dumps(ret))
 
 

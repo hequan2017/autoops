@@ -25,7 +25,7 @@
 
         </div>
     </div>
-<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
             <div class="col-lg-5">
                 <div class="ibox float-e-margins">
@@ -70,7 +70,7 @@
                                         <tr class="gradeA" id="{{ row.id }}">
                                             <td><input type="checkbox" value="{{ row.id }}" name="id"></td>
                                             <td class="center"><a
-                                                     href="{% url  "asset:asset_detail"   pk=row.id %}">{{ row.network_ip }}</a>
+                                                    href="{% url  "asset:asset_detail"   pk=row.id %}">{{ row.network_ip }}</a>
                                             </td>
                                             <td class="center">{{ row.manage_ip }}</td>
                                             <td class="center">{{ row.system_user }}</td>
@@ -82,16 +82,43 @@
 
                                 </table>
 
-
                                 <div class="ibox-content">
-                                    <div class="form-group"><label class="col-sm-2 control-label">命令</label>
+                                <div class="form-group">
 
-                                        <div class="col-lg-8 col-sm-9"><input type="text" class="form-control" placeholder="命令" name="cmd" required=""><span class="help-block m-b-none"></span>
+
+                                        <div>
+
+                                            <select name="module" class="form-control" title="" required=""
+                                            id="id_cmd" style="width:100px;float: left;">
+                                                <option value="shell">shell</option>
+                                                <option value="cron">cron</option>
+                                                <option value="copy">copy</option>
+                                                <option value="file">file</option>
+                                                <option value="service">service</option>
+                                                <option value="user">user</option>
+                                                <option value="ping">ping</option>
+                                                <option value="yum">yum</option>
+                                                <option value="setup">setup</option>
+                                                <option value="template">template</option>
+                                                <option value="synchronize">synchronize</option>
+                                                <option value="get_url">get_url</option>
+
+                                            </select>
+                                            &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;
+                                            &nbsp;
+                                            <input type="button" class="btn btn-primary  " value="增加" id="addTable"
+                                                   onclick="add_tr(this)"/>
+                                            <input type="button" class="btn btn-danger  " value="删除" id="deleteTable"
+                                                   onclick="del_tr(this)"/>
+                                            <input class="form-control" placeholder="命令"   name="args" title="" style="width:500px;">
+
+
                                         </div>
+
+
                                     </div>
 
-
-                                    <div class="form-group">
+                     <div class="form-group">
                                         <div class="col-sm-6 col-sm-offset-2">
 
                                             <a id="cmd" class="btn btn-primary" type="submit">提交</a>
@@ -100,14 +127,21 @@
                                         </div>
                                     </div>
 
-                                </div>
 
-                            </form>
+
+                            </div>
+
+                                </form>
                         </div>
+
+
 
                     </div>
                 </div>
             </div>
+
+
+
             <div class="col-sm-7">
                 <div class="ibox float-e-margins">
                     <div class="ibox-title">
@@ -131,9 +165,9 @@
                             </a>
                         </div>
                     </div>
-                    <div class="ibox-content  pres"   >
+                    <div class="ibox-content  pres">
 
-                          <pre> <span id="err"></span></pre>
+                        <pre> <span id="err"></span></pre>
 
                     </div>
                 </div>
@@ -143,52 +177,59 @@
 
 
 
-{% block footer-js %}
+    {% block footer-js %}
 
-<script>
-
-
-    $(function () {
+        <script>
 
 
-        $('#cmd').click(function () {
-            $.ajax({
-                url: "/tasks/cmd.html",
-                type: 'POST',
-                data: $('.cmd_from').serialize(),
-                success: function (data) {
-                    var obj = JSON.parse(data);
-                    cons = "";
-                    if (obj.data) {
-                         $.each(obj, function (data, values) {
-                            $.each(values, function (index, value) {
-                                cons += "<pre>"+"主机:" + value.ip + "\n" + "结果: \n " + value.data + "</pre>"
-
-                            });
-                            $(".pres").html(cons); //把内容入到这个div中即完成
-                        });
-                    } else {
-                        $('#err').text(obj.error);
-                    }
-
-                }
-
-            })
-        });
+            $(function () {
 
 
+                $('#cmd').click(function () {
+                    $.ajax({
+                        url: "/tasks/cmd.html",
+                        type: 'POST',
+                        data: $('.cmd_from').serialize(),
+                        success: function (data) {
+                            var obj = JSON.parse(data);
+                            cons = "";
+                            if (obj.data) {
+                                $.each(obj, function (data, values) {
+                                    $.each(values, function (index, value) {
+                                        cons += "<pre>" + "主机:" + value.ip + "\n" + "结果: \n " + value.data + "</pre>"
+
+                                    });
+                                    $(".pres").html(cons); //把内容入到这个div中即完成
+                                });
+                            } else {
+                                $('#err').text(obj.error);
+                            }
+
+                        }
+
+                    })
+                });
 
 
+            });
 
-    });
-
-    function clearBody() {
-        location.reload()
-    }
-
-</script>
+            function clearBody() {
+                location.reload()
+            }
 
 
-{% endblock %}
+            function add_tr(obj) {
+                var tr = $(obj).parent();
+                tr.after(tr.clone());
+            }
+
+            function del_tr(obj) {
+                $(obj).parent().remove();
+            }
+
+        </script>
+
+
+    {% endblock %}
 
 {% endblock %}

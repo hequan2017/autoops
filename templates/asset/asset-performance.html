@@ -36,7 +36,7 @@
                     <div class="ibox float-e-margins">
 
                     <div class="ibox-title">
-                            <h5>CPU</h5>
+                            <h5>CPU 当前最新</h5>
                               <div class="ibox-tools">
                                 <a class="collapse-links">
                                     <i class="fa fa-chevron-up"></i>
@@ -58,7 +58,7 @@
                         </div>
 
                     <div class="ibox-content" >
-                        <div   style="height:300px;" >  {{ cpu | safe }} </div>
+                        {{ cpu | safe }}
                     </div>
                 </div>
 
@@ -67,7 +67,7 @@
                     <div class="ibox float-e-margins">
 
                     <div class="ibox-title">
-                            <h5>内存</h5>
+                            <h5>内存 当前最新</h5>
                               <div class="ibox-tools">
                                 <a class="collapse-links">
                                     <i class="fa fa-chevron-up"></i>
@@ -89,7 +89,7 @@
                         </div>
 
                     <div class="ibox-content" >
-                        <div   style="height:300px;" >{{ mem  | safe}}</div>
+                      {{ mem  | safe}}
                     </div>
                 </div>
 

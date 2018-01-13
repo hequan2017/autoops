@@ -12,12 +12,13 @@
   </component>
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$" />
-    <orderEntry type="jdk" jdkName="Remote Python 3.6.4 (ssh://root@42.62.55.52:22/usr/bin/python)" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Python 3.6.4 (C:\Program Files\Python36\python.exe)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="cmdb" />
     <orderEntry type="module" module-name="apps" />
     <orderEntry type="module" module-name="web" />
     <orderEntry type="module" module-name="python-lianxi" />
+    <orderEntry type="module" module-name="cmdb" />
   </component>
   <component name="TemplatesService">
     <option name="TEMPLATE_CONFIGURATION" value="Django" />
