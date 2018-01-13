@@ -210,16 +210,17 @@ python manage.py  createsuperuser             ##创建管理员
 
 ###  开发设置
 
-  * 如果想在windows 下的 pycharm打开，请注释  
+  * 如果想在windows 下的 pycharm打开， 先pip 安装好模块，ansbile无法装在windows上，忽略掉。然后注释下面的代码。  
   
   ```djangotemplate
 asset/views.py
-from  tasks.ansible_runner.runner import AdHocRunner
+from   tasks.ansible_2420.runner import AdHocRunner, CommandRunner
+# from  tasks.ansible_2420.inventory import BaseInventory
 
 
 tasks/views.py   
-from   tasks.ansible_runner.runner import AdHocRunner, PlayBookRunner
-from   tasks.ansible_runner.callback import CommandResultCallback
+from   tasks.ansible_2420.runner import AdHocRunner, CommandRunner
+from  tasks.ansible_2420.inventory import BaseInventory
 ```
     
     
