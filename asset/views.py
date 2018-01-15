@@ -397,7 +397,7 @@ def asset_web_ssh(request):
 
 
 def Gauge_cpumem(attr, data):
-    bar = Gauge("", width=600, height=300)
+    bar = Gauge("", height=300)
     bar.add("", attr, data)
     return bar
 

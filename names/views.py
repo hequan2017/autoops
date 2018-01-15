@@ -22,14 +22,14 @@ from .password_crypt import pyecharts_add
 def Bard(product,products):
     attr = product
     v1 = products
-    bar = Bar("", width=700, height=300)
+    bar = Bar("",  height=300)
     bar.add("产品线", attr, v1)
     return bar
 
 def Bard2(data,datas):
     attr = data
     v1 = datas
-    bar = Bar("", width=700, height=300)
+    bar = Bar("",  height=300)
     bar.add("数据中心", attr, v1)
     return bar
 
