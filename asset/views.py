@@ -404,8 +404,8 @@ def Gauge_cpumem(attr, data):
 
 def Line_network(d, title, title1, date, network_in, network_put):
     bar = Line(d, width=1600, height=500)
-    bar.add(title, date, network_in)
-    bar.add(title1, date, network_put)
+    bar.add(title, date, network_in,is_datazoom_show=True)
+    bar.add(title1, date, network_put,is_datazoom_show=True)
     return bar
 
 
