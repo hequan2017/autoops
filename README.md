@@ -175,7 +175,12 @@ inception_remote_backup_port='3306'
 inception_remote_backup_host='192.168.10.81'
 
 ```  
+  * 修改一个文件 `/usr/local/lib/python3.6/site-packages/django/db/backends/mysql/base.py`   注释两行
   
+```
+35 #if version < (1, 3, 3):
+36 #    raise ImproperlyConfigured("mysqlclient 1.3.3 or newer is required; you have %s" % Database.__version__)
+```
     
   * 初始化数据库（可删除文件夹的 db.sqlite3）
   
