@@ -29,6 +29,36 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="false">
+        <entry file="file://D:/autoops-docs/.gitignore">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="search.html" pinned="false" current-in-tab="false">
+        <entry file="file://D:/autoops-docs/search.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="sitemap.xml" pinned="false" current-in-tab="false">
+        <entry file="file://D:/autoops-docs/sitemap.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="requirements.txt" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/requirements.txt">
           <provider selected="true" editor-type-id="text-editor">
@@ -39,35 +69,15 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="README.md" pinned="false" current-in-tab="false">
+      <file leaf-file-name="README.md" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/README.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
             <state split_layout="SPLIT">
-              <first_editor relative-caret-position="-422">
-                <caret line="208" column="10" lean-forward="true" selection-start-line="208" selection-start-column="10" selection-end-line="208" selection-end-column="10" />
+              <first_editor relative-caret-position="266">
+                <caret line="14" column="50" lean-forward="false" selection-start-line="14" selection-start-column="50" selection-end-line="14" selection-end-column="50" />
                 <folding />
               </first_editor>
               <second_editor />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="supervisor.conf" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/script/supervisor.conf">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="565">
-              <caret line="87" column="79" lean-forward="true" selection-start-line="87" selection-start-column="79" selection-end-line="87" selection-end-column="79" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="connections.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/script/connections.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-171">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -85,7 +95,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>db_user</find>
       <find>db_users</find>
       <find>DbUserListAll</find>
       <find>pk</find>
@@ -115,6 +124,7 @@
       <find>product_line</find>
       <find>cmd</find>
       <find>tasks1</find>
+      <find>from tasks.ansible_2420.inventory import BaseInventory</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -123,16 +133,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="E:/python-lianxi/1/1/2.py" />
-        <option value="E:/python-lianxi/1/1/1.py" />
-        <option value="$PROJECT_DIR$/names/password_crypt.py" />
-        <option value="$PROJECT_DIR$/names/tests.py" />
-        <option value="$PROJECT_DIR$/asset/models.py" />
-        <option value="$PROJECT_DIR$/db/models.py" />
-        <option value="$PROJECT_DIR$/templates/_css.html" />
-        <option value="$PROJECT_DIR$/templates/_js.html" />
-        <option value="$PROJECT_DIR$/templates/asset/system-user.html" />
-        <option value="$PROJECT_DIR$/templates/asset/system-user-detail.html" />
         <option value="$PROJECT_DIR$/templates/db/db.html" />
         <option value="$PROJECT_DIR$/templates/db/db-detail.html" />
         <option value="$PROJECT_DIR$/templates/db/db-user.html" />
@@ -173,7 +173,17 @@
         <option value="$PROJECT_DIR$/script/inc.cnf" />
         <option value="$PROJECT_DIR$/script/inception/bin/inc.cnf" />
         <option value="$PROJECT_DIR$/script/install_Inception.sh" />
+        <option value="D:/hequan2017.github.io/index.md" />
+        <option value="D:/hequan2017.github.io/docs/about.md" />
+        <option value="D:/hequan2017.github.io/.gitignore" />
+        <option value="D:/hequan2017.github.io/mkdocs.yml" />
+        <option value="D:/autoops.github.io/docs/index.md" />
+        <option value="D:/autoops.github.io/docs/development.md" />
+        <option value="D:/hequan2017.github.io/docs/index.md" />
+        <option value="D:/hequan2017.github.io/autoops-docs/index.md" />
         <option value="$PROJECT_DIR$/README.md" />
+        <option value="D:/autoops-docs/.gitignore" />
+        <option value="D:/autoops-docs/mkdocs.yml" />
       </list>
     </option>
   </component>
@@ -187,7 +197,7 @@
     <option name="x" value="-8" />
     <option name="y" value="-8" />
     <option name="width" value="1382" />
-    <option name="height" value="927" />
+    <option name="height" value="926" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -205,6 +215,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scratches" />
       <pane id="Scope">
         <subPane subId="Project Files">
           <expand>
@@ -230,36 +241,34 @@
             </path>
             <path>
               <item name="autoops" type="b2602c69:ProjectViewProjectNode" />
-              <item name="autoops" type="462c0819:PsiDirectoryNode" />
-              <item name="script" type="462c0819:PsiDirectoryNode" />
+              <item name="autoops-docs" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="D:/Yearning" />
+    <property name="last_opened_file_path" value="D:/autoops-docs" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="D:\autoops\static\js\plugins" />
-      <recent name="E:\autoops" />
-      <recent name="E:\autoops\script" />
-      <recent name="E:\autoops\static\demo" />
-      <recent name="E:\autoops\templates\tasks" />
-    </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\autoops.github.io\demo" />
+      <recent name="D:\hequan2017.github.io" />
       <recent name="D:\autoops\script" />
       <recent name="D:\autoops\tasks" />
       <recent name="E:\autoops\static\css\plugins" />
-      <recent name="E:\autoops\static\js" />
-      <recent name="E:\autoops\static\js\plugins" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\autoops-docs" />
+      <recent name="D:\hequan2017.github.io\autoops-docs" />
+      <recent name="D:\hequan2017.github.io\docs" />
+      <recent name="D:\autoops\static\js\plugins" />
+      <recent name="E:\autoops" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -596,7 +605,7 @@
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.31058496" sideWeight="0.4757208" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32451254" sideWeight="0.48878205" order="14" side_tool="false" content_ui="tabs" />
       <window_info id="运行" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32293987" sideWeight="0.48638427" order="23" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15085287" sideWeight="0.5622951" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15884861" sideWeight="0.5622951" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32964224" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24867374" sideWeight="0.46135265" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.38880485" sideWeight="0.43770492" order="2" side_tool="true" content_ui="tabs" />
@@ -672,100 +681,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/asset/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="361">
-          <caret line="36" column="16" lean-forward="false" selection-start-line="36" selection-start-column="4" selection-end-line="36" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/.PyCharm2017.2/system/remote_sources/1560987217/-337502517/django/db/models/query_utils.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="56" column="8" lean-forward="false" selection-start-line="56" selection-start-column="8" selection-end-line="56" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/names/login.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="227">
-          <caret line="29" column="0" lean-forward="false" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tasks/ansible_runner/inventorys.py" />
-    <entry file="file://$PROJECT_DIR$/templates/tasks/tools-update.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="380">
-          <caret line="38" column="72" lean-forward="false" selection-start-line="38" selection-start-column="72" selection-end-line="38" selection-end-column="72" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/tasks/tools-add.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="39" column="46" lean-forward="false" selection-start-line="39" selection-start-column="46" selection-end-line="39" selection-end-column="46" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/tasks/tools-script.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tasks/ansible_runner/runner.py" />
-    <entry file="file://$USER_HOME$/.PyCharm2017.2/system/python_stubs/-1120166012/builtins.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="97128">
-          <caret line="5112" column="0" lean-forward="false" selection-start-line="5112" selection-start-column="0" selection-end-line="5113" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tasks/form.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-57">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://D:/cmdb/templates/sh/sh.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-456">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://D:/cmdb/templates/jigui/jigui.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://D:/cmdb/templates/jigui/add.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="684">
-          <caret line="114" column="52" lean-forward="true" selection-start-line="111" selection-start-column="38" selection-end-line="114" selection-end-column="52" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/asset/system-user.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/asset/system-user-add.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="521">
-          <caret line="99" column="22" lean-forward="false" selection-start-line="99" selection-start-column="22" selection-end-line="99" selection-end-column="58" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tasks/ansible_runner/__init__.py" />
     <entry file="file://$PROJECT_DIR$/tasks/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -877,14 +792,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/autoops/settings.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="636">
-          <caret line="209" column="18" lean-forward="false" selection-start-line="209" selection-start-column="18" selection-end-line="209" selection-end-column="18" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/autoops/urls.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="95">
@@ -955,6 +862,36 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/names/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="19">
+          <caret line="19" column="0" lean-forward="false" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/script/inc.cnf" />
+    <entry file="file://$PROJECT_DIR$/script/install_Inception.sh" />
+    <entry file="file://$PROJECT_DIR$/script/inception/bin/inc.cnf">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="494">
+          <caret line="26" column="78" lean-forward="false" selection-start-line="26" selection-start-column="78" selection-end-line="26" selection-end-column="78" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/script/connections.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/script/supervisor.conf">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="566">
+          <caret line="87" column="79" lean-forward="false" selection-start-line="87" selection-start-column="79" selection-end-line="87" selection-end-column="79" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/asset/views.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="19">
@@ -965,33 +902,37 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/names/views.py">
+    <entry file="file://$PROJECT_DIR$/autoops/wsgi.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="19">
-          <caret line="19" column="0" lean-forward="false" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#59#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/script/supervisor.conf">
+    <entry file="file://$PROJECT_DIR$/autoops/settings.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="565">
-          <caret line="87" column="79" lean-forward="true" selection-start-line="87" selection-start-column="79" selection-end-line="87" selection-end-column="79" />
-          <folding />
+        <state relative-caret-position="337">
+          <caret line="93" column="0" lean-forward="false" selection-start-line="93" selection-start-column="0" selection-end-line="98" selection-end-column="1" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/script/inc.cnf">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="437">
-          <caret line="23" column="0" lean-forward="false" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
-          <folding />
+    <entry file="file://D:/autoops.github.io/docs/index.md" />
+    <entry file="file://D:/autoops.github.io/docs/about.md" />
+    <entry file="file://D:/autoops.github.io/.gitignore" />
+    <entry file="file://D:/autoops.github.io/mkdocs.yml" />
+    <entry file="file://D:/autoops.github.io/docs/development.md" />
+    <entry file="file://D:/hequan2017.github.io/autoops-docs/about.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="0">
+            <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+            <folding />
+          </first_editor>
+          <second_editor />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/script/install_Inception.sh">
+    <entry file="file://D:/hequan2017.github.io/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
@@ -999,17 +940,68 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/script/inception/bin/inc.cnf">
+    <entry file="file://D:/hequan2017.github.io/mkdocs.yml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="494">
-          <caret line="26" column="78" lean-forward="false" selection-start-line="26" selection-start-column="78" selection-end-line="26" selection-end-column="78" />
+        <state relative-caret-position="19">
+          <caret line="1" column="6" lean-forward="true" selection-start-line="1" selection-start-column="6" selection-end-line="1" selection-end-column="6" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/script/connections.py">
+    <entry file="file://D:/hequan2017.github.io/autoops-docs/demo/1.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://D:/hequan2017.github.io/autoops-docs/development.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="0">
+            <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+            <folding />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://D:/hequan2017.github.io/autoops-docs/index.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="1231">
+            <caret line="307" column="15" lean-forward="true" selection-start-line="307" selection-start-column="15" selection-end-line="307" selection-end-column="15" />
+            <folding />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://D:/autoops-docs/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-171">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://D:/autoops-docs/search.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://D:/autoops-docs/sitemap.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://D:/autoops-docs/mkdocs.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
@@ -1024,18 +1016,18 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/README.md">
-      <provider editor-type-id="text-editor">
-        <state relative-caret-position="988">
-          <caret line="52" column="12" lean-forward="true" selection-start-line="52" selection-start-column="12" selection-end-line="52" selection-end-column="12" />
-        </state>
-      </provider>
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
-          <first_editor relative-caret-position="-422">
-            <caret line="208" column="10" lean-forward="true" selection-start-line="208" selection-start-column="10" selection-end-line="208" selection-end-column="10" />
+          <first_editor relative-caret-position="266">
+            <caret line="14" column="50" lean-forward="false" selection-start-line="14" selection-start-column="50" selection-end-line="14" selection-end-column="50" />
             <folding />
           </first_editor>
           <second_editor />
+        </state>
+      </provider>
+      <provider editor-type-id="text-editor">
+        <state relative-caret-position="988">
+          <caret line="52" column="12" lean-forward="true" selection-start-line="52" selection-start-column="12" selection-end-line="52" selection-end-column="12" />
         </state>
       </provider>
     </entry>

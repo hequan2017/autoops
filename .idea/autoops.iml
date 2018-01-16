@@ -21,6 +21,10 @@
     <orderEntry type="module" module-name="cmdb" />
     <orderEntry type="module" module-name="Static_Full_Version汉化" />
     <orderEntry type="module" module-name="Yearning" />
+    <orderEntry type="module" module-name="hequan2017.github.io" />
+    <orderEntry type="module" module-name="autoops.github.io" />
+    <orderEntry type="module" module-name="hequan2017.github.io" />
+    <orderEntry type="module" module-name="autoops-docs" />
   </component>
   <component name="TemplatesService">
     <option name="TEMPLATE_CONFIGURATION" value="Django" />

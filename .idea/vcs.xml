@@ -3,6 +3,9 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
     <mapping directory="D:/Yearning" vcs="Git" />
+    <mapping directory="D:/autoops-docs" vcs="Git" />
+    <mapping directory="D:/autoops.github.io" vcs="Git" />
     <mapping directory="D:/cmdb" vcs="Git" />
+    <mapping directory="D:/hequan2017.github.io" vcs="Git" />
   </component>
 </project>

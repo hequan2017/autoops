@@ -8,7 +8,7 @@ AutoOps 是一款基于 2.0 版本django开发的，主要面向linux运维工�
 ###  Demo
 
   -  地址:  `http://42.62.55.58:8003/`        账号`admin`      密码`1qaz.2wsx`
-  -  交流群号： `620176501`   欢迎交流！   <a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=bbe5716e8bd2075cb27029bd5dd97e22fc4d83c0f61291f47ed3ed6a4195b024"><img border="0" src="https://github.com/hequan2017/cmdb/blob/master/static/img/group.png"  alt="autoops开发讨论群" title="autoops开发讨论群"></a>
+  -  交流群号： `620176501`   欢迎交流！  
   -  后台地址 `http://42.62.55.58:8003/admin`     账号`admin`   密码`1qaz.2wsx`
   -  博客:    `http://hequan.blog.51cto.com/`
   -  github:  `https://github.com/hequan2017/autoops/`
@@ -17,7 +17,7 @@ AutoOps 是一款基于 2.0 版本django开发的，主要面向linux运维工�
 ###  架构图
 
  
-![DEMO](https://github.com/hequan2017/autoops/blob/master/static/demo/autoops.png)
+![DEMO](static/demo/autoops.png)
 
 
 ### 更新记录  
@@ -237,7 +237,7 @@ python manage.py  createsuperuser             ##创建管理员
   * 登陆后台，设置定时获取主机图，设置数据中心、组。
   
   * 设置定时获取主机信息任务。 先创建执行的时间频率，再创建任务，创建后，观察队列任务是否执行成功，如不成功，重启所有celery任务。
- ![图片](https://github.com/hequan2017/autoops/blob/master/static/demo/9.png)
+![DEMO](static/demo/9.png)
 
 
 
@@ -300,14 +300,15 @@ root         /opt/autoops;
 
 
 ###   截图
-![图片](https://github.com/hequan2017/autoops/blob/master/static/demo/1.png)
-![图片](https://github.com/hequan2017/autoops/blob/master/static/demo/2.png)
-![图片](https://github.com/hequan2017/autoops/blob/master/static/demo/3.png)
-![图片](https://github.com/hequan2017/autoops/blob/master/static/demo/4.png)
-![图片](https://github.com/hequan2017/autoops/blob/master/static/demo/5.png)
-![图片](https://github.com/hequan2017/autoops/blob/master/static/demo/6.png)
-![图片](https://github.com/hequan2017/autoops/blob/master/static/demo/7.png)
-![图片](https://github.com/hequan2017/autoops/blob/master/static/demo/8.png)
+![DEMO](static/demo/1.png)
+![DEMO](static/demo/2.png)
+![DEMO](static/demo/3.png)
+![DEMO](static/demo/4.png)
+![DEMO](static/demo/5.png)
+![DEMO](static/demo/6.png)
+![DEMO](static/demo/7.png)
+![DEMO](static/demo/8.png)
+
 
 
 ### 贡献者
