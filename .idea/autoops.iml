@@ -20,6 +20,7 @@
     <orderEntry type="module" module-name="python-lianxi" />
     <orderEntry type="module" module-name="cmdb" />
     <orderEntry type="module" module-name="Static_Full_Version汉化" />
+    <orderEntry type="module" module-name="Yearning" />
   </component>
   <component name="TemplatesService">
     <option name="TEMPLATE_CONFIGURATION" value="Django" />

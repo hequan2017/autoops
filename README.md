@@ -104,11 +104,9 @@ pip3 install -r requirements.txt
   
     2. 安装其他组件
     
- 
+
  * 安装 `script/install_webssh.sh` ,  需要修改的内容见脚本内，如果不需要webssh，可暂时不用安装。
- * 安装 `script/install_inception.sh` ,  需要修改的内容见脚本内，如果不需要 数据库自动审核，可暂时不用安装。
- 
- 
+
  * 安装   `supervisor  `
  
 ```bash
@@ -175,12 +173,47 @@ inception_remote_backup_port='3306'
 inception_remote_backup_host='192.168.10.81'
 
 ```  
-  * 修改一个文件 `/usr/local/lib/python3.6/site-packages/django/db/backends/mysql/base.py`   注释两行
+  * 修改一个文件 `/usr/local/lib/python3.6/site-packages/django/db/backends/mysql/base.py`   注释两行,找不到可以忽略。
   
 ```
 35 #if version < (1, 3, 3):
 36 #    raise ImproperlyConfigured("mysqlclient 1.3.3 or newer is required; you have %s" % Database.__version__)
 ```
+  * 由于Inception 并不原生支持pymysql，所以需更改pymysql相关源码，修改 `$PYTHON_HOME/lib/python3.6/site-packages/pymysql`下
+
+`connections.py 和 cursors.py `两个文件
+
+找到 connections.py 1108行
+```
+  if int(self.server_version.split('.', 1)[0]) >= 5:
+            self.client_flag |= CLIENT.MULTI_RESULTS
+```
+更改为
+```
+    try:
+        if int(self.server_version.split('.', 1)[0]) >= 5:
+            self.client_flag |= CLIENT.MULTI_RESULTS
+    except:
+        if self.server_version.split('.', 1)[0] >= 'Inception2':
+            self.client_flag |= CLIENT.MULTI_RESULTS
+```
+
+找到 cursors.py 345行
+```
+if self._result and (self._result.has_next or not self._result.warning_count):
+        return
+```
+改为
+```
+if self._result:
+    return
+```
+
+注: 在script/  文件夹下有已经修改的connections.py 和 cursors.py 直接替换即可
+
+
+
+  
     
   * 初始化数据库（可删除文件夹的 db.sqlite3）
   
