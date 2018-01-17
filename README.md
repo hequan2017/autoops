@@ -69,7 +69,7 @@ AutoOps 是一款基于 2.0 版本django开发的，主要面向linux运维工�
 
 ### 环境
 
-   * Python 3.6.4         #可以参考 `script/install_python3.6.4.py`
+   * Python 3.6.4         #可以参考   `script/install_python3.6.4.py`
    * Django 2.0
    * Python 2.7            (用来启动 supervisor)
    * Centos 7.4
@@ -80,7 +80,6 @@ AutoOps 是一款基于 2.0 版本django开发的，主要面向linux运维工�
 
    * 开发环境部署：
    
-   
    1. 下载，安装基本环境,安装目录为/opt下，如是其他目录，请修改supervisor.conf中的相应设置即可。
  
 ```bash
@@ -88,37 +87,27 @@ cd /opt
 yum install git   sshpass    redis  -y 
 systemctl enable redis.service 
 systemctl start  redis.service 
-
-
-
 git  clone  https://github.com/hequan2017/autoops.git
     
-cd autoops/
-pip3 install -r requirements.txt     
-    
-```
-    
-  
-   添加的资产 里面 请执行  ` yum install  ipmitool     dmidecode   -y  `以获取更多信息
+cd   autoops/
+pip3 install -r requirements.txt        
+``` 
+   添加的资产里面,   建议执行  ` yum install  ipmitool     dmidecode   -y  `以获取更多信息
    
   
     2. 安装其他组件
-    
-
  * 安装 `script/install_webssh.sh` ,  需要修改的内容见脚本内，如果不需要webssh，可暂时不用安装。
-
  * 安装   `supervisor  `
- 
 ```bash
-pip2   install    supervisor     ## 没有pip2 版本的 ，可以参考 script/install_pip2.sh
-
+chmod +x  *  /opt/autoops/script/inception/bin/
+pip2   install    supervisor                                     ## 没有pip2 版本的 ，可以参考 script/install_pip2.sh
 echo_supervisord_conf > /etc/supervisord.conf 
 mkdir /etc/supervisord.d/
      
 
 vim /etc/supervisord.conf      ##进行相关设置
          
-[inet_http_server] 
+[inet_http_server]                ##HTTP登录账号密码
 port=0.0.0.0:9001 
 username=user
 password=321
@@ -126,7 +115,7 @@ password=321
 [include]
 files = /etc/supervisord.d/*.conf
 
-cp   /opt/autoops/script/supervisor.conf    /etc/supervisord.d/      ## 复制配置文件
+cp   /opt/autoops/script/supervisor.conf               /etc/supervisord.d/      ## 复制配置文件
 ```  
     
  
@@ -157,22 +146,22 @@ DATABASES = {
   * 修改 autoops/settings 自定义参数
   
 ```djangotemplate
-DEBUG = True  ## 实际生产环境实用，请关闭  False
+DEBUG = True                          ## 实际生产环境实用，请关闭  False
 
-BROKER_URL = 'redis://127.0.0.1:6379/0'  ##Redis地址
+BROKER_URL = 'redis://127.0.0.1:6379/0'                  ##Redis地址,一般情况不用修改
 
-Webssh_ip = "42.62.6.54"    ##WebSSH 软件的 访问IP   
+Webssh_ip = "42.62.6.54"                      ##WebSSH 软件的 访问IP   
 Webssh_port='9000'
 
-Inception_ip = '127.0.0.1'        ## 此为 Inception 软件地址 需要设置
-Inception_port = '6669'           ## 此为 Inception 软件端口号
+Inception_ip = '127.0.0.1'                  ## 此为 Inception 软件地址 需要设置，一般不用修改
+Inception_port = '6669'                     ## 此为 Inception 软件端口号
 
-inception_remote_system_password='123456'         ## 设置回滚备份（mysql）服务器相关参数，并同步修改一下 script/inc.cnf 里面的设置
+inception_remote_system_password='123456'                ## 设置回滚备份（mysql）服务器相关参数，并同步修改一下 script/inc.cnf 里面的设置
 inception_remote_system_user='root'
 inception_remote_backup_port='3306'
 inception_remote_backup_host='192.168.10.81'
-
 ```  
+
   * 修改一个文件 `/usr/local/lib/python3.6/site-packages/django/db/backends/mysql/base.py`   注释两行,找不到可以忽略。
   
 ```
@@ -211,10 +200,6 @@ if self._result:
 
 注: 在script/  文件夹下有已经修改的connections.py 和 cursors.py 直接替换即可
 
-
-
-  
-    
   * 初始化数据库（可删除文件夹的 db.sqlite3）
   
 ```bash
@@ -222,21 +207,17 @@ python manage.py makemigrations
 python manage.py  migrate
 python manage.py  createsuperuser             ##创建管理员
 ``` 
-             
+  * 登陆的端口号 在 supervisor.conf  里面 第15行  ,默认是       :8003 。如有修改端口号，请把supervisor 里的uwsgi  服务关闭。然后杀掉supervisor进程，再启动。             
       
   * 启动supervisor进程管理  `/usr/bin/python2.7   /usr/bin/supervisord -c /etc/supervisord.conf`
     加到linux 开机启动里面  `chmod +x  /etc/rc.d/rc.local ` 把上面的命令放到这个文件里面  
   
   
-  * 启动: 统一用supervisor 管理进程,  打开   0.0.0.0:9001  账号user  密码123    进入进程管理界面，管理uwsgi,redis,webssh,celery,Inception 等启动关闭。
-此方法不涉及到nginx。
+  * 启动: 统一用supervisor 管理进程,  打开   0.0.0.0:9001  账号user  密码321   进入进程管理界面，管理uwsgi,redis,webssh,celery,Inception 等启动关闭。此方法不涉及到nginx。
 
-  * 登陆的端口号 在 supervisor.conf  里面 第15行  ,默认是   :8003。
- 如有修改 端口号，请把supervisor 里的服务都关闭。然后杀掉supervisor进程，再启动。
- 
-  * 登陆后台，设置定时获取主机图，设置数据中心、组。
+  * 登陆后台，设置定时获取主机图，设置数据中心、用户组。
   
-  * 设置定时获取主机信息任务。 先创建执行的时间频率，再创建任务，创建后，观察队列任务是否执行成功，如不成功，重启所有celery任务。
+  * 设置定时获取主机信息任务。 先创建执行的时间频率，再创建任务，创建后，观察队列任务是否执行成功。   如不成功，重启所有supervisor中的  celery服务。
 ![DEMO](static/demo/9.png)
 
 
@@ -255,20 +236,17 @@ asset/views.py
 from   tasks.ansible_2420.runner import AdHocRunner, CommandRunner
 # from  tasks.ansible_2420.inventory import BaseInventory
 
-
 tasks/views.py   
 from   tasks.ansible_2420.runner import AdHocRunner, CommandRunner
 from  tasks.ansible_2420.inventory import BaseInventory
 ```
     
-    
-    
+   
    
 ###  生产环境   
    
   * 如果想在生产环境部署、启动, 用nginx去处理。 可以参考   `http://hequan.blog.51cto.com/5701886/1982769` , 请把`supervisor.conf` 中 关于uwsgi的部分删除掉, 
 用以下方式控制UWSGI的启动 关闭.
-
 
 ```bash
 uwsgi  --ini    /opt/autoops/script/uwsgi.ini     # 启动uwsgi配置  也可以把这个命令写到开机的文件里面
@@ -276,8 +254,7 @@ uwsgi  --stop   /opt/autoops/script/uwsgi.pid    # 关闭uwsgi
 uwsgi  --reload  /opt/autoops/script/uwsgi.pid   #重新加载
 ```
  
-*  或者用nginx 
-nginx 配置文件修改如下
+*  或者用nginx ，nginx 配置文件修改如下。 此方法也要启动 uwsgi。
 
 ```html
 root         /opt/autoops;
@@ -300,6 +277,7 @@ root         /opt/autoops;
 
 
 ###   截图
+![DEMO](static/demo/12.png)
 ![DEMO](static/demo/1.png)
 ![DEMO](static/demo/2.png)
 ![DEMO](static/demo/3.png)

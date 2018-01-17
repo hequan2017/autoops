@@ -199,17 +199,15 @@ MEDIA_URL = '/upload/'  # 这个是在浏览器上访问该上传文件的url的
 
 
 
-
+Webssh_ip = '42.62.6.5'   ##WebSSH 软件的 访问IP
+Webssh_port='9000'
 
 
 Inception_ip = '127.0.0.1'  ## 此为 Inception 软件地址 需要设置
 Inception_port = '6669'       ## 此为 Inception 软件端口号
 
 
-Webssh_ip = '42.62.6.5'   ##WebSSH 软件的 访问IP
-Webssh_port='9000'
-
 inception_remote_system_password='654321'    ## 设置回滚备份服务器相关参数，并同步修改一下 script/inc.cnf 里面的设置
 inception_remote_system_user='root'
 inception_remote_backup_port='3306'
-inception_remote_backup_host='192.168.10.100'
+inception_remote_backup_host='192.168.10.100'  ##备份数据库地址
