@@ -21,6 +21,7 @@ urlpatterns = [
     path('library/', include('library.urls', namespace="library",), ),
     path('upload/',  AssetUpload.as_view()),
     path('ueditor/',include('DjangoUeditor.urls' )),
+    path('release/', include('release.urls', namespace="release")),
 ]
 
 

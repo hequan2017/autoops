@@ -47,6 +47,17 @@
                 </ul>
             </li>
 
+           <li class="{{   release_active }}">
+                <a href="#"><i class="fa fa-address-book-o"></i> <span class="nav-label">代码发布</span>
+                    <span class="fa arrow"> </span></a>
+                <ul class="nav nav-second-level">
+                    <li class="{{ release_list_active }}"><a href="{% url    'release:release_list' %}">代码库</a></li>
+
+                </ul>
+            </li>
+
+
+
             <li class="{{ tasks_active }}">
                 <a href="#"><i class="fa fa-address-book-o"></i> <span class="nav-label">执行任务</span>
                     <span class="fa arrow"> </span></a>

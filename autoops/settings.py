@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'djcelery',
     'guardian',
     'DjangoUeditor',
+    'release',
 ]
 
 MIDDLEWARE = [
