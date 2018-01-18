@@ -7,6 +7,8 @@ urlpatterns = [
     path('release-add.html',views.ReleaseAdd.as_view(),name='release_add'),
     path('release-del.html',views.ReleaseDel.as_view(),name='release_del'),
     path('release-update-<int:pk>.html', views.ReleaseUpdate.as_view(), name='release_update'),
+    path('release-upload-<int:pk>.html', views.ReleaseUpload.as_view(), name='release_upload'),
+    path('release-upload.html', views.ReleaseUploadPost.as_view(), name='release_upload_post'),
 
 
 

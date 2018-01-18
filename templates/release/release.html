@@ -14,7 +14,7 @@
                     <a href="/index.html">主页</a>
                 </li>
                 <li>
-                    <a href="">代码库管理</a>
+                    <a href="{% url  'release:release_list'  %}">代码库管理</a>
                 </li>
                 <li class="active">
                     <strong>代码库</strong>
@@ -84,6 +84,12 @@
 
                                         <td><a class="btn btn-primary  btn-xs"
                                                href="{% url  "release:release_update"   row.id %}">编辑</a>
+
+                                            <a class="btn btn-primary  btn-xs"
+                                               href="{% url  "release:release_upload"   row.id     %}">分发</a>
+
+
+
                                             <button class="btn btn-danger  btn-xs  system_user_del"
                                                  >删除
                                             </button>

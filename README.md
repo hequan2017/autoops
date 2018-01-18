@@ -21,7 +21,7 @@ AutoOps 是一款基于 2.0 版本django开发的，主要面向linux运维工�
 
 
 ### 更新记录  
-  -  1.7.5  代码库功能。
+  -  1.7.6  代码库功能上线，带分发。
   -  1.7.4  更新ansible版本。 增强命令行 功能。具体方法参考ansible 模块。
  
   -  1.6.7   权限梳理，若干代码优化。
@@ -59,6 +59,10 @@ AutoOps 是一款基于 2.0 版本django开发的，主要面向linux运维工�
   
   - library 技术文档 (真正运维人员的管理平台，自带技术文档，有问题不用再去别的地方找)
     - DjangoUeditor 富文本编辑器
+    
+  -  代码库
+     - 代码库
+     - 主机分发
     
   - 数据库自动审核-- 命令执行   回滚
     - Inception 
@@ -155,10 +159,10 @@ Webssh_port='9000'
 Inception_ip = '127.0.0.1'                  ## 此为 Inception 软件地址 需要设置，一般不用修改
 Inception_port = '6669'                     ## 此为 Inception 软件端口号
 
-inception_remote_system_password='123456'                ## 设置回滚备份（mysql）服务器相关参数，并同步修改一下 script/inc.cnf 里面的设置
+inception_remote_system_password='123456'                    ## 设置回滚备份（mysql）服务器相关参数，并同步修改一下 script/inc.cnf 里面的设置
 inception_remote_system_user='root'
 inception_remote_backup_port='3306'
-inception_remote_backup_host='192.168.10.81'
+inception_remote_backup_host='192.168.10.100'
 ```  
 
   * 修改一个文件 `/usr/local/lib/python3.6/site-packages/django/db/backends/mysql/base.py`   注释两行,找不到可以忽略。
@@ -276,6 +280,7 @@ root         /opt/autoops;
 
 
 ###   截图
+![DEMO](static/demo/13.png)
 ![DEMO](static/demo/12.png)
 ![DEMO](static/demo/1.png)
 ![DEMO](static/demo/2.png)

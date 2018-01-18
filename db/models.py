@@ -12,7 +12,7 @@ class db_mysql(models.Model):
 
 
     db_user = models.ForeignKey(to="db_user", to_field='id', on_delete=models.SET_NULL, null=True,
-                                    verbose_name='数据库登陆用户', blank=True)
+                                    verbose_name='数据库登陆用户',default='root', blank=True)
 
 
     product_line =  models.ForeignKey(to=Group,to_field='id',on_delete=models.SET_NULL,verbose_name='产品线',null=True)

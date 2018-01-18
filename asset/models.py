@@ -75,7 +75,7 @@ class   data_centers(models.Model):
 class  system_users(models.Model):
 
     name = models.CharField(max_length=255, unique=True,verbose_name='名称')
-    username = models.CharField(max_length=64,null=True,blank=True, verbose_name=('登陆用户'))
+    username = models.CharField(max_length=64,null=True,blank=True, verbose_name=('登陆用户'),default='root')
     password = models.CharField(max_length=255, blank=True,null=True,verbose_name=('登陆密码'))
     product_line = models.ForeignKey(to=Group, to_field='id', on_delete=models.SET_NULL, verbose_name='产品线',null=True)
     ps = models.CharField(max_length=1024,verbose_name="备注",null=True,blank=True)
