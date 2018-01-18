@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'guardian',
     'DjangoUeditor',
     'release',
+    'webssh',
 ]
 
 MIDDLEWARE = [
@@ -109,12 +110,6 @@ DATABASES = {
 #         'PORT': '6446',
 #      }
 # }
-
-
-
-
-
-
 
 
 
@@ -200,8 +195,8 @@ MEDIA_URL = '/upload/'  # 这个是在浏览器上访问该上传文件的url的
 
 
 
-Webssh_ip = '42.62.6.5'   ##WebSSH 软件的 访问IP
-Webssh_port='9000'
+Webssh_ip = '42.62.55.52'    ##WebSSH 软件的 访问IP,也就是本机外网IP，改这个地方就好了。
+Webssh_port='9000'            ##WebSSH 软件的 访问端口号  需要修改  webssh/main.py文件   define('port', default=9000, help='listen port', type=int)
 
 
 Inception_ip = '127.0.0.1'  ## 此为 Inception 软件地址 需要设置

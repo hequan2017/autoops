@@ -7,5 +7,6 @@
     <mapping directory="D:/autoops.github.io" vcs="Git" />
     <mapping directory="D:/cmdb" vcs="Git" />
     <mapping directory="D:/hequan2017.github.io" vcs="Git" />
+    <mapping directory="D:/webssh" vcs="Git" />
   </component>
 </project>

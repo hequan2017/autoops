@@ -25,6 +25,7 @@
     <orderEntry type="module" module-name="autoops.github.io" />
     <orderEntry type="module" module-name="hequan2017.github.io" />
     <orderEntry type="module" module-name="autoops-docs" />
+    <orderEntry type="module" module-name="webssh" />
   </component>
   <component name="TemplatesService">
     <option name="TEMPLATE_CONFIGURATION" value="Django" />

@@ -6,6 +6,8 @@ from cryptography.fernet import Fernet
 ##  key = base64.urlsafe_b64encode(os.urandom(32))  生成key
 
 
+## 如果修改了 下面的密钥key，请同步修改一下  webssh/main.py 中的，不然无法解密。
+
 def  encrypt_p(password):## 加密
         f = Fernet('Ow2Qd11KeZS_ahNOMicpWUr3nu3RjOUYa0_GEuMDlOc=')
         p1 = password.encode()

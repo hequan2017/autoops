@@ -378,14 +378,12 @@ def asset_web_ssh(request):
         ret = {}
         try:
             if checker.has_perm('task_asset', a) == True:
-                ip = obj.network_ip + ":" + str(obj.port)
-
+                ip = obj.network_ip
+                port = obj.port
                 username = obj.system_user.username
-                password1 = obj.system_user.password
-                password = decrypt_p(password1)
+                password = obj.system_user.password
 
-                ret = {"ip": ip, "username": username, 'password': password, "static": True}
-
+                ret = {"ip": ip,'port':port,"username": username, 'password': password, "static": True}
                 login_ip = request.META['REMOTE_ADDR']
 
                 web_history.objects.create(user=request.user, ip=login_ip, login_user=obj.system_user.username, host=ip)

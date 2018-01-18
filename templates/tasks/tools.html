@@ -120,7 +120,9 @@
 
 
     {% block footer-js %}
-
+      <script type="text/JavaScript">
+    $.ajaxSetup({headers: {"X-CSRFToken": '{{ csrf_token }}'}});
+</script>
 
         <script>
             $(function () {

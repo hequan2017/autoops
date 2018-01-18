@@ -8,8 +8,7 @@ from django.contrib.auth.decorators import login_required
 from .form import CodeBaseForm
 from guardian.shortcuts import get_objects_for_user, get_objects_for_group
 import json,os
-from   tasks.ansible_2420.runner import AdHocRunner, CommandRunner
-from  tasks.ansible_2420.inventory import BaseInventory
+
 from django.contrib.auth.models import User
 from guardian.decorators import permission_required_or_403
 from asset.models import asset
@@ -17,7 +16,8 @@ from guardian.core import ObjectPermissionChecker
 from names.password_crypt import decrypt_p
 from tasks.models import history
 
-
+from   tasks.ansible_2420.runner import AdHocRunner
+from  tasks.ansible_2420.inventory import BaseInventory
 
 
 class ReleaseListAll(TemplateView):
@@ -137,7 +137,6 @@ class ReleaseUpload(View):
 
 class ReleaseUploadPost(View):
 
-
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
             return super(ReleaseUploadPost, self).dispatch(*args, **kwargs)
@@ -193,9 +192,6 @@ class ReleaseUploadPost(View):
 
                     ret1 = []
 
-                    print(retsult.results_summary)
-                    print(retsult.results_raw['ok']['host']['copy_code']['changed'])
-                    print(retsult.results_raw['ok']['host']['copy_code'])
                     try:
                         ret1.append("分发成功 {}      备注：如果前面返回值为 false，表示已经分发完成了，请不要重复分发。".format(retsult.results_raw['ok']['host']['copy_code']['changed']))
                     except Exception as e:
@@ -208,8 +204,9 @@ class ReleaseUploadPost(View):
 
                     ret2 = {'ip': i.network_ip, 'data': '\n'.join(ret1)}
                     ret['data'].append(ret2)
-
                 except Exception as e:
                     ret['data'].append({"ip": i.network_ip, "data": "账号密码不对,{}".format(e)})
+
+
 
             return HttpResponse(json.dumps(ret))

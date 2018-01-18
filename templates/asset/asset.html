@@ -1,12 +1,24 @@
 {% extends "base.html" %}
 {% load  mytags %}
 {% load   guardian_tags %}
+
+
+{% block header-css %}
+<link href="/static/webssh_static/css/xterm.min.css" rel="stylesheet" type="text/css"/>
+<link href="/static/webssh_static/css/fullscreen.min.css" rel="stylesheet" type="text/css"/>
+{% endblock %}
+
+
 {% block  title %}资产信息{% endblock %}
 
+
+
+
+
+
+
 {% block page-content %}
-
-
-    <div class="row wrapper border-bottom white-bg page-heading">
+<div class="row wrapper border-bottom white-bg page-heading">
         <div class="col-lg-10">
             <h2>资产信息</h2>
             <ol class="breadcrumb">
@@ -25,7 +37,7 @@
 
         </div>
     </div>
-    <div class="wrapper wrapper-content animated fadeInRight">
+<div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
             <div class="col-lg-12">
                 <div class="ibox float-e-margins">
@@ -56,10 +68,10 @@
 
                             <form id="cha" class="form-horizontal" action="{% url 'asset:asset_list' %}" method="post">
                                 {% csrf_token %}
-                                                                <div class="col-md-2"><input type="text" class="form-control" name="name" required>
-                                                                </div>
+                                <div class="col-md-2"><input type="text" class="form-control" name="name" required>
+                                </div>
 
-                                                                <button class="btn btn-primary" type="submit">查询</button>
+                                <button class="btn btn-primary" type="submit">查询</button>
 
 
                                 <a href="{% url    'asset:asset_add' %}" class="btn btn-primary  ">
@@ -109,8 +121,9 @@
                                                 </a>
                                                 <a class="btn btn-primary  btn-xs "
                                                    href="{% url    "asset:asset_performance"   row.id %}">性能</a>
-                                                <a type="button" class="btn btn-primary btn-xs  webssh">终端
+                                                <a type="button" class="btn btn-primary btn-xs" id="webssh">终端
                                                 </a>
+
 
                                             </td>
                                         </tr>
@@ -125,6 +138,8 @@
                         </div>
 
                     </div>
+
+
                 </div>
             </div>
         </div>
@@ -132,18 +147,18 @@
 
 
 
+{% block footer-js %}
+
+<script src="/static/webssh_static/js/xterm.min.js"></script>
+<script src="/static/webssh_static/js/fullscreen.min.js"></script>
 
 
+<script>
+     $(function () {
 
-    {% block footer-js %}
+       $('.asset_del').click(function () {
 
-
-        <script>
-            $(function () {
-
-                $('.asset_del').click(function () {
-
-
+              $.ajaxSetup({headers: {"X-CSRFToken": '{{ csrf_token }}'}});
                     var id = $(this).parent().parent().attr('id');
 
                     swal({
@@ -178,8 +193,8 @@
                 });
 
 
-                $('.asset_all_del').click(function () {
-
+       $('.asset_all_del').click(function () {
+                   $.ajaxSetup({headers: {"X-CSRFToken": '{{ csrf_token }}'}});
 
                     swal({
 
@@ -212,51 +227,84 @@
                     });
                 });
 
+
             });
 
 
-            $('.webssh').click(function () {
+            jQuery(function ($) {
 
-                var id_a = $(this).parent().parent().attr('id');
-                $.ajax({
-                    url: "/asset/asset-webssh.html",
-                    type: 'POST',
-                    data: {'id': id_a},
-                    success: function (ret) {
 
-                        var obj = JSON.parse(ret);
-                        var ip = obj.ip;
-                        var username = obj.username;
-                        var password = obj.password;
+                $('#webssh').click(function (event) {
+                    event.preventDefault();
 
-                        $.ajax({
-                            url: "http://{{  Webssh  }}:{{ Webssh_port  }}/console/login?rnd=" + Math.random(),
-                            method: "POST",
-                            data: {
-                                "vm_addr": ip,
-                                "user_name": username,
-                                "user_pwd": password
-                            },
-                            dataType: "jsonp",
-                            jsonp: 'callback',
-                            jsonpCallback: "callback",
-                            cache: false,
-                            contentType: "application/json;utf-8", /*设置返回类型*/
-                            async: false
-                        }).done(function (data) {
-                            var json = (data);
-                            if (json.ok) {
-                                window.open("http://{{ Webssh }}:{{ Webssh_port  }}" + json.data);
-                            } else {
-                                alert("登陆失败，请确认您的登陆信息。");
+                    var id_a = $(this).parent().parent().attr('id');
+
+                    $.ajax({
+                        headers: {"X-CSRFToken": '{{ csrf_token }}'},
+                        url: "/asset/asset-webssh.html",
+                        type: 'POST',
+                        data: {'id': id_a},
+                        success: function (ret) {
+
+                            var obj = JSON.parse(ret);
+                            var ips = obj.ip;
+                            var ports = obj.port;
+                            var usernames = obj.username;
+                            var passwords = obj.password;
+
+                            $.ajax({
+                                url: "http://{{ Webssh }}:{{ Webssh_port }}/",
+                                type: 'POST',
+                                data: {hostname: ips, port: ports, username: usernames, password: passwords},
+                                crossDomain: true,
+                                success: callback
+                            });
+
+                            function callback(msg) {
+                                console.log(msg);
+                                if (msg.status) {
+                                      swal("错误", "删除" + "[ " + msg.status + " ]" + "遇到错误", "error");
+                                      return;
+                                }
+
+                                var    url = "ws://{{ Webssh }}:{{ Webssh_port }}/" + 'ws?id=' + msg.id,
+                                    socket = new WebSocket(url),
+                                    terminal = document.getElementById('#terminal'),
+                                    term = new Terminal({cursorBlink: true});
+
+                                console.log(url);
+                                term.on('data', function (data) {
+                                    // console.log(data);
+                                    socket.send(data);
+                                });
+
+                                socket.onopen = function (e) {
+                                    $('.container1').hide();
+                                    term.open(terminal, true);
+                                    term.toggleFullscreen(true);
+                                };
+
+                                socket.onmessage = function (msg) {
+                                    console.log(msg);
+                                    term.write(msg.data);
+                                };
+
+                                socket.onerror = function (e) {
+                                    console.log(e);
+                                };
+
+                                socket.onclose = function (e) {
+                                    console.log(e);
+                                    term.destroy();
+                                    $('.container1').show();
+                                    // status.text(e.reason);
+                                };
                             }
-                        }).fail(function () {
-                            alert("未知失败，请联系管理员。");
-                        });
-                    }
-                })
-            });
 
+                        }
+                    });
+                });
+            });
 
         </script>
 

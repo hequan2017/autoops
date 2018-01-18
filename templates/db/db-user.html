@@ -103,34 +103,17 @@
             </div>
         </div>
     </div>
-    <div class="modal inmodal" id="myModal1" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content animated fadeIn">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span
-                            aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <i class="fa fa-clock-o modal-icon"></i>
-                    <h4 class="modal-title">删除</h4>
-                    <span id="error" style="color:red;"></span>
-                    <small></small>
-                </div>
-                <form id="db_user_del_form">
-                    <div class="modal-body">
 
-                        <div class="form-group"><input type="text" name="nid" style="display:none"/></div>
-                        <p><strong>确定删除？</strong></p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
-                        <a class="btn btn-danger m-r-sm db_user_del">删除</a>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+
 
 
     {% block footer-js %}
+
+              <script type="text/JavaScript">
+    $.ajaxSetup({headers: {"X-CSRFToken": '{{ csrf_token }}'}});
+</script>
+
+
         <script>
             $(function () {
 

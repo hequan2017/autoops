@@ -21,6 +21,8 @@ AutoOps 是一款基于 2.0 版本django开发的，主要面向linux运维工�
 
 
 ### 更新记录  
+
+  -  1.7.7   更换webssh启动方式。
   -  1.7.6  代码库功能上线，带分发。
   -  1.7.4  更新ansible版本。 增强命令行 功能。具体方法参考ansible 模块。
  
@@ -48,14 +50,15 @@ AutoOps 是一款基于 2.0 版本django开发的，主要面向linux运维工�
     - 全部导出
     - CPU 内存 流量图
   - names 用户（预留模块）
-      -  加密解密   password_crypt.py 
+      -  加密解密   password_crypt.py          ## 如果是自己的生成环境，建议更换里面的密钥。 
   - tasks任务 
      - 命令行
      - 工具  
         - shell 
         - python
         
-  - webssh  登陆 （用复制粘贴的时候，会显示二份，但实际只有一个，不影响使用，请忽略。）
+  - webssh  登陆
+     -  借鉴的 github上的  https://github.com/huashengdun/webssh
   
   - library 技术文档 (真正运维人员的管理平台，自带技术文档，有问题不用再去别的地方找)
     - DjangoUeditor 富文本编辑器
@@ -65,9 +68,11 @@ AutoOps 是一款基于 2.0 版本django开发的，主要面向linux运维工�
      - 主机分发
     
   - 数据库自动审核-- 命令执行   回滚
-    - Inception 
+     - Inception 
+     
   - 后台管理
     - admin     
+   
    
 
 ### 环境
@@ -76,7 +81,15 @@ AutoOps 是一款基于 2.0 版本django开发的，主要面向linux运维工�
    * Django 2.0
    * Python 2.7            (用来启动 supervisor)
    * Centos 7.4
- 
+   
+   * supervisor  中的服务
+     * uwsgi                 服务启动
+     * webssh
+     * celeryd               队列任务
+     * celerybeat
+     * celerycam
+     * celeryflower
+     * Inception             mysql 数据库审核
  
    
 ### 安装 
@@ -95,31 +108,28 @@ git  clone  https://github.com/hequan2017/autoops.git
 cd   autoops/
 pip3 install -r requirements.txt        
 ``` 
-   添加的资产里面,   建议执行  ` yum install  ipmitool     dmidecode   -y  `以获取更多信息
-   
-  
-    2. 安装其他组件
- * 安装 `script/install_webssh.sh` ,  需要修改的内容见脚本内，如果不需要webssh，可暂时不用安装。
- * 安装   `supervisor  `
+   添加的资产里面,  建议执行  ` yum install  ipmitool     dmidecode   -y  `以获取更多信息
+    2. 安装   `supervisor  `
+ 
 ```bash
 chmod +x  *  /opt/autoops/script/inception/bin/
 pip2   install    supervisor                                     ## 没有pip2 版本的 ，可以参考 script/install_pip2.sh
-echo_supervisord_conf > /etc/supervisord.conf 
+echo_supervisord_conf    > /etc/supervisord.conf 
 mkdir /etc/supervisord.d/
      
-
 vim /etc/supervisord.conf      ##进行相关设置
          
-[inet_http_server]                ##HTTP登录账号密码
+[inet_http_server]             ##HTTP登录账号密码
 port=0.0.0.0:9001 
 username=user
 password=321
 
 [include]
 files = /etc/supervisord.d/*.conf
-
-cp   /opt/autoops/script/supervisor.conf               /etc/supervisord.d/      ## 复制配置文件
-```  
+```
+```
+cp   /opt/autoops/script/supervisor.conf               /etc/supervisord.d/                  ## 复制配置文件
+```
     
  
 
@@ -128,6 +138,7 @@ cp   /opt/autoops/script/supervisor.conf               /etc/supervisord.d/      
   * 数据库: 请修改 `autops/settings`文件, 如果没有mysql，请选择上面那种。如果有，则可以启用mysql，设置相关连接地址。
      关于mysql安装方法，可参考我的博客 `http://hequan.blog.51cto.com/5701886/1982428`
 
+
 ```djangotemplate
 DATABASES = {
      'default': {
@@ -135,6 +146,8 @@ DATABASES = {
          'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
      }
  }
+ 
+ 
 DATABASES = {
        'default': {
            'ENGINE': 'django.db.backends.mysql',
@@ -153,35 +166,39 @@ DEBUG = True                          ## 实际生产环境实用，请关闭  F
 
 BROKER_URL = 'redis://127.0.0.1:6379/0'                  ##Redis地址,一般情况不用修改
 
-Webssh_ip = "42.62.6.54"                      ##WebSSH 软件的 访问IP   
-Webssh_port='9000'
 
-Inception_ip = '127.0.0.1'                  ## 此为 Inception 软件地址 需要设置，一般不用修改
+
+Webssh_ip = '42.62.55.52'      ##WebSSH 软件的 访问IP,也就是本机外网IP，改这个地方就好了。
+Webssh_port='9000'             ##WebSSH 软件的 访问端口号  需要修改  webssh/main.py文件   define('port', default=9000, help='listen port', type=int)
+
+Inception_ip = '127.0.0.1'                  ## 此为 Inception 软件地址,  默认为本机地址，一般不用修改
 Inception_port = '6669'                     ## 此为 Inception 软件端口号
 
-inception_remote_system_password='123456'                    ## 设置回滚备份（mysql）服务器相关参数，并同步修改一下 script/inc.cnf 里面的设置
+inception_remote_system_password='123456'             ## 设置回滚备份（mysql）服务器相关参数，并同步修改一下 script/inc.cnf 里面的设置
 inception_remote_system_user='root'
 inception_remote_backup_port='3306'
-inception_remote_backup_host='192.168.10.100'
+inception_remote_backup_host='192.168.10.100'          ##设置备份数据库地址
 ```  
 
   * 修改一个文件 `/usr/local/lib/python3.6/site-packages/django/db/backends/mysql/base.py`   注释两行,找不到可以忽略。
   
+```python
+#if version < (1, 3, 3):
+#    raise ImproperlyConfigured("mysqlclient 1.3.3 or newer is required; you have %s" % Database.__version__)
 ```
-35 #if version < (1, 3, 3):
-36 #    raise ImproperlyConfigured("mysqlclient 1.3.3 or newer is required; you have %s" % Database.__version__)
-```
-  * 由于Inception 并不原生支持pymysql，所以需更改pymysql相关源码，修改 `$PYTHON_HOME/lib/python3.6/site-packages/pymysql`下
 
-`connections.py 和 cursors.py `两个文件
+
+  * 由于Inception 并不原生支持pymysql，所以需更改pymysql相关源码。注: 在script/  文件夹下有已经修改的connections.py 和 cursors.py 直接替换即可
+   
+  修改 `$PYTHON_HOME/lib/python3.6/site-packages/pymysql`  下的 `connections.py 和 cursors.py `   两个文件
 
 找到 connections.py 1108行
-```
+```python
   if int(self.server_version.split('.', 1)[0]) >= 5:
             self.client_flag |= CLIENT.MULTI_RESULTS
 ```
 更改为
-```
+```python
     try:
         if int(self.server_version.split('.', 1)[0]) >= 5:
             self.client_flag |= CLIENT.MULTI_RESULTS
@@ -191,17 +208,17 @@ inception_remote_backup_host='192.168.10.100'
 ```
 
 找到 cursors.py 345行
-```
+
+```python
 if self._result and (self._result.has_next or not self._result.warning_count):
         return
 ```
+
 改为
-```
+```python
 if self._result:
     return
 ```
-
-注: 在script/  文件夹下有已经修改的connections.py 和 cursors.py 直接替换即可
 
   * 初始化数据库（可删除文件夹的 db.sqlite3）
   
@@ -210,23 +227,19 @@ python manage.py makemigrations
 python manage.py  migrate
 python manage.py  createsuperuser             ##创建管理员
 ``` 
-  * 登陆的端口号 在 supervisor.conf  里面 第15行  ,默认是       :8003 。如有修改端口号，请把supervisor 里的uwsgi  服务关闭。然后杀掉supervisor进程，再启动。             
+  * autoops 登陆的端口号 在 supervisor.conf  里面 第2行  ,默认是   :8003 。如有修改端口号，请把supervisor 里的uwsgi  服务关闭,再启动。             
       
   * 启动supervisor进程管理  `/usr/bin/python2.7   /usr/bin/supervisord -c /etc/supervisord.conf`
-    加到linux 开机启动里面  `chmod +x  /etc/rc.d/rc.local ` 把上面的命令放到这个文件里面  
+  
+    加到linux 开机启动里面  `chmod +x  /etc/rc.d/rc.local `  把上面的命令放到这个文件里面  
   
   
-  * 启动: 统一用supervisor 管理进程,  打开   0.0.0.0:9001  账号user  密码321   进入进程管理界面，管理uwsgi,redis,webssh,celery,Inception 等启动关闭。此方法不涉及到nginx。
+  * 启动: 统一用supervisor 管理进程,  打开   0.0.0.0:9001  账号user  密码321   进入进程管理界面，管理uwsgi,webssh,celery,Inception 等启动关闭。
 
   * 登陆后台，设置定时获取主机图，设置数据中心、用户组。
   
   * 设置定时获取主机信息任务。 先创建执行的时间频率，再创建任务，创建后，观察队列任务是否执行成功。   如不成功，重启所有supervisor中的  celery服务。
 ![DEMO](static/demo/9.png)
-
-
-
-
-
 
 
 
@@ -242,9 +255,12 @@ from   tasks.ansible_2420.runner import AdHocRunner, CommandRunner
 tasks/views.py   
 from   tasks.ansible_2420.runner import AdHocRunner, CommandRunner
 from  tasks.ansible_2420.inventory import BaseInventory
+
+release/views.py
+from   tasks.ansible_2420.runner import AdHocRunner
+from  tasks.ansible_2420.inventory import BaseInventory
 ```
     
-   
    
 ###  生产环境   
    
@@ -257,9 +273,9 @@ uwsgi  --stop   /opt/autoops/script/uwsgi.pid    # 关闭uwsgi
 uwsgi  --reload  /opt/autoops/script/uwsgi.pid   #重新加载
 ```
  
-*  或者用nginx ，nginx 配置文件修改如下。 此方法也要启动 uwsgi。
+* nginx 配置文件修改如下。 此方法也要启动 uwsgi。
 
-```html
+```bash
 root         /opt/autoops;
    
    
@@ -277,20 +293,13 @@ root         /opt/autoops;
 ```
 
 
-
-
 ###   截图
 ![DEMO](static/demo/13.png)
 ![DEMO](static/demo/12.png)
 ![DEMO](static/demo/1.png)
-![DEMO](static/demo/2.png)
-![DEMO](static/demo/3.png)
 ![DEMO](static/demo/4.png)
 ![DEMO](static/demo/5.png)
-![DEMO](static/demo/6.png)
 ![DEMO](static/demo/7.png)
-![DEMO](static/demo/8.png)
-
 
 
 ### 贡献者

@@ -14,3 +14,4 @@ xlwt
 uwsgi
 cryptography
 pyecharts
+tornado==4.5.2
