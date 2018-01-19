@@ -121,7 +121,7 @@
                                                 </a>
                                                 <a class="btn btn-primary  btn-xs "
                                                    href="{% url    "asset:asset_performance"   row.id %}">性能</a>
-                                                <a type="button" class="btn btn-primary btn-xs" id="webssh">终端
+                                                <a type="button" class="btn btn-primary btn-xs webssh" >终端
                                                 </a>
 
 
@@ -234,7 +234,7 @@
             jQuery(function ($) {
 
 
-                $('#webssh').click(function (event) {
+                $('.webssh').click(function (event) {
                     event.preventDefault();
 
                     var id_a = $(this).parent().parent().attr('id');
