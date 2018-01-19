@@ -1,0 +1,29 @@
+
+
+找到 connections.py 1108行
+```python
+  if int(self.server_version.split('.', 1)[0]) >= 5:
+            self.client_flag |= CLIENT.MULTI_RESULTS
+```
+更改为
+```python
+    try:
+        if int(self.server_version.split('.', 1)[0]) >= 5:
+            self.client_flag |= CLIENT.MULTI_RESULTS
+    except:
+        if self.server_version.split('.', 1)[0] >= 'Inception2':
+            self.client_flag |= CLIENT.MULTI_RESULTS
+```
+
+找到 cursors.py 345行
+
+```python
+if self._result and (self._result.has_next or not self._result.warning_count):
+        return
+```
+
+改为
+```python
+if self._result:
+    return
+```

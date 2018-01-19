@@ -50,7 +50,6 @@ INSTALLED_APPS = [
     'guardian',
     'DjangoUeditor',
     'release',
-    'webssh',
 ]
 
 MIDDLEWARE = [
@@ -194,13 +193,12 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'upload/')
 MEDIA_URL = '/upload/'  # 这个是在浏览器上访问该上传文件的url的前缀
 
 
+Webssh_ip = '42.62.55.58'      ##WebSSH 软件的 访问IP,也就是本机外网IP，改这个地方就好了。
+Webssh_port='9000'             ##端口号,默认即可。如有修改，也需要修改  webssh/main.py文件   define('port', default=9000, help='listen port', type=int)
 
-Webssh_ip = '42.62.55.52'    ##WebSSH 软件的 访问IP,也就是本机外网IP，改这个地方就好了。
-Webssh_port='9000'            ##WebSSH 软件的 访问端口号  需要修改  webssh/main.py文件   define('port', default=9000, help='listen port', type=int)
+Inception_ip = '127.0.0.1'                  ## 此为 Inception 软件地址,  默认为本机地址，一般不用修改
+Inception_port = '6669'                     ## 此为 Inception 软件端口号
 
-
-Inception_ip = '127.0.0.1'  ## 此为 Inception 软件地址 需要设置
-Inception_port = '6669'       ## 此为 Inception 软件端口号
 
 
 inception_remote_system_password='654321'    ## 设置回滚备份服务器相关参数，并同步修改一下 script/inc.cnf 里面的设置
