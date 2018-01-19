@@ -110,11 +110,12 @@ pip3 install -r requirements.txt
 ``` 
 
    添加的资产里面,  建议执行  ` yum install  ipmitool     dmidecode   -y  `以获取更多信息
-    2. 安装   `supervisor  `
+   
+   2. 安装   `supervisor  `
  
 ```bash
 chmod +x    /opt/autoops/script/inception/bin/*
-pip2   install    supervisor                                     ## 没有pip2 版本的 ，可以参考 script/install_pip2.sh
+pip2   install    supervisor          ## 没有pip2 版本的 ，可以参考 script/install_pip2.sh
 echo_supervisord_conf    > /etc/supervisord.conf 
 mkdir /etc/supervisord.d/
      
@@ -129,7 +130,7 @@ password=321
 files = /etc/supervisord.d/*.conf
 ```
 ```bash
-cp   /opt/autoops/script/supervisor.conf               /etc/supervisord.d/                  ## 复制配置文件
+cp   /opt/autoops/script/supervisor.conf               /etc/supervisord.d/        
 ```
     
  
@@ -169,16 +170,16 @@ BROKER_URL = 'redis://127.0.0.1:6379/0'                  ##Redis地址,一般情
 
 
 Webssh_ip = '42.62.55.58'      ##WebSSH 软件的 访问IP,也就是本机外网IP，改这个地方就好了。
-Webssh_port='9000'             ##端口号,默认即可。如有修改，也需要修改  webssh/main.py文件   define('port', default=9000, help='listen port', type=int)
+Webssh_port='9000'             ##端口号,默认即可。如有修改，需要修改  webssh/main.py文件 define('port', default=9000, help='listen port', type=int)
 
-Inception_ip = '127.0.0.1'                  ## 此为 Inception 软件地址,  默认为本机地址，一般不用修改
-Inception_port = '6669'                     ## 此为 Inception 软件端口号
+Inception_ip = '127.0.0.1'         ## 此为 Inception 软件地址,  默认为本机地址，一般不用修改
+Inception_port = '6669'            ## 此为 Inception 软件端口号
 
 
-inception_remote_system_password='1654321'             ## 设置回滚备份（mysql）服务器相关参数，并同步修改一下 script/inc.cnf 里面的设置
+inception_remote_system_password='654321'    ## 设置回滚备份（mysql）服务器相关参数，并同步修改一下 script/inc.cnf 里面的设置
 inception_remote_system_user='root'
 inception_remote_backup_port='3306'
-inception_remote_backup_host='192.168.10.100'          ##设置备份数据库地址
+inception_remote_backup_host='192.168.10.100'   ##设置备份数据库地址
 ```  
 
   * 修改一个文件 `/usr/local/lib/python3.6/site-packages/django/db/backends/mysql/base.py`   注释35 36 以下两行,找不到可以忽略。
