@@ -522,7 +522,7 @@ def Inception(request):  ##Inception 审核
                     s['data'] = "返回值为空,可能是权限不够。"
                 ret['data'].append(s)
             except Exception as e:
-                ret['data'].append({"ip": i.ip, "data": "账号密码不对,{0}  如果出现 invalid literal for int() with base 10: 'Inception2',这个报错，请按照script/install_inception.sh 最下面，修改文件 即可".format(e)})
+                ret['data'].append({"ip": i.ip, "data": "账号密码不对,{0}".format(e)})
         return HttpResponse(json.dumps(ret))
 
 

@@ -175,7 +175,7 @@ Inception_ip = '127.0.0.1'                  ## 此为 Inception 软件地址,  �
 Inception_port = '6669'                     ## 此为 Inception 软件端口号
 
 
-inception_remote_system_password='123456'             ## 设置回滚备份（mysql）服务器相关参数，并同步修改一下 script/inc.cnf 里面的设置
+inception_remote_system_password='1654321'             ## 设置回滚备份（mysql）服务器相关参数，并同步修改一下 script/inc.cnf 里面的设置
 inception_remote_system_user='root'
 inception_remote_backup_port='3306'
 inception_remote_backup_host='192.168.10.100'          ##设置备份数据库地址
@@ -192,7 +192,7 @@ if version < (1, 3, 3):
   
 在script/  文件夹下有已经修改的connections.py 和 cursors.py 直接替换即可。  
 替换位置为  `/usr/local/lib/python3.6/site-packages/pymysql`  下的 `connections.py 和 cursors.py `   两个文件
-
+注:  如果想知道，修改了哪里，可参考script/备注。
 
 ```bash
 cp /opt/autoops/script/connections.py   /usr/local/lib/python3.6/site-packages/pymysql/connections.py
