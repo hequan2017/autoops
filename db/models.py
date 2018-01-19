@@ -12,7 +12,7 @@ class db_mysql(models.Model):
 
 
     db_user = models.ForeignKey(to="db_user", to_field='id', on_delete=models.SET_NULL, null=True,
-                                    verbose_name='数据库登陆用户',default='root', blank=True)
+                                    verbose_name='数据库登陆用户', blank=True)
 
 
     product_line =  models.ForeignKey(to=Group,to_field='id',on_delete=models.SET_NULL,verbose_name='产品线',null=True)
@@ -49,7 +49,7 @@ class db_mysql(models.Model):
 class  db_user(models.Model):
 
     name = models.CharField(max_length=128, unique=True,verbose_name='名称')
-    username = models.CharField(max_length=64,null=True,blank=True, verbose_name=('登陆用户'))
+    username = models.CharField(max_length=64,null=True,blank=True, default='root',verbose_name=('登陆用户'))
     password =  models.CharField(max_length=255, blank=True,null=True,verbose_name=('登陆密码'))
     product_line = models.ForeignKey(to=Group, to_field='id', on_delete=models.SET_NULL, verbose_name='产品线',null=True)
     ps = models.CharField(max_length=1024,verbose_name="备注",null=True,blank=True)
