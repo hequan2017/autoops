@@ -22,6 +22,14 @@ AutoOps 是一款基于 2.0 版本django开发的，主要面向linux运维工�
 
 ### 更新记录  
 
+  -  1.7.8  更换后台为xadmin
+     -  注意： xadmin暂时不支持 对象权限组件django-guardian,需要设置的时候，可以登陆dadmin（为默认admin）
+     -  注意： xadmin  认不到 tasks任务的名字，需要的名字如下：
+        -  tasks.task.任务
+        -  tasks.task.monitor_job
+        -  tasks.task.clean_history_host_monitor
+        -  tasks.task.cmd_job
+        
   -  1.7.7   更换webssh启动方式。
   -  1.7.6  代码库功能上线，带分发。
   -  1.7.4  更新ansible版本。 增强命令行 功能。具体方法参考ansible 模块。
@@ -106,7 +114,8 @@ systemctl start  redis.service
 git  clone  https://github.com/hequan2017/autoops.git
     
 cd   autoops/
-pip3 install -r requirements.txt        
+pip3 install -r requirements.txt       
+pip3 install git+git://github.com/sshwsfc/xadmin.git@django2 
 ``` 
 
    添加的资产里面,  建议执行  ` yum install  ipmitool     dmidecode   -y  `以获取更多信息

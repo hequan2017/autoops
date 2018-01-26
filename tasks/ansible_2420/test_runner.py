@@ -13,10 +13,10 @@ def  TestAdHocRunner():
         host_data = [
             {
                 "hostname": "testserver",
-                "ip": "192.168.10.93",
+                "ip": "192.168.10.100",
                 "port": 22,
                 "username": "root",
-                "password": "password",
+                "password": "123456",
             },
         ]
         inventory = BaseInventory(host_data)
@@ -30,7 +30,6 @@ def  TestAdHocRunner():
         print(ret.results_summary)
         print(ret.results_raw)
 
-
 def TestCommandRunner():
         """
         执行单个命令，返回结果
@@ -40,10 +39,10 @@ def TestCommandRunner():
         host_data = [
             {
                 "hostname": "testserver",
-                "ip": "192.168.10.93",
+                "ip": "192.168.10.100",
                 "port": 22,
                 "username": "root",
-                "password": "password",
+                "password": "123456",
             },
         ]
         inventory = BaseInventory(host_data)

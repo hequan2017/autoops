@@ -1,4 +1,4 @@
-from django.conf.urls import include
+from django.conf.urls import include,url
 from django.contrib import admin
 
 from names.views import index,login_view,logout
@@ -7,9 +7,16 @@ from asset.views import  AssetUpload
 from django.conf import settings
 from django.urls  import path
 
+import xadmin
+xadmin.autodiscover()
+
+from xadmin.plugins import xversion
+xversion.register_models()
+
 
 urlpatterns = [
-    path('admin/', admin.site.urls,name="admin"),
+    path('admin/', xadmin.site.urls, name="xadmin"),
+    path('dadmin/', admin.site.urls,name="dadmin"),
     path('', index),
     path('login.html', login_view,name="login_view"),
     path('logout.html', logout,name="logout"),

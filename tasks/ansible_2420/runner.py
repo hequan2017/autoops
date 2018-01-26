@@ -28,6 +28,21 @@ Options = namedtuple('Options', [
     'verbosity', 'check', 'extra_vars', 'playbook_path', 'passwords',
     'diff', 'gathering', 'remote_tmp',
 ])
+import multiprocessing
+
+
+# class  MyTaskQueueManager(TaskQueueManager):
+#     def __initialize_processes(self,num):
+#         self._workers = []
+#         current_process =  multiprocessing.current_process
+#         daemon_my = current_process()._config['daemon'] == False
+#         for i in range(num):
+#             rslt_q = multiprocessing.Queue()
+#             self._workers.append([None,rslt_q])
+
+
+
+
 
 
 def get_default_options():

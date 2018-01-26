@@ -4,11 +4,16 @@ from tasks.views import ssh
 import threading,time,datetime
 from names.password_crypt import decrypt_p
 
+from   tasks.ansible_2420.runner import AdHocRunner, CommandRunner
+from  tasks.ansible_2420.inventory import BaseInventory
 
 
 platforms.C_FORCE_ROOT = True
 
 app= Celery('autoops',)
+
+
+
 
 
 def   job(id):  ##计划任务
@@ -44,6 +49,20 @@ def   job(id):  ##计划任务
     in_network = int((int(in4[1]) - int(in2[1]))/1024/10*8)
     out_network = int((int(in4[9]) - int(in2[9]))/1024/10*8)
     performance.objects.create(server_id=i.id, cpu_use=cpu, mem_use=mem,in_use=in_network,out_use=out_network)
+
+
+
+
+@app.task
+def  ansbile():
+
+
+    from multiprocessing import current_process
+    # try:
+    #     current_process()._config
+    # except AttributeError:
+    current_process()._config = {'semprefix': '/mp'}
+
 
 
 
