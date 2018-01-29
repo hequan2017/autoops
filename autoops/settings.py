@@ -53,7 +53,6 @@ INSTALLED_APPS = [
     'xadmin',
     'crispy_forms',
     'reversion',
-    "xplugin_guardian",
 ]
 
 MIDDLEWARE = [
