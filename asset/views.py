@@ -166,7 +166,7 @@ class AssetDetail(DetailView):
     def dispatch(self, *args, **kwargs):
         return super(AssetDetail, self).dispatch(*args, **kwargs)
 
-    def get_context_data(self, **kwargs,):
+    def get_context_data(self, **kwargs):
         pk = self.kwargs.get(self.pk_url_kwarg, None)
         detail = asset.objects.get(id=pk)
 
