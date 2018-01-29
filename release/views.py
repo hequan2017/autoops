@@ -107,8 +107,10 @@ class  ReleaseDel(View):
         ret = {'status': True, 'error': None, }
         try:
             id = request.POST.get('nid', None)
+            print(id)
             c = codebase.objects.get(id=id)
             path = c.file.url
+            print(path)
             path2 = path[1:]
             os.remove(path2)
             c.delete()
@@ -116,7 +118,7 @@ class  ReleaseDel(View):
         except Exception as e:
             ret = {
                 "static": False,
-                "error": '删除请求错误,{}'.format(e)
+                "error": '删除请求错误,代码名称不能是中文{}'.format(e)
             }
         finally:
             return HttpResponse(json.dumps(ret))

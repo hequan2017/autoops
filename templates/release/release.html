@@ -71,8 +71,7 @@
 
                                 {% for   row   in   codebase_list %}
                                     <tr class="gradeA" id="{{ row.id }}">
-                                        <td class="center"><a
-                                                href="{% url  "asset:system_user_detail"   row.id %}" >{{ row.name }}</a>
+                                        <td class="center">{{ row.name }}
                                         </td>
                                         <td><b>  {% if  row.file %}
                                                 <a href="{{ row.file.url }} ">{{ row.file.name | lowers }}</a> {% endif %}

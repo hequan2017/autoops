@@ -8,8 +8,14 @@ class CodeBaseForm(forms.ModelForm):
 
         labels={
 
-            "file":"上传文件"
+            "file":"上传文件",
+
         }
+        help_texts = {
+            "file": "文件名称不能是中文",
+
+        }
+
         widgets = {
             'ps': forms.Textarea(
                 attrs={'cols': 80, 'rows': 3}
