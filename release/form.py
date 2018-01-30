@@ -12,7 +12,7 @@ class CodeBaseForm(forms.ModelForm):
 
         }
         help_texts = {
-            "file": "文件名称不能是中文",
+            "file": "文件名称不能是中文,必填项目",
 
         }
 

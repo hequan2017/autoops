@@ -6,7 +6,7 @@ class codebase(models.Model):
     name = models.CharField(max_length=64, verbose_name='代码名称', null=True,blank=True)
 
     ps = models.CharField(max_length=1024,verbose_name="备注",null=True,blank=True)
-    file = models.FileField(upload_to = 'codebase/%Y%m%d{}'.format(random.randint(0,99999)),verbose_name="代码文件",null=True,blank=True,default=None)
+    file = models.FileField(upload_to = 'codebase/%Y%m%d{}'.format(random.randint(0,99999)),verbose_name="代码文件",)
 
 
     ctime= models.DateTimeField(auto_now_add=True,null=True,verbose_name='创建时间',blank=True)
