@@ -115,7 +115,7 @@ git  clone  https://github.com/hequan2017/autoops.git
     
 cd   autoops/
 pip3 install -r requirements.txt       
-pip3 install git+git://github.com/sshwsfc/xadmin.git@django2 
+pip3 install git+https://github.com/sshwsfc/xadmin.git@django2 
 ``` 
 
    添加的资产里面,  建议执行  ` yum install  ipmitool     dmidecode   -y  `以获取更多信息
@@ -243,7 +243,7 @@ python manage.py  createsuperuser             ##创建管理员
   ```djangotemplate
 asset/views.py
 from   tasks.ansible_2420.runner import AdHocRunner, CommandRunner
-# from  tasks.ansible_2420.inventory import BaseInventory
+from  tasks.ansible_2420.inventory import BaseInventory
 
 tasks/views.py   
 from   tasks.ansible_2420.runner import AdHocRunner, CommandRunner
