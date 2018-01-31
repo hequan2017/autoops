@@ -270,7 +270,7 @@
                                 var    url = "ws://{{ Webssh }}:{{ Webssh_port }}/" + 'ws?id=' + msg.id,
                                     socket = new WebSocket(url),
                                     terminal = document.getElementById('#terminal'),
-                                    term = new Terminal({cursorBlink: true});
+                                    term = new Terminal({cursorBlink: true,clos:80,rows:34});
 
                                 console.log(url);
                                 term.on('data', function (data) {

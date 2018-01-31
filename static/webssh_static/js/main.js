@@ -24,7 +24,7 @@ jQuery(function($){
       $.ajax({
           url: url,
           type: type,
-          data: {hostname:'42.62.55.52',port:22,username:'root',password:'He.he123'},
+          data: {hostname:'42.62.55.58',port:22,username:'root',password:'123456'},
           success: callback
           // cache: false,
           // contentType: false,
