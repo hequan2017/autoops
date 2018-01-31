@@ -17,6 +17,8 @@ urlpatterns = [
     path('Inception.html', views.Inception, name='Inception'),
     path('Inception-exe.html', views.Inception_exe, name='Inception_exe'),
     path('Inception-rb.html', views.Inception_rb, name='Inception_rb'),
+    path('Inception-query.html', views.Inception_query, name='Inception_query'),
+    path('Inception-query-databases.html', views.Inception_query_databases, name='Inception_query_databases'),
 ]
 
 app_name="tasks"

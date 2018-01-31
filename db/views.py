@@ -303,12 +303,12 @@ class DbUserUpdate(UpdateView):
 
         if new_password != None:
                 self.db = db_save = form.save()
-                print('密码变了')
+
                 db_save.password = encrypt_p(new_password)
                 db_save.save()
 
                 if old_pro != myproduct:
-                    print('产品线变了')
+
                     old_mygroup = Group.objects.get(name=old_pro)
                     mygroup = Group.objects.get(name=myproduct)
                     GroupObjectPermission.objects.remove_perm("read_db_user", old_mygroup, obj=db_save)
@@ -323,14 +323,14 @@ class DbUserUpdate(UpdateView):
 
 
         else:
-                print('密码没变')
+
                 password_old = db_user.objects.get(id=pk).password
                 self.db = db = form.save()
                 db.password = password_old
                 db.save()
 
                 if old_pro != myproduct:
-                    print('密码没变，但是产品线变了')
+
                     old_mygroup = Group.objects.get(name=old_pro)
                     mygroup = Group.objects.get(name=myproduct)
                     GroupObjectPermission.objects.remove_perm("read_db_user", old_mygroup, obj=db)

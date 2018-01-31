@@ -1,6 +1,20 @@
 {% extends "base.html" %}
 {% load static %}
 
+{% block header-css %}
+    <style>
+    pre{
+    white-space: pre-wrap;
+    white-space: -moz-pre-wrap;
+    white-space: -o-pre-wrap;
+    word-wrap: break-word;
+    }
+   </style>
+{% endblock %}
+
+
+
+
 {% block  title %}命令行{% endblock %}
 
 {% block page-content %}
@@ -50,8 +64,10 @@
                         </div>
                     </div>
                     <div class="ibox-content">
-                        <div class="table-responsive">
+                        <div class="table-responsive ">
+
                             <form class="form-horizontal  cmd_from">
+
                                 <table class="table table-striped table-bordered table-hover dataTables-example">
                                     <thead>
                                     <tr>
@@ -69,7 +85,7 @@
                                     {% for   row   in   sql_list %}
 
                                         <tr class="gradeA" id="{{ row.id }}">
-                                            <td><input type="checkbox" value="{{ row.id }}" name="id"></td>
+                                            <td><input type="checkbox"  value="{{ row.id }}" name="id"></td>
                                             <td class="center"><a
                                                     href="{% url  "db:db_detail"   pk=row.id %}">{{ row.ip }}</a>
                                             </td>
@@ -84,12 +100,39 @@
                                 </table>
 
 
-                                <div class="ibox-content">
+                                <div class="ibox-content  "  >
+  <div class="form-group"><label class="col-sm-2 control-label"  >数据库库名</label>
+                            <div class="col-sm-10"  id="xiala">
+
+                            </div>
+                        </div>
+                                    <div class="form-group"><label class="col-sm-2 control-label">查询接口</label>
+
+                                        <div class="col-lg-6 col-sm-6"><textarea  name="sql"  class="sql_q" rows="2"
+                                                                                 cols="60" required=""></textarea>
+                                        </div>
 
 
-                                    <div class="form-group"><label class="col-sm-2 control-label">命令</label>
 
-                                        <div class="col-lg-6 col-sm-6"><textarea id="sql" name="sql" rows="8"
+
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+
+
+
+
+                                     <div class="form-group">
+                                        <div class="col-sm-6 col-sm-offset-2">
+
+                                            <a  class="btn btn-primary sql_query" type="submit">查询</a>
+                                             <a  class="btn btn-primary sql_query_databases" type="submit">查询数据库名字</a>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group"><label class="col-sm-2 control-label">执行命令</label>
+
+                                        <div class="col-lg-6 col-sm-6"><textarea id="sql_c"   name="sql" rows="4"
                                                                                  cols="60" required=""></textarea>
                                         </div>
                                     </div>
@@ -101,8 +144,7 @@
 
                                             <a id="sql_check" class="btn btn-primary" type="submit">自动审核</a>
 
-                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                             <a id="sql_exe" class="btn btn-danger" type="submit">命令执行</a>
                                         </div>
                                     </div>
@@ -168,14 +210,23 @@
                             </a>
                         </div>
                     </div>
+                    <div class="ibox-content  pre_query">
+
+                        <pre> <span id="err_query">查询反馈  只能使用  select , show,desc等命令。 只能执行单条语句。 暂时不能执行 select * from user;
+</span></pre>
+  </div>
+
+
                     <div class="ibox-content  pres">
 
-                        <pre> <span id="err">mysql命令 以 ; 分割    例如：   use mysql;CREATE DATABASE `1213` CHARACTER SET utf8mb4;   </span></pre>
+                        <pre> <span id="err">mysql命令 以 ; 分割      命令执行是忽略警告的，请注意！ 警告仅供参考，修改SQL命令。  SQL命令可手动回滚。
+ 例如： 创建库  先选择   mysql 库,    然后执行： CREATE DATABASE `1213` CHARACTER SET utf8mb4;
+ 例如： 创建表   选中库之后 ,  CREATE TABLE `1213` (id int) ;</span></pre>
   </div>
 
             <div class="ibox-content  ">
 
-                        <pre> <span id="sql_rb1">回滚命令  请输入上面想要回滚语句的 返回信息，例如：
+                        <pre> <span id="sql_rb1">回滚命令, 因为回滚比较重要，  请手动输入上面想要回滚语句的 返回信息，例如：
 
 sequence : 1514198102_234_0   ###不要加标点
 backup_dbname : 192_168_10_81_3306_hequan1
@@ -188,7 +239,8 @@ backup_dbname : 192_168_10_81_3306_hequan1
 
 
 
-    {% block footer-js %}      <script type="text/JavaScript">
+    {% block footer-js %}
+        <script type="text/JavaScript">
     $.ajaxSetup({headers: {"X-CSRFToken": '{{ csrf_token }}'}});
 </script>
 
@@ -197,11 +249,95 @@ backup_dbname : 192_168_10_81_3306_hequan1
             $(function () {
 
 
-                $('#sql_check').click(function () {
+
+         $('.sql_query').click(function () {
+
+                var   ids = $('input[name="id"]:checked').val();
+                  var val=$('input:radio[name="databases"]:checked').val();
+                if(val == null){
+                         alert("请先执行 查询数据库名字，之后选中要查询的库名字");
+                         return false;
+                }
+                var   sql_query3 = $(".sql_q").val();
+                var  db=val;
+                    $.ajax({
+                        url: "/tasks/Inception-query.html",
+                        type: 'POST',
+                        data: {"id":ids,"sql":sql_query3,'databases':db},
+
+
+                        success: function (data) {
+                            var obj = JSON.parse(data);
+                            cons = "";
+                            if (obj.data) {
+                                $.each(obj, function (data, values) {
+                                    $.each(values, function (index, value) {
+                                        cons += "<pre>" + "主机:" + value.ip + "\n" + "结果: \n " + value.data + "</pre>"
+
+                                    });
+                                    $(".pre_query").html(cons); //把内容入到这个div中即完成
+                                });
+                            } else {
+                                $('#err_query').text(obj.error);
+                            }
+
+                        }
+
+                    })
+                });
+
+
+        $('.sql_query_databases').click(function () {
+        var   ids = $('input[name="id"]:checked').val();
+
+                    $.ajax({
+                        url: "/tasks/Inception-query-databases.html",
+                        type: 'POST',
+                        data: {"id":ids,},
+                        success: function (data) {
+                            var obj = JSON.parse(data);
+                            cons = "";
+                            if (obj.data) {
+                                $.each(obj, function (data, values) {
+                                    $.each(values, function (index, value) {
+                                            var aaa = value.data;
+                                        $.each(aaa,function (index,val) {
+                                                  $("#xiala").append('<label class="radio-inline"><input type="radio"  value='+val +' name="databases" required="">' + val +'</label>');
+
+                                    });
+{#                                    $(".pre_query").html(cons); //把内容入到这个div中即完成#}
+                                });
+
+
+                                })
+                            } else {
+                                $('#err_query').text(obj.error);
+                            }
+
+                        }
+
+                    })
+                });
+
+
+
+           $('#sql_check').click(function () {
+
+        var   ids = $('input[name="id"]:checked').val();
+                       var val=$('input:radio[name="databases"]:checked').val();
+                        if(val == null){
+                                 alert("请先执行 查询数据库名字，之后选中要查询的库名字");
+                                 return false;
+                        }
+                        var   sql_query1 = $("#sql_c").val();
+                        var  db=val;
+
+
+
                     $.ajax({
                         url: "/tasks/Inception.html",
                         type: 'POST',
-                        data: $('.cmd_from').serialize(),
+                        data: {"id":ids,"sql":sql_query1,'databases':db},
                         success: function (data) {
                             var obj = JSON.parse(data);
                             cons = "";
@@ -223,10 +359,23 @@ backup_dbname : 192_168_10_81_3306_hequan1
                 });
 
                 $('#sql_exe').click(function () {
+
+
+        var   ids = $('input[name="id"]:checked').val();
+                       var val=$('input:radio[name="databases"]:checked').val();
+                        if(val == null){
+                                 alert("请先执行 查询数据库名字，之后选中要查询的库名字");
+                                 return false;
+                        }
+                        var   sql_query1 = $("#sql_c").val();
+                        var  db=val;
+
+
+
                     $.ajax({
                         url: "/tasks/Inception-exe.html",
                         type: 'POST',
-                        data: $('.cmd_from').serialize(),
+                        data: {"id":ids,"sql":sql_query1,'databases':db},
                         success: function (data) {
                             var obj = JSON.parse(data);
                             cons = "";

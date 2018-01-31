@@ -11,7 +11,8 @@ from guardian.core import ObjectPermissionChecker
 from  db.models import db_mysql, db_user
 from guardian.decorators import permission_required_or_403
 from django.views.generic import TemplateView, ListView, View, CreateView, UpdateView, DeleteView, DetailView
-
+import datetime
+import decimal
 
 
 from   tasks.ansible_2420.runner import AdHocRunner, CommandRunner
@@ -19,7 +20,7 @@ from  tasks.ansible_2420.inventory import BaseInventory
 
 
 from  autoops import settings
-from names.password_crypt import encrypt_p,decrypt_p
+from names.password_crypt import decrypt_p
 
 
 
@@ -324,15 +325,15 @@ b = getattr(settings, 'Inception_port')
 In_port = int(b)
 
 
-def sql(user, password, host, port, sqls):  ## 审核
+def sql(user, password, host, port, databases, sqls):  ## 审核
     sql = '/*--user={0};--password={1};--host={2};--enable-check;--disable-remote-backup;--port={3};*/\
-    inception_magic_start;\
-    {4}\
-    inception_magic_commit;'.format(user, password, host, port, sqls)
+    inception_magic_start; \
+    use {4}; \
+    {5}\
+    inception_magic_commit;'.format(user, password, host, port,databases, sqls)
 
     print("----------------审核----------------------")
-
-
+    print(sql)
     try:
         ret = {"ip": host, "data": None}
 
@@ -369,14 +370,14 @@ def sql(user, password, host, port, sqls):  ## 审核
         return ret
 
 
-def sql_exe(user, password, host, port, sqls):  ## 执行
+def sql_exe(user, password, host, port,databases, sqls):  ## 执行
     sql = '/*--user={0};--password={1};--host={2};--execute=1;--enable-execute;--enable-ignore-warnings;--port={3};*/\
     inception_magic_start;\
-    {4}\
-    inception_magic_commit;'.format(user, password, host, port, sqls)
+    use {4}  ; \
+    {5}\
+    inception_magic_commit;'.format(user, password, host, port,databases, sqls)
 
     print("----------------执行----------------------")
-
     try:
         ret = {"ip": host, "data": None}
 
@@ -466,6 +467,188 @@ def sql_rb(user, password, host, port, sequence, backup_dbname):  ##   查询回
         return ret
 
 
+
+class DateEncoder(json.JSONEncoder ):  ## 格式化查询返回的内容
+        def default(self, obj):
+            if isinstance(obj, datetime.datetime):
+                return obj.strftime('%Y-%m-%d %H:%M:%S')
+            elif isinstance(obj, datetime.date):
+                return obj.strftime('%Y-%m-%d')
+            elif isinstance(obj, decimal.Decimal):
+                return str(obj)
+            else:
+                return json.JSONEncoder.default(self, obj)
+
+
+class  sql_query(object):  ## 查询接口
+    def __init__(self,host,port,user,password,db):
+        self.host = host
+        self.port = port
+        self.user = user
+        self.password = password
+        self.db = db
+
+
+    def connectmysql(self,sql):# 查询数据库 库名字
+        self.conn = pymysql.connect(host=self.host,port=self.port,password=self.password,db=self.db,charset='utf8')
+        self.cursor = self.conn.cursor(pymysql.cursors.SSCursor)
+        self.cursor.execute(sql)
+        result = self.cursor.fetchall()
+        self.conn.commit()
+        self.conn.close()
+        desc = self.cursor.description
+        return result
+
+    def connectmysql_select(self, sql):# 查询数据库
+        self.conn = pymysql.connect(host=self.host, port=self.port, password=self.password, db=self.db, charset='utf8')
+        self.cursor = self.conn.cursor(pymysql.cursors.SSCursor)
+        self.cursor.execute(sql)
+        result = self.cursor.fetchall()
+        self.conn.commit()
+        self.conn.close()
+        # desc = self.cursor.description
+
+        column_name_max_size = max(len(i[0]) for i in self.cursor.description)
+        data = []
+
+        for result in result:
+            row = map(lambda x, y: (x, y), (i[0] for i in self.cursor.description), result)
+            for each_column in row:
+                    data.append(str(each_column[0].rjust(column_name_max_size)) + " " + ":" + " " + str(
+                        each_column[1].replace('\n', '\n'.ljust(column_name_max_size + 4))) )
+        return data
+
+
+
+@login_required(login_url="/login.html")
+def Inception_query_databases(request):  ##Inception 查询 数据库 名字
+
+    if request.method == 'POST':
+        ids = request.POST.getlist('id')
+        user = User.objects.get(username=request.user)
+        checker = ObjectPermissionChecker(user)
+        ids1 = []
+        for i in ids:
+            assets = db_mysql.objects.get(id=i)
+            if checker.has_perm('task_db_mysql', assets, ) == True:
+                ids1.append(i)
+            else:
+                error_3 = "数据库没有权限"
+                ret = {"error": error_3, "status": False}
+                return HttpResponse(json.dumps(ret))
+
+
+
+        user = request.user
+        idstring = ','.join(ids1)
+        if not ids:
+            error_1 = "请选择数据库"
+            ret = {"error": error_1, "status": False}
+            return HttpResponse(json.dumps(ret))
+
+
+        obj = db_mysql.objects.extra(where=['id IN (' + idstring + ')'])
+        ret = {}
+        ret['data'] = []
+
+        for i in obj:
+            try:
+                history.objects.create(ip=i.ip, root=i.db_user.username, port=i.port,
+                                                  cmd="查询数据库库名字".format(), user=user)
+
+                password = decrypt_p(i.db_user.password)
+
+                a = sql_query(user=i.db_user.username, password=password, host=i.ip, port=i.port,db='mysql')
+                s1 = a.connectmysql(sql="select SCHEMA_NAME from information_schema.SCHEMATA;")
+
+                s2 = []
+                for  z  in  s1:
+                        s2.append(z[0])
+
+                s = {'ip':i.ip,'data':s2}
+                ret['data'].append(s)
+
+            except Exception as e:
+                ret['data'].append({"ip": i.ip, "data": "账号密码不对,{}".format(e)})
+        return HttpResponse(json.dumps(ret))
+
+
+
+
+@login_required(login_url="/login.html")
+def Inception_query(request):  ##查询数据库
+
+    if request.method == 'POST':
+        ids = request.POST.getlist('id')
+
+        sqls = request.POST.get('sql')
+        db = request.POST.get('databases')
+
+
+        sqls1= sqls.split(';')
+
+        for s in sqls1:
+            if '' in sqls1:
+                sqls1.remove('')
+
+        for j in range(len(sqls1)):
+            j1 = sqls1[j].strip()[:4]
+            if j1 == 'show'   or j1 == 'sele'  or j1 == 'desc' :
+                break
+            else:
+                rets = {"error": "输入的命令有误，禁止使用非 select , show,desc", "status": False}
+                return HttpResponse(json.dumps(rets))
+
+
+        user = User.objects.get(username=request.user)
+        checker = ObjectPermissionChecker(user)
+        ids1 = []
+        for i in ids:
+            assets = db_mysql.objects.get(id=i)
+            if checker.has_perm('task_db_mysql', assets, ) == True:
+                ids1.append(i)
+            else:
+                error_3 = "数据库没有权限"
+                ret = {"error": error_3, "status": False}
+                return HttpResponse(json.dumps(ret))
+        user = request.user
+        idstring = ','.join(ids1)
+
+
+        if not ids:
+            error_1 = "请选择数据库"
+            ret = {"error": error_1, "status": False}
+            return HttpResponse(json.dumps(ret))
+        elif    not sqls:
+            error_2 = "请输入要查询的语句"
+
+            ret = {"error": error_2, "status": False}
+            return HttpResponse(json.dumps(ret))
+
+
+        obj = db_mysql.objects.extra(where=['id IN (' + idstring + ')'])
+        ret = {}
+        ret['data'] = []
+
+        for i in obj:
+            try:
+                history.objects.create(ip=i.ip, root=i.db_user.username, port=i.port,cmd="查询:{}".format(sqls), user=user)
+
+                password = decrypt_p(i.db_user.password)
+
+                query = sql_query(user=i.db_user.username, password=password, host=i.ip, port=i.port,db=db)
+                re = query.connectmysql_select(sql=sqls)
+                re2 = json.dumps(re, cls=DateEncoder)
+                re3 = re2.replace('["', '').replace('"]', '')
+                re4 = re3.split(",")
+                re5 = {'ip':i.ip,'data': '\n'.join(re4)}
+                ret['data'].append(re5)
+            except Exception as e:
+                ret['data'].append({"ip": i.ip, "data": "账号密码不对,查询失败{}".format(e)})
+        return HttpResponse(json.dumps(ret))
+
+
+
 @login_required(login_url="/login.html")
 def Inception(request):  ##Inception 审核
 
@@ -477,13 +660,14 @@ def Inception(request):  ##Inception 审核
     if request.method == 'POST':
         ids = request.POST.getlist('id')
         sql_db = request.POST.get('sql', None)
+        databases = request.POST.get('databases', None)
 
         user = User.objects.get(username=request.user)
         checker = ObjectPermissionChecker(user)
         ids1 = []
         for i in ids:
             assets = db_mysql.objects.get(id=i)
-            if checker.has_perm('task_db_mysql', db_mysql, ) == True:
+            if checker.has_perm('task_db_mysql', assets, ) == True:
                 ids1.append(i)
             else:
                 error_3 = "数据库没有权限"
@@ -509,12 +693,12 @@ def Inception(request):  ##Inception 审核
 
         for i in obj:
             try:
-                historys = history.objects.create(ip=i.ip, root=i.db_user.username, port=i.port,
+                history.objects.create(ip=i.ip, root=i.db_user.username, port=i.port,
                                                   cmd="审核:{0}".format(sql_db), user=user)
 
                 password = decrypt_p(i.db_user.password)
 
-                s = sql(user=i.db_user.username, password=password, host=i.ip, port=i.port, sqls=sql_db)
+                s = sql(user=i.db_user.username, password=password, host=i.ip, port=i.port,databases=databases,sqls=sql_db)
 
                 if s == None or s['data'] == '':
                     s = {}
@@ -522,8 +706,16 @@ def Inception(request):  ##Inception 审核
                     s['data'] = "返回值为空,可能是权限不够。"
                 ret['data'].append(s)
             except Exception as e:
+
                 ret['data'].append({"ip": i.ip, "data": "账号密码不对,{0}".format(e)})
         return HttpResponse(json.dumps(ret))
+
+
+
+
+
+
+
 
 
 @login_required(login_url="/login.html")
@@ -532,13 +724,17 @@ def Inception_exe(request):  ##Inception 执行
     if request.method == 'POST':
         ids = request.POST.getlist('id')
         sql_db = request.POST.get('sql', None)
+        databases = request.POST.get('databases', None)
+
+
+
 
         user = User.objects.get(username=request.user)
         checker = ObjectPermissionChecker(user)
         ids1 = []
         for i in ids:
             assets = db_mysql.objects.get(id=i)
-            if checker.has_perm('task_db_mysql', db_mysql, ) == True:
+            if checker.has_perm('task_db_mysql',assets, ) == True:
                 ids1.append(i)
 
             else:
@@ -565,13 +761,11 @@ def Inception_exe(request):  ##Inception 执行
 
         for i in obj:
             try:
-                historys = history.objects.create(ip=i.ip, root=i.db_user.username, port=i.port,
+                history.objects.create(ip=i.ip, root=i.db_user.username, port=i.port,
                                                   cmd="执行:{}".format(sql_db), user=user)
 
                 password = decrypt_p(i.db_user.password)
-
-
-                s = sql_exe(user=i.db_user.username, password=password, host=i.ip, port=i.port, sqls=sql_db)
+                s = sql_exe(user=i.db_user.username, password=password, host=i.ip, port=i.port, databases=databases,sqls=sql_db)
 
                 if s == None or s['data'] == '':
                     s = {}

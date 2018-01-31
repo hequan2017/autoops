@@ -7,6 +7,8 @@
 
 {% for jsfile_name in script_list %}
         <script src="/static/echarts/{{ jsfile_name }}.js"></script>
+
+
 {% endfor %}
 {% endblock %}
 
@@ -31,9 +33,9 @@
                     <a class="collapse-links">
                         <i class="fa fa-chevron-up"></i>
                     </a>
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                        <i class="fa fa-wrench"></i>
-                    </a>
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                <i class="fa fa-wrench"></i>
+                            </a>
                     <ul class="dropdown-menu dropdown-user">
                         <li><a href="#">配置选项 1</a>
                         </li>
@@ -47,7 +49,7 @@
 
             </div>
 
-            <div class="ibox-content">
+            <div class="ibox-content  col-sm-12">
             <div  >{{ myechart|safe }}</div>
             </div>
 
@@ -80,7 +82,7 @@
 
             </div>
 
-            <div class="ibox-content" >
+            <div class="ibox-content  col-sm-12" >
             <div  >{{ myechart1|safe }}</div>
             </div>
 
@@ -88,6 +90,7 @@
         </div>
 
     </div>
+
 </div>
     </div>
 
