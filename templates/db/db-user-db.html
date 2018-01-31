@@ -41,15 +41,7 @@
 
                                 <a class="text-center"    ><i class="fa fa-laptop"></i>关联资产</a>
                             </li>
-                            <li class="pull-right">
-                                <a class="btn btn-outline btn-default" href="{% url "db:db_user_update"  nid %}"><i
-                                        class="fa fa-edit"></i>编辑</a>
-                            </li>
-                            <li class="pull-right">
-                                <a class="btn btn-outline btn-danger" data-toggle="modal" data-target="#myModal1">
-                                    <i class="fa fa-edit"></i>删除
-                                </a>
-                            </li>
+
 
                         </ul>
                     </div>
@@ -117,9 +109,7 @@
 
                                             <td><a class="btn btn-primary  btn-xs "
                                                    href="{% url  "db:db_update"  pk=row.id %}">编辑</a>
-                                                <a class="btn btn-danger  btn-xs  db_user_del"
-                                                   >删除
-                                                </a>
+                                             
 
                                             </td>
                                         </tr>
