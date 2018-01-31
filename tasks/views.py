@@ -515,7 +515,7 @@ class  sql_query(object):  ## 查询接口
             row = map(lambda x, y: (x, y), (i[0] for i in self.cursor.description), result)
             for each_column in row:
                     data.append(str(each_column[0].rjust(column_name_max_size)) + " " + ":" + " " + str(
-                        each_column[1].replace('\n', '\n'.ljust(column_name_max_size + 4))) )
+                        each_column[1]))
         return data
 
 
@@ -638,11 +638,12 @@ def Inception_query(request):  ##查询数据库
 
                 query = sql_query(user=i.db_user.username, password=password, host=i.ip, port=i.port,db=db)
                 re = query.connectmysql_select(sql=sqls)
+
                 re2 = json.dumps(re, cls=DateEncoder)
-                re3 = re2.replace('["', '').replace('"]', '')
-                re4 = re3.split(",")
+                re4 = re2.split(",")
                 re5 = {'ip':i.ip,'data': '\n'.join(re4)}
                 ret['data'].append(re5)
+
             except Exception as e:
                 ret['data'].append({"ip": i.ip, "data": "账号密码不对,查询失败{}".format(e)})
         return HttpResponse(json.dumps(ret))
