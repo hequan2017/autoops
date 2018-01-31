@@ -333,7 +333,7 @@ def sql(user, password, host, port, databases, sqls):  ## 审核
     inception_magic_commit;'.format(user, password, host, port,databases, sqls)
 
     print("----------------审核----------------------")
-    print(sql)
+
     try:
         ret = {"ip": host, "data": None}
 

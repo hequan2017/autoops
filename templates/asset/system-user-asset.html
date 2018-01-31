@@ -41,15 +41,6 @@
 
                                 <a class="text-center"    ><i class="fa fa-laptop"></i>关联资产</a>
                             </li>
-                            <li class="pull-right">
-                                <a class="btn btn-outline btn-default" href="{% url "asset:system_user_update"  nid %}"><i
-                                        class="fa fa-edit"></i>编辑</a>
-                            </li>
-                            <li class="pull-right">
-                                <a class="btn btn-outline btn-danger" data-toggle="modal" data-target="#myModal1">
-                                    <i class="fa fa-edit"></i>删除
-                                </a>
-                            </li>
 
                         </ul>
                     </div>
@@ -101,10 +92,6 @@
                                         <td class="center">{{ row.product_line }}</td>
                                         <td><a   class="btn btn-primary btn-xs"
                                                href="{% url  "asset:asset_update"   row.id %}">编辑</a>
-                                            <button  class="btn btn-danger btn-xs  system_user_del"
-
-                                                  >删除
-                                            </button>
                                         </td>
                                     </tr>
                                 {% endfor %}
@@ -132,59 +119,6 @@
             </div>
         </div>
     </div>
-
-
-
-
-    {% block footer-js %}
-
-              <script type="text/JavaScript">
-    $.ajaxSetup({headers: {"X-CSRFToken": '{{ csrf_token }}'}});
-</script>
-
-
-        <script>
-            $(function () {
-                $('.system_user_del').click(function () {
-
-
-            swal({
-
-                                title: "你确定删除",
-                                text: "你将无法恢复",
-                                type: "warning",
-                                showCancelButton: true,
-                                confirmButtonColor: "#DD6B55",
-                                confirmButtonText: "确定",
-
-                                closeOnConfirm: false
-                            }, function () {
-                                $.ajax({
-                                      url: "/asset/system-user-del.html",
-                                     type: 'POST',
-                                    data: {'nid': {{ nid }} },
-                                    success: function (data) {
-                                        var obj = JSON.parse(data);
-                                        if (obj.status) {
-                                            swal({title: "删除", text: "已成功删除", type: "success"}, function () {
-                                               location.href = "{% url "asset:system_user" %}"
-                                            })
-                                        } else {
-                                            swal("错误", "删除" + "[ " + obj.error + " ]" + "遇到错误", "error");
-                                        }
-                                    }
-                                });
-
-
-                            });
-                        });
-
-
-            });
-        </script>
-
-
-    {% endblock %}
 
 
 {% endblock %}

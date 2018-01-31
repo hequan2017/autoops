@@ -191,9 +191,13 @@ class AssetDel(View):
         ret = {'status': True, 'error': None, }
         try:
             id = request.POST.get('nid', None)
-            user = User.objects.get(username=request.user)
-            checker = ObjectPermissionChecker(user)
+            print(id)
+            users= User.objects.get(username=request.user)
+            print(users)
+            checker = ObjectPermissionChecker(users)
             assets = asset.objects.get(id=id)
+            print(assets)
+
             if checker.has_perm('delete_asset', assets, ) == True:
                 assets.delete()
         except Exception as e:
