@@ -234,6 +234,9 @@
             jQuery(function ($) {
 
 
+
+
+
                 $('.webssh').click(function (event) {
                     event.preventDefault();
 
@@ -260,6 +263,14 @@
                                 success: callback
                             });
 
+                                function current_geometry() {
+                                    cols = parseInt(window.innerWidth / 10);
+                                    rows = parseInt(window.innerHeight / 24);
+                                    return [cols, rows];
+                                  }
+
+
+
                             function callback(msg) {
                                 console.log(msg);
                                 if (msg.status) {
@@ -267,10 +278,15 @@
                                       return;
                                 }
 
+
+
+
+
                                 var    url = "ws://{{ Webssh }}:{{ Webssh_port }}/" + 'ws?id=' + msg.id,
                                     socket = new WebSocket(url),
                                     terminal = document.getElementById('#terminal'),
-                                    term = new Terminal({cursorBlink: true,clos:80,rows:34});
+                                    geometry = current_geometry();
+                                    term = new Terminal({cursorBlink: true,  cols: geometry[0], rows: geometry[1]});
 
                                 console.log(url);
                                 term.on('data', function (data) {
@@ -300,6 +316,15 @@
                                     // status.text(e.reason);
                                 };
                             }
+
+
+                                            $(window).resize(function(){
+                    if (typeof term != "undefined") {
+                       geometry = current_geometry();
+                       term.geometry = geometry;
+                       term.resize(geometry[0], geometry[1]);
+                     }
+                   });
 
                         }
                     });
