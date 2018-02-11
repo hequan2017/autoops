@@ -116,7 +116,7 @@
                                             <td class="center">{{ row.sn }}</td>
                                             <td><a class="btn btn-primary  btn-xs "
                                                    href="{%   url  "asset:asset_update"  pk=row.id %}">编辑</a>
-                                                <a class="btn btn-danger  btn-xs  asset_del" data-toggle="modal"
+                                                <a class="btn btn-danger  btn-xs  asset_del_1" data-toggle="modal"
                                                    data-target="#myModal1">删除
                                                 </a>
                                                 <a class="btn btn-primary  btn-xs "
@@ -156,7 +156,7 @@
 <script>
      $(function () {
 
-       $('.asset_del').click(function () {
+       $(document).on('click','.asset_del_1',function () {
 
               $.ajaxSetup({headers: {"X-CSRFToken": '{{ csrf_token }}'}});
                     var id = $(this).parent().parent().attr('id');
@@ -192,8 +192,8 @@
 
                 });
 
+  $(document).on('click','.asset_all_del',function () {
 
-       $('.asset_all_del').click(function () {
                    $.ajaxSetup({headers: {"X-CSRFToken": '{{ csrf_token }}'}});
 
                     swal({

@@ -14,3 +14,4 @@ class AssetDetail(generics.RetrieveUpdateDestroyAPIView):
 	queryset = asset.objects.all()
 	serializer_class = AssetSerializer
 	permission_classes = (permissions.IsAdminUser,)
+

@@ -1,6 +1,6 @@
 ## AutoOps
 
-AutoOps 是一款基于 2.0 版本django开发的，主要面向linux运维工程师使用,管理linux资产信息，Mysql数据库，批量执行命令、脚本,获取流量图，web ssh管理，技术文档等功能。
+AutoOps 是一款基于 2.0 版本django 开发的，主要面向linux运维工程师使用,管理linux资产信息，Mysql数据库，批量执行命令、脚本,获取流量图，web ssh管理，技术文档等功能。
 
 欢迎大家测试使用，有问题可反馈。
 
@@ -40,7 +40,7 @@ AutoOps 是一款基于 2.0 版本django开发的，主要面向linux运维工�
   -  1.2    权限管理完善。 增加附件上传下载功能。
   -  1.1.5  新增 权限管理。 根据后台用户组，区分不同权限。如：在后台先建一个 测试机 组，把普通用户加入到此组。在前端添加资产时，在产品线中会出现测试机 。 测试机组下的用户 只管管理测试机产品线的资产。             
   -  1.1    新增 平台登录记录、web登录记录、密码修改等功能。
-
+---
 
 ###  功能
   - asset资产
@@ -92,6 +92,7 @@ AutoOps 是一款基于 2.0 版本django开发的，主要面向linux运维工�
      * celeryflower
      * Inception             mysql 数据库审核
 
+---
    
 ### 安装 
 
@@ -235,7 +236,7 @@ python manage.py  createsuperuser             ##创建管理员
 
 
 
-
+---
 
 ###  开发设置
 
@@ -295,7 +296,7 @@ root         /opt/autoops;
 ![DEMO](static/demo/5.png)
 ![DEMO](static/demo/7.png)
 
-
+---
 ### 贡献者
 
 #### 1.0

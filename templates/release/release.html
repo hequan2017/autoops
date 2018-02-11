@@ -123,8 +123,8 @@
 </script>
         <script>
             $(function () {
+  $(document).on('click','.system_user_del',function () {
 
-                $('.system_user_del').click(function () {
                     var id = $(this).parent().parent().attr('id');
 
                     swal({

@@ -133,8 +133,8 @@
 
         <script>
             $(function () {
+  $(document).on('click','.db_del',function () {
 
-                $('.db_del').click(function () {
                     var id = $(this).parent().parent().attr('id');
 
                     swal({
@@ -166,8 +166,8 @@
                     });
                 });
 
+  $(document).on('click','.db_all_del',function () {
 
-                $('.db_all_del').click(function () {
 
                     swal({
 

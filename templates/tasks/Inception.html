@@ -244,8 +244,8 @@ backup_dbname : 192_168_10_81_3306_hequan1
 
             $(function () {
 
+  $(document).on('click','.sql_query',function () {
 
-                $('.sql_query').click(function () {
 
                     var ids = $('input[name="id"]:checked').val();
                     var val = $('input:radio[name="databases"]:checked').val();
@@ -281,14 +281,14 @@ backup_dbname : 192_168_10_81_3306_hequan1
                     })
                 });
 
+  $(document).on('click','.sql_query_databases',function () {
 
-                $('.sql_query_databases').click(function () {
                     var ids = $('input[name="id"]:checked').val();
 
                     $.ajax({
                         url: "/tasks/Inception-query-databases.html",
                         type: 'POST',
-                        data: {"id": ids,},
+                        data: {"id": ids},
                         success: function (data) {
                             var obj = JSON.parse(data);
                             cons = "";
@@ -314,12 +314,12 @@ backup_dbname : 192_168_10_81_3306_hequan1
                     })
                 });
 
+  $(document).on('click','#sql_check',function () {
 
-                $('#sql_check').click(function () {
 
                     var ids = $('input[name="id"]:checked').val();
                     var val = $('input:radio[name="databases"]:checked').val();
-                    if (val == null) {
+                    if ( val == null ) {
                         alert("请先执行 查询数据库名字，之后选中要查询的库名字");
                         return false;
                     }
@@ -350,8 +350,8 @@ backup_dbname : 192_168_10_81_3306_hequan1
 
                     })
                 });
+  $(document).on('click','#sql_exe',function () {
 
-                $('#sql_exe').click(function () {
 
 
                     var ids = $('input[name="id"]:checked').val();
@@ -387,9 +387,9 @@ backup_dbname : 192_168_10_81_3306_hequan1
 
                     })
                 });
+  $(document).on('click','#sql_rb',function () {
 
 
-                $('#sql_rb').click(function () {
                     $.ajax({
                         url: "/tasks/Inception-rb.html",
                         type: 'POST',

@@ -126,8 +126,9 @@
 
         <script>
             $(function () {
+  $(document).on('click','.tools_del',function () {
 
-                $('.tools_del').click(function () {
+
                     var   id = $(this).parent().parent().attr('id');
 
 
@@ -160,9 +161,9 @@
                     });
                 });
 
+  $(document).on('click','.asset_all_del',function () {
 
 
-                $('.asset_all_del').click(function () {
 
 
                        swal({

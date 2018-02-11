@@ -114,8 +114,8 @@
 </script>
         <script>
             $(function () {
+  $(document).on('click','.library_del',function () {
 
-                $('.library_del').click(function () {
                     var id = $(this).parent().parent().attr('id');
 
                     swal({
