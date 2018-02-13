@@ -205,8 +205,8 @@ class IndexHandler(tornado.web.RequestHandler):
         privatekey = self.get_privatekey()
         # pkey = self.get_pkey(privatekey, password) if privatekey else None
         password1 = decrypt_p(password)
-        args = (hostname, port, username, password1)
 
+        args = (hostname, port, username, password1)
         logging.debug(args)
         return args
 

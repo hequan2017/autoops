@@ -73,6 +73,8 @@ class AssetListAll(TemplateView):
                        "asset_list_active": "active", "asset_list": ret})
 
 
+
+
 class AssetAdd(CreateView):
     model = asset
     form_class = AssetForm
@@ -157,6 +159,7 @@ class AssetUpdate(UpdateView):
         return super(AssetUpdate, self).get_success_url()
 
 
+
 class AssetDetail(DetailView):
     model = asset
     template_name = 'asset/asset-detail.html'
@@ -178,6 +181,7 @@ class AssetDetail(DetailView):
         }
         kwargs.update(context)
         return super(AssetDetail, self).get_context_data(**kwargs)
+
 
 
 class AssetDel(View):
@@ -209,6 +213,8 @@ class AssetDel(View):
             return HttpResponse(json.dumps(ret))
 
 
+
+
 class AssetAllDel(View):
     model = asset
 
@@ -236,6 +242,7 @@ class AssetAllDel(View):
             ret['error'] = '删除请求错误,没有权限{}'.format(e)
         finally:
             return HttpResponse(json.dumps(ret))
+
 
 
 @login_required(login_url="/login.html")

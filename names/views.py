@@ -4,8 +4,7 @@ from django.contrib.auth import authenticate, login
 from django.views.generic import View
 from .models import login_log
 from .form import UserPasswordForm
-from django.contrib.auth.models import User
-from django.contrib.auth.hashers import make_password, check_password
+from django.contrib.auth.hashers import  check_password
 from  asset.models import web_history
 from  tasks.models import history
 from django.contrib.auth.models import User, Group

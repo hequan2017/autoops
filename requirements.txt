@@ -6,7 +6,6 @@ celery==3.1.25
 celery-with-redis==3.0
 django-celery==3.2.1
 django-kombu==0.9.4
-flower
 djangorestframework
 django-guardian
 pymysql
