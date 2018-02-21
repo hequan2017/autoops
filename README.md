@@ -7,12 +7,13 @@ AutoOps 是一款基于 2.0 版本django 开发的，主要面向linux运维工�
 
 ###  Demo
 
-  -  地址:  `http://42.62.55.58:8003/`        账号`admin`      密码`1qaz.2wsx`
+  -  地址:  `http://114.115.132.147:8003`        账号`admin`      密码`1qaz.2wsx`
   -  交流群号： `620176501`   欢迎交流！  
-  -  后台地址 `http://42.62.55.58:8003/admin`     账号`admin`   密码`1qaz.2wsx`
+  -  后台地址 `http://114.115.132.147:8003/admin`     账号`admin`   密码`1qaz.2wsx`
   -  博客:    `http://hequan.blog.51cto.com/`
   -  github:  `https://github.com/hequan2017/autoops/`
   -  码云:    `https://gitee.com/hequan2020/autoops`
+
 
 ###  架构图
 
@@ -44,7 +45,7 @@ AutoOps 是一款基于 2.0 版本django 开发的，主要面向linux运维工�
 
 ###  功能
   - asset资产
-    - api     `http://42.62.55.58:8003/asset/api/asset.html`
+    - api     `http://114.115.132.147:8003/asset/api/asset.html`
     - 自动获取服务器信息
     - 全部导出
     - CPU 内存 流量图
@@ -178,7 +179,7 @@ DEBUG = True                            ## 实际生产环境使用，请关闭 
 BROKER_URL = 'redis://127.0.0.1:6379/0'                  ##Redis地址,一般情况不用修改
 
 
-Webssh_ip = '42.62.55.58'      ##WebSSH 软件的 访问IP,也就是本机外网IP，改这个地方就好了。
+Webssh_ip = '114.115.132.147'      ##WebSSH 软件的 访问IP,也就是本机外网IP，改这个地方就好了。
 Webssh_port='9000'             ##端口号,默认即可。如有修改，需要修改  webssh/main.py文件 define('port', default=9000, help='listen port', type=int)
 
 Inception_ip = '127.0.0.1'         ## 此为 Inception 软件地址,  默认为本机地址，一般不用修改
@@ -222,12 +223,17 @@ python manage.py  createsuperuser             ##创建管理员
 ```bash
 /usr/bin/python2.7   /usr/bin/supervisord -c /etc/supervisord.conf
 ``` 
-    加到linux 开机启动里面  `chmod +x  /etc/rc.d/rc.local `  把上面的命令放到这个文件里面  
+
+
+加到linux 开机启动里面  `chmod +x  /etc/rc.d/rc.local `  把上面的命令放到这个文件里面  
+  
   
   * 启动: 统一用supervisor 管理进程,  打开   0.0.0.0:9001  账号user  密码321   进入进程管理界面，管理uwsgi,webssh,celery,Inception 等启动关闭。
      ![DEMO](static/demo/14.png)
 
+
   * 登陆后台，设置定时获取主机图，设置数据中心、用户组。
+  
   
   * 设置定时获取主机信息任务。 先创建执行的时间频率，再创建任务，创建后，观察队列任务是否执行成功。   如不成功，重启所有supervisor中的  celery服务。
 ![DEMO](static/demo/9.png)
@@ -240,7 +246,7 @@ python manage.py  createsuperuser             ##创建管理员
 
 ###  开发设置
 
-  * 如果想在windows 下的 pycharm打开， 先pip 安装好模块，ansbile无法装在windows上，忽略掉。然后注释下面的代码。  
+  * 如果想在windows 下的 pycharm打开， 先pip 安装好模块，ansbile无法装在windows上，忽略掉。然后注释下面的代码。  注释xadmin
   
   ```djangotemplate
 asset/views.py
@@ -280,11 +286,11 @@ root         /opt/autoops;
         uwsgi_pass unix:/opt/autoops/script/uwsgi.sock;
         
     }
-    location /static/ {
+    
+    location /static/   {
             alias  /opt/autoops/static/;
             index  index.html index.htm;
-    }
-     
+    }     
 ```
 
 

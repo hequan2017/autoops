@@ -1,4 +1,4 @@
-from celery import Celery, platforms,shared_task
+from celery import Celery, platforms
 from asset.models import asset,performance
 from tasks.views import ssh
 import threading,time,datetime
