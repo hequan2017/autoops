@@ -4,12 +4,13 @@ AutoOps 是一款基于 2.0 版本django 开发的，主要面向linux运维工�
 
 欢迎大家测试使用，有问题可反馈。
 
+### 项目停止
+
+因本人工作原因，此项目的开发及维护无限期暂停。
 
 ###  Demo
 
-  -  地址:  `http://114.115.132.147:8003`        账号`admin`      密码`1qaz.2wsx`
   -  交流群号： `620176501`   欢迎交流！  
-  -  后台地址 `http://114.115.132.147:8003/admin`     账号`admin`   密码`1qaz.2wsx`
   -  博客:    `http://hequan.blog.51cto.com/`
   -  github:  `https://github.com/hequan2017/autoops/`
   -  码云:    `https://gitee.com/hequan2020/autoops`
@@ -22,8 +23,7 @@ AutoOps 是一款基于 2.0 版本django 开发的，主要面向linux运维工�
 
 
 ### 更新记录  
-
-  -  1.8预览版         加强mysql查询展示功能。
+  -  1.8    最后一次更新， 修改ansible api，以支持playbook，需要自己测试。
   -  1.7.8  更换后台为xadmin
      -  注意： xadmin暂时不支持 对象权限组件django-guardian,需要设置的时候，可以登陆dadmin（为默认admin）
      -  注意： xadmin  认不到 tasks任务的名字，需要的名字如下：

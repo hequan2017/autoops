@@ -28,18 +28,6 @@ Options = namedtuple('Options', [
     'verbosity', 'check', 'extra_vars', 'playbook_path', 'passwords',
     'diff', 'gathering', 'remote_tmp',
 ])
-import multiprocessing
-
-
-# class  MyTaskQueueManager(TaskQueueManager):
-#     def __initialize_processes(self,num):
-#         self._workers = []
-#         current_process =  multiprocessing.current_process
-#         daemon_my = current_process()._config['daemon'] == False
-#         for i in range(num):
-#             rslt_q = multiprocessing.Queue()
-#             self._workers.append([None,rslt_q])
-
 
 
 
@@ -77,59 +65,127 @@ def get_default_options():
 
 
 # Jumpserver not use playbook
+# class PlayBookRunner:
+#     """
+#     用于执行AnsiblePlaybook的接口.简化Playbook对象的使用.
+#     """
+#
+#     # Default results callback
+#     results_callback_class = PlaybookResultCallBack
+#     loader_class = DataLoader
+#     variable_manager_class = VariableManager
+#     options = get_default_options()
+#
+#     def __init__(self, inventory=None, options=None):
+#         """
+#         :param options: Ansible options like ansible.cfg
+#         :param inventory: Ansible inventory
+#         """
+#         if options:
+#             self.options = options
+#         C.RETRY_FILES_ENABLED = False
+#         self.inventory = inventory
+#         self.loader = self.loader_class()
+#         self.results_callback = self.results_callback_class()
+#         self.playbook_path = options.playbook_path
+#         self.variable_manager = self.variable_manager_class(
+#             loader=self.loader, inventory=self.inventory
+#         )
+#         self.passwords = options.passwords
+#         self.__check()
+#
+#     def __check(self):
+#         if self.options.playbook_path is None or \
+#                 not os.path.exists(self.options.playbook_path):
+#             raise AnsibleError(
+#                 "Not Found the playbook file: {}.".format(self.options.playbook_path)
+#             )
+#         if not self.inventory.list_hosts('all'):
+#             raise AnsibleError('Inventory is empty')
+#
+#     def run(self):
+#         executor = PlaybookExecutor(
+#             playbooks=[self.playbook_path],
+#             inventory=self.inventory,
+#             variable_manager=self.variable_manager,
+#             loader=self.loader,
+#             options=self.options,
+#             passwords=self.passwords
+#         )
+#
+#         if executor._tqm:
+#             executor._tqm._stdout_callback = self.results_callback
+#         executor.run()
+#         executor._tqm.cleanup()
+#         return self.results_callback.output
+
+
+
+
+##此方法为别人测试给我的，我暂无测试。 应该可以用。
 class PlayBookRunner:
-    """
-    用于执行AnsiblePlaybook的接口.简化Playbook对象的使用.
-    """
 
-    # Default results callback
-    results_callback_class = PlaybookResultCallBack
-    loader_class = DataLoader
-    variable_manager_class = VariableManager
-    options = get_default_options()
 
-    def __init__(self, inventory=None, options=None):
-        """
-        :param options: Ansible options like ansible.cfg
-        :param inventory: Ansible inventory
-        """
-        if options:
-            self.options = options
-        C.RETRY_FILES_ENABLED = False
-        self.inventory = inventory
-        self.loader = self.loader_class()
-        self.results_callback = self.results_callback_class()
-        self.playbook_path = options.playbook_path
-        self.variable_manager = self.variable_manager_class(
-            loader=self.loader, inventory=self.inventory
-        )
-        self.passwords = options.passwords
-        self.__check()
-
-    def __check(self):
-        if self.options.playbook_path is None or \
-                not os.path.exists(self.options.playbook_path):
-            raise AnsibleError(
-                "Not Found the playbook file: {}.".format(self.options.playbook_path)
+        def __init__(self, playbook_path, inventory=None, options=None):
+            """
+            :param options: Ansible options like ansible.cfg
+            :param inventory: Ansible inventory
+            :param BaseInventory:The BaseInventory parameter hostname must be equal to the hosts in yaml
+            or the BaseInventory parameter groups must equal to the hosts in yaml.
+            """
+            if options:
+                self.options = options
+            C.RETRY_FILES_ENABLED = False
+            self.inventory = inventory
+            # self.loader = self.loader_class()
+            self.loader = DataLoader()
+            self.results_callback = self.results_callback_class()
+            # self.playbook_path = options.playbook_path
+            self.playbook_path = playbook_path
+            self.variable_manager = self.variable_manager_class(
+                loader=self.loader, inventory=self.inventory
             )
-        if not self.inventory.list_hosts('all'):
-            raise AnsibleError('Inventory is empty')
+            # self.passwords = options.passwords
+            self.passwords = {"passwords":''}#为了修改paramiko中的bug添加入，无实际意义
+            self.__check()
 
-    def run(self):
-        executor = PlaybookExecutor(
-            playbooks=[self.playbook_path],
-            inventory=self.inventory,
-            variable_manager=self.variable_manager,
-            loader=self.loader,
-            options=self.options,
-            passwords=self.passwords
-        )
+        def __check(self):
+            if self.options.playbook_path is None or \
+                    not os.path.exists(self.options.playbook_path):
+                raise AnsibleError(
+                    "Not Found the playbook file: {}.".format(self.options.playbook_path)
+                )
+            if not self.inventory.list_hosts('all'):
+                raise AnsibleError('Inventory is empty')
 
-        if executor._tqm:
-            executor._tqm._stdout_callback = self.results_callback
-        executor.run()
-        executor._tqm.cleanup()
-        return self.results_callback.output
+        def run(self):
+            executor = PlaybookExecutor(
+                playbooks=[self.playbook_path],
+                inventory=self.inventory,
+                variable_manager=self.variable_manager,
+                loader=self.loader,
+                options=self.options,
+                passwords=self.passwords
+            )
+
+            if executor._tqm:
+                executor._tqm._stdout_callback = self.results_callback
+            executor.run()
+            executor._tqm.cleanup()
+            try:
+                results_callback=self.results_callback.output['plays'][0]['tasks'][1]['hosts']
+                status=self.results_callback.output['stats']
+                results={"results_callback":results_callback,"status":status}
+                return results
+            except Exception as e:
+                raise AnsibleError('The hostname parameter or groups parameter in the BaseInventory \
+                                   does not match the hosts parameter in the yaml file.')
+
+
+
+
+
+
 
 
 class AdHocRunner:
