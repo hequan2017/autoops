@@ -1,6 +1,6 @@
 django==2.0.8
 django-bootstrap3
-ansible==2.4.2.0
+ansible>=2.4.5
 paramiko
 celery==3.1.25
 celery-with-redis==3.0
