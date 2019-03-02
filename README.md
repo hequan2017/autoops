@@ -9,9 +9,10 @@ AutoOps 是一款基于 2.0 版本django 开发的，主要面向linux运维工�
 因本人工作原因，此项目的开发及维护无限期暂停。
 
 
-### 推荐一下 现在自己在做的一个新项目， 基于 云主机管理的 CMDB
+### 推荐一下 现在自己在做的  django 基础开发模板
 
-https://github.com/hequan2017/chain
+https://github.com/hequan2017/seal/
+
 
 
 ###  Demo
