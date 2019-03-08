@@ -1,21 +1,24 @@
-## AutoOps
-
-AutoOps 是一款基于 2.0 版本django 开发的，主要面向linux运维工程师使用,管理linux资产信息，Mysql数据库，批量执行命令、脚本,获取流量图，web ssh管理，技术文档等功能。
-
-欢迎大家测试使用，有问题可反馈。
-
-### 项目停止
-
-因本人工作原因，此项目的开发及维护无限期暂停。
+# AutoOps
 
 
-### 推荐一下 现在自己在做的  django 基础开发模板
+## 推荐一下 现在自己在做的  django 基础开发模板
 
 https://github.com/hequan2017/seal/
 
 
 
-###  Demo
+## 项目停止
+
+因本人工作原因，此项目的开发及维护无限期暂停。
+
+##  介绍
+
+AutoOps 是一款基于 2.0 版本django 开发的，主要面向linux运维工程师使用,管理linux资产信息，Mysql数据库，批量执行命令、脚本,获取流量图，web ssh管理，技术文档等功能。
+
+欢迎大家测试使用，有问题可反馈。
+
+
+##  Demo
 
   -  交流群号： `620176501`   欢迎交流！  
   -  博客:    `http://hequan.blog.51cto.com/`
@@ -23,13 +26,13 @@ https://github.com/hequan2017/seal/
   -  码云:    `https://gitee.com/hequan2020/autoops`
 
 
-###  架构图
+##  架构图
 
  
 ![DEMO](static/demo/autoops.png)
 
 
-### 更新记录  
+## 更新记录  
   -  1.8    最后一次更新， 修改ansible api，以支持playbook，需要自己测试。
   -  1.7.8  更换后台为xadmin
      -  注意： xadmin暂时不支持 对象权限组件django-guardian,需要设置的时候，可以登陆dadmin（为默认admin）
@@ -50,7 +53,7 @@ https://github.com/hequan2017/seal/
   -  1.1    新增 平台登录记录、web登录记录、密码修改等功能。
 ---
 
-###  功能
+##  功能
   - asset资产
     - api     `http://114.115.132.147:8003/asset/api/asset.html`
     - 自动获取服务器信息
@@ -84,7 +87,7 @@ https://github.com/hequan2017/seal/
     -  那么  hequan 只能看见 运维组下面的服务器、数据库，执行工具也只能选择 运维组的。 hequan 无法添加服务器、数据库。
    
 
-### 环境
+## 环境
 
    * Python 3.6.4         #可以参考   `script/install_python3.6.4.py`
    * Django 2.0
@@ -102,7 +105,7 @@ https://github.com/hequan2017/seal/
 
 ---
    
-### 安装 
+## 安装 
 
    * 开发环境部署：
    
