@@ -1,4 +1,4 @@
-django==2.0.13
+django==2.2.13
 django-bootstrap3
 ansible>=2.4.5
 paramiko
