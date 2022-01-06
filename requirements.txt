@@ -2,7 +2,7 @@ django==2.0.13
 django-bootstrap3
 ansible>=2.4.5
 paramiko
-celery==3.1.25
+celery==5.2.2
 celery-with-redis==3.0
 django-celery==3.2.1
 django-kombu==0.9.4
