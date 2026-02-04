@@ -81,10 +81,72 @@ AutoOps 提供资产管理、命令行批量执行、流量图监控、Web SSH�
 ---
 
 ## ⚙️ 安装
+=======
+##  功能
+  - asset资产
+    - api     `http://114.115.132.147:8003/asset/api/asset.html`
+    - 自动获取服务器信息
+    - 全部导出
+    - CPU 内存 流量图
+  - names 用户（预留模块）
+      -  加密解密   password_crypt.py          ## 如果是自己的生产环境，建议更换里面的密钥。 
+  - tasks任务 
+     - 命令行
+     - 工具  
+        - shell 
+        - python
+        
+  - webssh  登陆
+     -  借鉴的 github上的  https://github.com/huashengdun/webssh
+
+  - docker 管理
+     - 容器列表与启停/重启操作（基于 Docker API）
+  
+  - library 技术文档 (真正运维人员的管理平台，自带技术文档，有问题不用再去别的地方找)
+    - DjangoUeditor 富文本编辑器
+    
+  -  代码库
+     - 代码库
+     - 主机分发
+    
+  - 数据库自动审核-- 命令执行   回滚
+     - Inception 
+     
+  - 后台管理
+    - admin     
+    -  根据后台用户组进行区分。admin有最高权限。
+    -  例如：新建  运维组、开发组 ，    新建 运维组 里面的  hequan 账号
+    -  那么  hequan 只能看见 运维组下面的服务器、数据库，执行工具也只能选择 运维组的。 hequan 无法添加服务器、数据库。
+   
+
 
 **开发环境部署**
 
 1. 下载并安装基础环境（默认目录 `/opt`）
+=======
+   * Python 3.6.4         #可以参考   `script/install_python3.6.4.py`
+   * Django 2.0
+   * Python 2.7            (用来启动 supervisor)
+   * Centos 7.4
+   * Docker（可选，用于容器管理）
+   
+   * supervisor       管理无法
+     * uwsgi                    web服务启动
+     * webssh                
+     * celeryd                 队列任务
+     * celerybeat
+     * celerycam
+     * celeryflower
+     * Inception             mysql 数据库审核
+
+---
+   
+## 安装 
+
+   * 开发环境部署：
+   
+   1. 下载，安装基本环境,安装目录为/opt下，如是其他目录，请修改supervisor.conf中的相应设置即可。
+
  
 ```bash
 cd /opt
