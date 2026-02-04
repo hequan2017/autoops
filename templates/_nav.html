@@ -84,6 +84,15 @@
                 </ul>
             </li>
 
+            <li class="{{ gpu_active }}">
+                <a href="#"><i class="fa fa-sliders"></i> <span class="nav-label">GPU 资源</span>
+                    <span class="fa arrow"> </span></a>
+                <ul class="nav nav-second-level">
+                    <li class="{{ gpu_offer_active }}"><a href="{% url    'gpuops:offer_list' %}">购买套餐</a></li>
+                    <li class="{{ gpu_order_active }}"><a href="{% url    'gpuops:order_list' %}">我的订单</a></li>
+                </ul>
+            </li>
+
 
             <li class="{{ library_active }}">
                 <a href="#"><i class="fa fa-y-combinator-square"></i> <span class="nav-label">技术文档</span>

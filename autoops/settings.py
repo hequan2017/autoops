@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'release',
     'dockerops',
     'k8sops',
+    'gpuops',
     'xadmin',
     'crispy_forms',
     'reversion',

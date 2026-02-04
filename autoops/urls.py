@@ -28,6 +28,7 @@ urlpatterns = [
     path('library/', include('library.urls', namespace="library",), ),
     path('docker/', include('dockerops.urls', namespace="dockerops",), ),
     path('k8s/', include('k8sops.urls', namespace="k8sops",), ),
+    path('gpu/', include('gpuops.urls', namespace="gpuops",), ),
     path('upload/',  AssetUpload.as_view()),
     path('ueditor/',include('DjangoUeditor.urls' )),
     path('release/', include('release.urls', namespace="release")),
