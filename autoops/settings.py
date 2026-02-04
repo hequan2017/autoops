@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'DjangoUeditor',
     'release',
     'dockerops',
+    'k8sops',
     'xadmin',
     'crispy_forms',
     'reversion',

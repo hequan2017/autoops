@@ -76,6 +76,14 @@
                 </ul>
             </li>
 
+            <li class="{{ k8s_active }}">
+                <a href="#"><i class="fa fa-cloud"></i> <span class="nav-label">K8s 管理</span>
+                    <span class="fa arrow"> </span></a>
+                <ul class="nav nav-second-level">
+                    <li class="{{ k8s_overview_active }}"><a href="{% url    'k8sops:overview' %}">集群概览</a></li>
+                </ul>
+            </li>
+
 
             <li class="{{ library_active }}">
                 <a href="#"><i class="fa fa-y-combinator-square"></i> <span class="nav-label">技术文档</span>
