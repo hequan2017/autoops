@@ -14,3 +14,5 @@ uwsgi
 cryptography
 pyecharts
 tornado==4.5.2
+
+docker>=6.1.3

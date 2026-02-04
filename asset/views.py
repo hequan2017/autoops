@@ -29,6 +29,25 @@ from  tasks.ansible_2420.inventory import BaseInventory
 
 class AssetListAll(TemplateView):
     template_name = 'asset/asset.html'
+    search_fields = (
+        'network_ip',
+        'manage_ip',
+        'hostname',
+        'inner_ip',
+        'model',
+        'eth0',
+        'eth1',
+        'eth2',
+        'eth3',
+        'system',
+        'system_user__username',
+        'data_center__data_center_list',
+        'cabinet',
+        'position',
+        'sn',
+        'uplink_port',
+        'product_line__name',
+    )
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
@@ -40,31 +59,34 @@ class AssetListAll(TemplateView):
             "asset_list_active": "active",
             "Webssh": getattr(settings, 'Webssh_ip'),
             "Webssh_port": getattr(settings, 'Webssh_port'),
-            'asset_list': get_objects_for_user(self.request.user, 'asset.read_asset')
+            'asset_list': get_objects_for_user(
+                self.request.user,
+                'asset.read_asset',
+            ).select_related('product_line')
         }
         kwargs.update(context)
         return super(AssetListAll, self).get_context_data(**kwargs)
 
+    def _build_search_query(self, query):
+        search_query = Q()
+        for field in self.search_fields:
+            search_query |= Q(**{field: query})
+        return search_query
+
     def post(self, request):
         query = request.POST.get("name")
+        search_query = self._build_search_query(query)
+        base_queryset = asset.objects.select_related('product_line')
 
-        user = User.objects.get(username=request.user)
-        if user.is_superuser == 1:
-            ret = asset.objects.filter(Q(network_ip=query) | Q(manage_ip=query) | Q(hostname=query) | Q(
-                inner_ip=query) | Q(model=query) | Q(
-                eth0=query) | Q(eth1=query) | Q(eth2=query) | Q(eth3=query) |
-                                       Q(system=query) | Q(system_user__username=query) | Q(
-                data_center__data_center_list=query) | Q(
-                cabinet=query) |
-                                       Q(position=query) | Q(sn=query)
-                                       | Q(uplink_port=query) | Q(product_line__name=query)
-                                       )
+        user = request.user
+        if user.is_superuser:
+            ret = base_queryset.filter(search_query)
         else:
-            product1 = Group.objects.get(user=user)
-
-            ret = asset.objects.filter(Q(product_line__name=product1) &  Q(network_ip=query) | Q(manage_ip=query) | Q(hostname=query) | Q( inner_ip=query) | Q(model=query) | Q(eth0=query) | Q(eth1=query) | Q(eth2=query) | Q(eth3=query) |
-                                       Q(system=query) | Q(system_user__username=query)
-                                       | Q(data_center__data_center_list=query) | Q(cabinet=query) | Q(position=query) | Q(sn=query)| Q(uplink_port=query))
+            product_group = user.groups.first()
+            if product_group:
+                ret = base_queryset.filter(Q(product_line=product_group) & search_query)
+            else:
+                ret = base_queryset.none()
 
         return render(request, 'asset/asset.html',
                       {"Webssh": getattr(settings, 'Webssh_ip'),

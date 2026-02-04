@@ -26,6 +26,7 @@ urlpatterns = [
     path('tasks/', include('tasks.urls', namespace="tasks",), ),
     path('names/', include('names.urls', namespace="names",), ),
     path('library/', include('library.urls', namespace="library",), ),
+    path('docker/', include('dockerops.urls', namespace="dockerops",), ),
     path('upload/',  AssetUpload.as_view()),
     path('ueditor/',include('DjangoUeditor.urls' )),
     path('release/', include('release.urls', namespace="release")),

@@ -67,6 +67,9 @@ AutoOps 是一款基于 2.0 版本django 开发的，主要面向linux运维工�
         
   - webssh  登陆
      -  借鉴的 github上的  https://github.com/huashengdun/webssh
+
+  - docker 管理
+     - 容器列表与启停/重启操作（基于 Docker API）
   
   - library 技术文档 (真正运维人员的管理平台，自带技术文档，有问题不用再去别的地方找)
     - DjangoUeditor 富文本编辑器
@@ -91,6 +94,7 @@ AutoOps 是一款基于 2.0 版本django 开发的，主要面向linux运维工�
    * Django 2.0
    * Python 2.7            (用来启动 supervisor)
    * Centos 7.4
+   * Docker（可选，用于容器管理）
    
    * supervisor       管理无法
      * uwsgi                    web服务启动
