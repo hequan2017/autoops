@@ -3,7 +3,7 @@
 
 
 
-from inventory import BaseInventory
+from .inventory import BaseInventory
 
 
 def  Test():
