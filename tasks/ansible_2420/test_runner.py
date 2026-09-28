@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from  runner import AdHocRunner, CommandRunner
-from  inventory import BaseInventory
+from .runner import AdHocRunner, CommandRunner
+from .inventory import BaseInventory
 
 
 def  TestAdHocRunner():
