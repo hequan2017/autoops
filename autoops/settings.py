@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 import os
-import djcelery
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'mo2+&!_l_7z0ty4%e75a#gdf%*&es4p6n$y90xk=18uao*&8*y'
@@ -25,17 +24,15 @@ INSTALLED_APPS = [
     'names',
     'tasks',
     'library',
-    'djcelery',
-    'kombu',
+    'django_celery_beat',
+    'django_celery_results',
     'rest_framework',
     'rest_framework.authtoken',
     'guardian',
-    'DjangoUeditor',
     'release',
     'dockerops',
     'k8sops',
     'gpuops',
-    'xadmin',
     'crispy_forms',
     'reversion',
 ]
@@ -144,10 +141,9 @@ STATICFILES_DIRS = (
 )
 
 
-djcelery.setup_loader()
-BROKER_URL = 'redis://127.0.0.1:6379/0'  #消息存储数据存储在仓库0
+CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'  #消息存储数据存储在仓库0
 
-CELERY_RESULT_BACKEND = 'djcelery.backends.database:DatabaseBackend' # 指定 Backend
+CELERY_RESULT_BACKEND = 'django-db'  # 结果存数据库（django-celery-results）
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
@@ -155,10 +151,10 @@ CELERY_RESULT_SERIALIZER = 'json'
 
 CELERY_TIMEZONE = 'Asia/Shanghai'
 
-#CELERY_ALWAYS_EAGER = True   # 如果开启，Celery便以eager模式运行, 则task便不需要加delay运行
+#CELERY_TASK_ALWAYS_EAGER = True   # 如果开启，Celery便以eager模式运行, 则task便不需要加delay运行
 
 CELERY_IMPORTS = ('tasks.tasks',)
-CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'  #这是使用了django-celery默认的数据库调度模型,任务执行周期都被存在你指定的orm数据库中
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'  #这是使用了django-celery-beat默认的数据库调度模型,任务执行周期都被存在你指定的orm数据库中
 
 
 
