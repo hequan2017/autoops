@@ -107,6 +107,16 @@ class BaseInventory(InventoryManager):
         self.variable_manager = self.variable_manager_class()
         super().__init__(self.loader)
 
+    @property
+    def hosts(self):
+        """兼容旧版 InventoryManager.hosts 的访问方式"""
+        return self._inventory.hosts
+
+    @property
+    def groups(self):
+        """兼容旧版 InventoryManager.groups 的访问方式"""
+        return self._inventory.groups
+
     def get_groups(self):
         return self._inventory.groups
 
@@ -119,7 +129,7 @@ class BaseInventory(InventoryManager):
 
         for host_data in self.host_list:
             host = self.host_manager_class(host_data=host_data)
-            self.hosts[host_data['hostname']] = host
+            self._inventory.hosts[host_data['hostname']] = host
             groups_data = host_data.get('groups')
             if groups_data:
                 for group_name in groups_data:
