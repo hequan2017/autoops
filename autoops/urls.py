@@ -1,25 +1,16 @@
-from django.conf.urls import include,url
+from django.conf.urls import include, handler404, handler500  # noqa: F401
 from django.contrib import admin
 
-from names.views import index,login_view,logout
-from django.conf.urls import handler404, handler500
-from asset.views import  AssetUpload
+from names.views import index, login_view, logout
+from asset.views import AssetUpload
 from django.conf import settings
-from django.urls  import path
-
-import xadmin
-xadmin.autodiscover()
-
-from xadmin.plugins import xversion
-xversion.register_models()
-
+from django.urls import path
 
 urlpatterns = [
-    path('admin/', xadmin.site.urls, name="xadmin"),
-    path('dadmin/', admin.site.urls,name="dadmin"),
+    path('admin/', admin.site.urls, name="admin"),
     path('', index),
-    path('login.html', login_view,name="login_view"),
-    path('logout.html', logout,name="logout"),
+    path('login.html', login_view, name="login_view"),
+    path('logout.html', logout, name="logout"),
     path('index.html', index),
     path('asset/', include('asset.urls', namespace="asset", ), ),
     path('db/', include('db.urls', namespace="db", ), ),
@@ -29,15 +20,11 @@ urlpatterns = [
     path('docker/', include('dockerops.urls', namespace="dockerops",), ),
     path('k8s/', include('k8sops.urls', namespace="k8sops",), ),
     path('gpu/', include('gpuops.urls', namespace="gpuops",), ),
-    path('upload/',  AssetUpload.as_view()),
-    path('ueditor/',include('DjangoUeditor.urls' )),
+    path('upload/', AssetUpload.as_view()),
     path('release/', include('release.urls', namespace="release")),
 ]
-
-
 
 if settings.DEBUG:
     from django.conf.urls.static import static
     urlpatterns += static(
         settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
